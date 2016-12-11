@@ -1,0 +1,32 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.vineyard_2.ProfileFragment"
+    android:background="@drawable/profilesmaller">
+
+    <!-- TODO: Update blank fragment layout -->
+    <TextView
+        android:id="@+id/signup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sign up here."
+        android:textColor="#fff"
+        android:textStyle="italic"
+        android:textSize="18dp"
+        android:clickable="true"
+        android:onClick="signup"
+        tools:ignore="HardcodedText,SpUsage"
+        android:layout_marginTop="344dp"
+        android:layout_gravity="center_horizontal" />
+
+    <TextView
+        android:id="@+id/desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Enjoy the full Vineyard experience."
+        android:textColor="#fff"
+        android:layout_gravity="center_horizontal|center"
+        android:textSize="18sp"
+        tools:ignore="HardcodedText" />
+</FrameLayout>
