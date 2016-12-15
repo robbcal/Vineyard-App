@@ -8,8 +8,8 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:background="@drawable/signup2"
-    tools:context="com.example.vineyard_v1.SignupActivity">
+    android:background="@drawable/nsignup"
+    tools:context="com.example.vineyard_2.SignupActivity">
 
     <ImageView
         android:src="@drawable/vineyard_logo"
@@ -108,7 +108,7 @@
             </android.support.design.widget.TextInputLayout>
 
             <Button
-                android:id="@+id/email_sign_in_button"
+                android:id="@+id/sign_up_button"
                 style="?android:textAppearanceSmall"
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
@@ -126,8 +126,17 @@
                 android:textColorLink="@android:color/holo_green_light"
                 android:onClick="LogIn"
                 android:layout_marginTop="16dp"
-                tools:ignore="HardcodedText" />
+                tools:ignore="HardcodedText"
+                android:id="@+id/signinLink" />
 
         </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center|bottom"
+            android:layout_marginBottom="20dp"
+            android:visibility="gone" />
     </ScrollView>
 </LinearLayout>

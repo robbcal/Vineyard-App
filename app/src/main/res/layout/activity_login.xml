@@ -9,11 +9,12 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:background="@drawable/homebg"
-    tools:context="com.example.vineyard_2.LoginActivity">
+    tools:context="com.example.vineyard_2.LoginActivity"
+    android:weightSum="1">
 
     <ImageView
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
+        android:layout_width="136dp"
+        android:layout_height="51dp"
         android:src="@drawable/vineyard_logo"
         android:layout_marginTop="24dp"
         android:layout_marginBottom="32dp"
@@ -31,7 +32,8 @@
     <ScrollView
         android:id="@+id/login_form"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="315dp"
+        android:layout_weight="0.20">
 
         <LinearLayout
             android:id="@+id/email_login_form"
@@ -73,7 +75,7 @@
             </android.support.design.widget.TextInputLayout>
 
             <Button
-                android:id="@+id/email_sign_in_button"
+                android:id="@+id/login_button"
                 style="?android:textAppearanceSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="60dp"
@@ -102,31 +104,34 @@
             </RelativeLayout>
 
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:textColor="@android:color/white"
-                android:text="Don't have an account?"
-                android:layout_gravity="center"
-                android:textColorLink="@android:color/holo_green_light"
-                android:onClick="SignUp"
-                android:layout_marginTop="16dp"
-                tools:ignore="HardcodedText" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:textColor="@android:color/white"
-                android:text="Continue as a guest"
-                android:layout_gravity="center"
-                android:textColorLink="@android:color/holo_green_light"
-                android:onClick="LandingPage"
-                android:layout_marginTop="16dp"
-                tools:ignore="HardcodedText" />
-
-
         </LinearLayout>
     </ScrollView>
+
+    <Button
+        android:text="Don't have an account?"
+        android:layout_width="match_parent"
+        android:layout_height="33dp"
+        android:id="@+id/sign_up_button"
+        android:background="@null"
+        android:textSize="18sp"
+        android:textColor="@color/white"
+        android:textAllCaps="false" />
+
+    <Button
+        android:text="Continue as guest"
+        android:background="@null"
+        android:textSize="18sp"
+        android:textColor="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/continue_as_guest"
+        android:textAllCaps="false" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_gravity="center|bottom"
+        android:layout_marginBottom="20dp"
+        android:visibility="gone" />
 </LinearLayout>
