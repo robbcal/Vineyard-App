@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.vineyard_2.ProfileFragment"
-    android:background="@drawable/profilesmaller">
+    android:background="@drawable/nuseraccount">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
