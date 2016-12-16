@@ -28,9 +28,9 @@ public class LandingpageActivity extends AppCompatActivity {
         viewPager.setAdapter(viewPagerAdapter);
         viewPager.setCurrentItem(1, false);
         tabLayout.setupWithViewPager(viewPager);
-        tabLayout.getTabAt(0).setIcon(R.drawable.home);
-        tabLayout.getTabAt(1).setIcon(R.drawable.search);
-        tabLayout.getTabAt(2).setIcon(R.drawable.profile);
+        tabLayout.getTabAt(0).setIcon(R.drawable.nhome);
+        tabLayout.getTabAt(1).setIcon(R.drawable.nsearch);
+        tabLayout.getTabAt(2).setIcon(R.drawable.nmenu);
     }
 
 
