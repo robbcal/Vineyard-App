@@ -1,35 +1,29 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.vineyard_2.HomeFragment"
     android:background="@drawable/nhomepage">
 
-    <!-- TODO: Update blank fragment layout -->
+    <ImageView
+        android:layout_width="315dp"
+        android:layout_height="31dp"
+        app:srcCompat="@drawable/enjoyfullexperience"
+        android:id="@+id/header"
+        android:layout_gravity="center_vertical|center_horizontal|center"
+        android:layout_marginBottom="30dp" />
 
-    <TextView
-        android:id="@+id/signup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Sign up here."
-        android:textColor="#fff"
-        android:textStyle="italic"
-        android:textSize="18dp"
-        android:clickable="true"
-        android:onClick="signup"
-        tools:ignore="HardcodedText,SpUsage"
-        android:layout_marginTop="344dp"
-        android:layout_gravity="center_horizontal" />
-
-    <TextView
-        android:id="@+id/desc"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Enjoy the full Vineyard experience."
-        android:textColor="#fff"
-        android:layout_gravity="center_horizontal|center"
-        android:textSize="18sp"
-        tools:ignore="HardcodedText" />
+    <Button
+        android:id="@+id/btn_signup"
+        android:background="@drawable/signuphere"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white"
+        android:textSize="15dp"
+        android:onClick="onClickSignUp"
+        android:layout_height="30dp"
+        android:layout_width="135dp"
+        android:layout_gravity="center_vertical|center_horizontal|center"/>
 
 </FrameLayout>

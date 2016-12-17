@@ -43,4 +43,7 @@
     <string name="forgot_password_msg">We just need your registered Email Id to sent you password reset instructions.</string>
     <string name="cont_guest">Continue as guest</string>
 
+    <string name="facebook_app_id">234114673683116</string>
+    <string name="fb_login_protocol_scheme">fb234114673683116</string>
+
 </resources>
