@@ -28,7 +28,7 @@ import java.util.Arrays;
 import java.util.List;
 
 
-public class SearchFragment extends Fragment {
+public class SearchFragment_User extends Fragment {
     DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();;
     DatabaseReference mRecipeRef = mRootRef.child("recipes");
     ListView listView;
@@ -39,7 +39,7 @@ public class SearchFragment extends Fragment {
     ArrayList<String> searchedIngredients;
     private static final String TAG = "Chiz";
 
-    public SearchFragment() {
+    public SearchFragment_User() {
         // Required empty public constructor
     }
 

@@ -10,18 +10,18 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 
-public class HomeFragment extends Fragment{
+public class HomeFragment_User extends Fragment{
 
     View view;
 
-    public HomeFragment() {
+    public HomeFragment_User() {
 
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_home, container, false);
+        view = inflater.inflate(R.layout.fragment_home_user, container, false);
         return view;
     }
 }
