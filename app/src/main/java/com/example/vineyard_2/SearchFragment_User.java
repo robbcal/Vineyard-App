@@ -14,14 +14,20 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.firebase.ui.database.FirebaseListAdapter;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,7 +35,9 @@ import java.util.List;
 
 
 public class SearchFragment_User extends Fragment {
-    DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();;
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
+    DatabaseReference mUserRef = mRootRef.child("users");
     DatabaseReference mRecipeRef = mRootRef.child("recipes");
     ListView listView;
     EditText searchField;
@@ -37,6 +45,7 @@ public class SearchFragment_User extends Fragment {
     Button clearButton;
     List<Recipes> rowItems;
     ArrayList<String> searchedIngredients;
+    FirebaseListAdapter<Recipe> mAdapter;
     private static final String TAG = "Chiz";
 
     public SearchFragment_User() {
@@ -45,8 +54,7 @@ public class SearchFragment_User extends Fragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_search, container, false);
 
@@ -75,47 +83,56 @@ public class SearchFragment_User extends Fragment {
     }
 
     public void getData(){
-        hideKeypad();
-        mRecipeRef.orderByChild("title").addListenerForSingleValueEvent(new ValueEventListener() {
+        mAdapter = new FirebaseListAdapter<Recipe>(getActivity(), Recipe.class, R.layout.custom_list, mRecipeRef.orderByChild("title")) {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                rowItems = new ArrayList<Recipes>();
-                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
-                    final String recipeKey = postSnapshot.getKey();
-                    final String title = postSnapshot.child("title").getValue(String.class);
-                    final String url = postSnapshot.child("url").getValue(String.class);
-                    final String image_url = postSnapshot.child("image_url").getValue(String.class);
+            protected void populateView(View view, Recipe r, int position) {
+                DatabaseReference recipeRef = getRef(position);
+                final String recipeKey = recipeRef.getKey();
 
-                    Log.d(TAG, "recipeKey: "+recipeKey);
-                    Log.d(TAG, "title: "+title);
-                    Log.d(TAG, "url: "+url);
-                    Log.d(TAG, "image_url: "+image_url);
-                    Log.d(TAG, "-----");
+                final String url = r.getUrl();
+                final String title = r.getTitle();
+                final String imgUrl = r.getImage_url();
 
-                    Recipes item = new Recipes(title, url, image_url, recipeKey);
-                    rowItems.add(item);
+                /*Log.d(TAG, "key: "+recipeKey);
+                Log.d(TAG, "title: "+title);
+                Log.d(TAG, "url: "+url);
+                Log.d(TAG, "image_url: "+imgUrl);
+                Log.d(TAG, "-----");*/
 
-                    RecipeListAdapter adapter = new RecipeListAdapter(getActivity().getApplicationContext(), rowItems);
-                    listView.setAdapter(adapter);
+                Picasso.with(getActivity().getApplicationContext()).load(imgUrl).error(R.drawable.placeholder_error).into((ImageView) view.findViewById(R.id.icon));
+                ((TextView)view.findViewById(R.id.Text1)).setText(title);
+                ((TextView) view.findViewById(R.id.Text2)).setText(url);
+                ((TextView) view.findViewById(R.id.Text3)).setText(recipeKey);
 
-                    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                            TextView text = (TextView) view.findViewById(R.id.Text2);
-                            String recipe_url = text.getText().toString().trim();
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getActivity().getApplicationContext(), SpecificRecipe.class);
+                        intent.putExtra("url", url);
+                        startActivity(intent);
+                    }
+                });
 
-                            Intent intent = new Intent(getActivity().getApplicationContext(), SpecificRecipe.class);
-                            intent.putExtra("url", recipe_url);
-                            startActivity(intent);
+                ((Button) view.findViewById(R.id.add)).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (user != null) {
+                            String uid = user.getUid();
+                            DatabaseReference mspecificUser = mUserRef.child(uid+"/recipes/"+recipeKey);
+                            mspecificUser.child("title").setValue(title);
+                            mspecificUser.child("url").setValue(url);
+                            mspecificUser.child("image_url").setValue(imgUrl);
+
+                            Toast.makeText(v.getContext(), title+" has been added.", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(v.getContext(), "Enjoy the full Vineyard experience through signing up/signing in.", Toast.LENGTH_LONG).show();
                         }
-                    });
-                }
+                    }
+                });
+
             }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
-            }
-        });
+        };
+        listView.setAdapter(mAdapter);
     }
 
     public void searchIngredient(){
@@ -134,11 +151,11 @@ public class SearchFragment_User extends Fragment {
                     final String image_url = postSnapshot.child("image_url").getValue(String.class);
                     DatabaseReference mIngredientRef = mRootRef.child("recipes/"+recipeKey+"/content/ingredients");
 
-                    Log.d(TAG, "recipeKey: "+recipeKey);
+                   /*Log.d(TAG, "recipeKey: "+recipeKey);
                     Log.d(TAG, "title: "+title);
                     Log.d(TAG, "url: "+url);
                     Log.d(TAG, "image_url: "+image_url);
-                    Log.d(TAG, "-----");
+                    Log.d(TAG, "-----");*/
 
                     mIngredientRef.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
@@ -154,11 +171,11 @@ public class SearchFragment_User extends Fragment {
                                     String search = searchedIngredients.get(a);
                                     if(ingr.contains(search.toLowerCase())) {
                                         count++;
-                                        Log.d(TAG, "test: ingredient found");
+                                       //Log.d(TAG, "test: ingredient found");
                                     }
                                 }
                             }
-                            Log.d(TAG, "title: "+title+"-size: "+size+"-count: "+count);
+                            //Log.d(TAG, "title: "+title+"-size: "+size+"-count: "+count);
                             if(count >= size) {
                                 Recipes item = new Recipes(title, url, image_url, recipeKey);
                                 rowItems.add(item);
@@ -179,7 +196,6 @@ public class SearchFragment_User extends Fragment {
                                 });
                             }
                         }
-
                         @Override
                         public void onCancelled(DatabaseError databaseError) {
                             Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
@@ -197,10 +213,10 @@ public class SearchFragment_User extends Fragment {
 
     public void getSearchedIngredient() {
         String string = searchField.getText().toString();
-        Log.d(TAG, "test: comma separated string: "+string);
+        //Log.d(TAG, "test: comma separated string: "+string);
 
         searchedIngredients = new ArrayList<String>(Arrays.asList(string.split(",|\\, |\\ , |\\ ,")));
-        Log.d(TAG, "test: ArrayList size: "+searchedIngredients.size());
+        //Log.d(TAG, "test: ArrayList size: "+searchedIngredients.size());
     }
 
     public void clearSearchText(){

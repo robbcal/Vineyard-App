@@ -44,10 +44,11 @@
         android:id="@+id/add"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="ADD RECIPE"
+        android:text="REMOVE RECIPE"
         android:textColor="@android:color/white"
-        android:background="@android:color/holo_blue_light"
+        android:background="@android:color/holo_red_light"
         android:focusable="false"
         android:focusableInTouchMode="false"
         />
+
 </LinearLayout>
