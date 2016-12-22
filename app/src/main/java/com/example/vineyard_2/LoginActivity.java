@@ -28,6 +28,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -36,13 +38,12 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseUser user;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private ProgressBar progressBar;
-    private Button btnLogin, btnGoogle;
+    private Button btnLogin, btnGoogle, btnSignUp, btnGuest, btnReset;
+
+    private DatabaseReference database;
 
     private static final int RC_SIGN_IN = 1;
     private GoogleApiClient mGoogleApiClient;
-
-    private String mUsername;
-    private String mPhotoUrl;
 
     private static final String TAG = "LOGIN_ACTIVITY";
     private ProgressDialog progress;
@@ -66,8 +67,13 @@ public class LoginActivity extends AppCompatActivity {
             }
         };
 
+        database = FirebaseDatabase.getInstance().getReference().child("users");
+
         btnGoogle = (Button) findViewById(R.id.google);
         btnLogin = (Button) findViewById(R.id.btn_login);
+        btnSignUp = (Button) findViewById(R.id.btn_signup);
+        btnGuest = (Button) findViewById(R.id.btn_guest);
+        btnReset = (Button) findViewById(R.id.btn_reset);
         inputEmail = (EditText) findViewById(R.id.email);
         inputPassword = (EditText) findViewById(R.id.password);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
@@ -107,6 +113,36 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        btnSignUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(LoginActivity.this, SignupActivity.class);
+                startActivity(intent);
+
+            }
+        });
+
+        btnReset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(LoginActivity.this, ResetPasswordActivity.class);
+                startActivity(intent);
+
+            }
+        });
+
+        btnGuest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(LoginActivity.this, LandingpageActivity.class);
+                startActivity(intent);
+
+            }
+        });
+
     }
 
     @Override
@@ -114,16 +150,6 @@ public class LoginActivity extends AppCompatActivity {
         super.onStart();
 
         auth.addAuthStateListener(mAuthListener);
-    }
-
-    public void onSignUpClicked(View view) {
-        Intent intent = new Intent(LoginActivity.this, SignupActivity.class);
-        startActivity(intent);
-    }
-
-    public void onGuestClicked(View view) {
-        Intent intent = new Intent(LoginActivity.this, LandingpageActivity.class);
-        startActivity(intent);
     }
 
     private void signIn() {
@@ -156,8 +182,8 @@ public class LoginActivity extends AppCompatActivity {
                         // If sign in fails, display a message to the user. If sign in succeeds
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
-                        progressBar.setVisibility(View.GONE);
                         if (!task.isSuccessful()) {
+                            progress.dismiss();
                             // there was an error
                             if (password.length() < 6) {
                                 inputPassword.setError(getString(R.string.minimum_password));
@@ -211,8 +237,23 @@ public class LoginActivity extends AppCompatActivity {
                             Log.w(TAG, "signInWithCredential", task.getException());
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
+                        }else {
+                            String userid = auth.getCurrentUser().getUid();
+                            String username = auth.getCurrentUser().getDisplayName();
+                            String email = auth.getCurrentUser().getEmail();
+                            String image = auth.getCurrentUser().getPhotoUrl().toString();
+
+                            DatabaseReference currentUserDB =  database.child(userid);
+                            currentUserDB.child("name").setValue(username);
+                            currentUserDB.child("image").setValue(image);
+                            currentUserDB.child("email").setValue(email);
+                            currentUserDB.child("usertype").setValue("user");
+
+                            progress.dismiss();
+                            Intent mainIntent = new Intent(LoginActivity.this, LandingpageActivity_User.class);
+                            mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(mainIntent);
                         }
-                        // ...
                     }
                 });
     }
