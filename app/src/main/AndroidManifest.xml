@@ -20,12 +20,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".SignupActivity"/>
-
+        <activity android:name=".SignupActivity" />
         <activity android:name=".LandingpageActivity" />
-
-
+        <activity android:name=".SpecificRecipe"></activity>
     </application>
 
 </manifest>
