@@ -34,7 +34,7 @@ import java.util.Arrays;
 import java.util.List;
 
 
-public class SearchFragment extends Fragment {
+public class SearchFragment_User extends Fragment {
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
     DatabaseReference mUserRef = mRootRef.child("users");
@@ -48,14 +48,13 @@ public class SearchFragment extends Fragment {
     FirebaseListAdapter<Recipe> mAdapter;
     private static final String TAG = "Chiz";
 
-    public SearchFragment() {
+    public SearchFragment_User() {
         // Required empty public constructor
     }
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_search, container, false);
 
@@ -152,7 +151,7 @@ public class SearchFragment extends Fragment {
                     final String image_url = postSnapshot.child("image_url").getValue(String.class);
                     DatabaseReference mIngredientRef = mRootRef.child("recipes/"+recipeKey+"/content/ingredients");
 
-                    /*Log.d(TAG, "recipeKey: "+recipeKey);
+                   /*Log.d(TAG, "recipeKey: "+recipeKey);
                     Log.d(TAG, "title: "+title);
                     Log.d(TAG, "url: "+url);
                     Log.d(TAG, "image_url: "+image_url);
@@ -172,7 +171,7 @@ public class SearchFragment extends Fragment {
                                     String search = searchedIngredients.get(a);
                                     if(ingr.contains(search.toLowerCase())) {
                                         count++;
-                                        //Log.d(TAG, "test: ingredient found");
+                                       //Log.d(TAG, "test: ingredient found");
                                     }
                                 }
                             }
@@ -197,7 +196,6 @@ public class SearchFragment extends Fragment {
                                 });
                             }
                         }
-
                         @Override
                         public void onCancelled(DatabaseError databaseError) {
                             Log.w(TAG, "loadPost:onCancelled", databaseError.toException());

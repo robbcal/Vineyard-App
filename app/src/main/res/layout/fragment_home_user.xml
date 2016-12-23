@@ -1,16 +1,17 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.vineyard_2.SearchFragment"
-    android:background="@drawable/nrecipesearch">
+    tools:context="com.example.vineyard_2.HomeFragment_User"
+    android:background="@drawable/nhomepage">
 
     <EditText
         android:id="@+id/search_field"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Input ingredient/s"
+        android:hint="Input recipe"
         android:layout_marginTop="56dp"
         android:background="@android:color/white"
         android:drawableLeft="@android:drawable/ic_menu_search"
@@ -35,7 +36,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="SEARCH"
-        android:onClick="searchIngredient"
+        android:onClick="searchRecipe"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         />

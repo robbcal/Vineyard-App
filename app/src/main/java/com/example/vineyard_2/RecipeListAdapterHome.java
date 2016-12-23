@@ -23,14 +23,14 @@ import java.util.List;
  * Created by chiz on 12/22/16.
  */
 
-public class RecipeListAdapter extends BaseAdapter {
+public class RecipeListAdapterHome extends BaseAdapter {
     Context context;
     List<Recipes> rowItems;
     DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
     DatabaseReference mUserRef = mRootRef.child("users");
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-    public RecipeListAdapter ( Context context, List<Recipes> items ) {
+    public RecipeListAdapterHome (Context context, List<Recipes> items ) {
         this.context = context;
         this.rowItems = items;
     }
@@ -43,14 +43,14 @@ public class RecipeListAdapter extends BaseAdapter {
         Button addRecipe;
     }
 
-    public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder = null;
+    public View getView(final int position, View convertView, ViewGroup parent) {
+        RecipeListAdapterHome.ViewHolder holder = null;
 
         LayoutInflater mInflater = (LayoutInflater)
                 context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.custom_list, null);
-            holder = new ViewHolder();
+            convertView = mInflater.inflate(R.layout.custom_list_home, null);
+            holder = new RecipeListAdapterHome.ViewHolder();
             holder.txtUrl = (TextView) convertView.findViewById(R.id.Text2);
             holder.txtTitle = (TextView) convertView.findViewById(R.id.Text1);
             holder.imageView = (ImageView) convertView.findViewById(R.id.icon);
@@ -59,7 +59,7 @@ public class RecipeListAdapter extends BaseAdapter {
             convertView.setTag(holder);
         }
         else {
-            holder = (ViewHolder) convertView.getTag();
+            holder = (RecipeListAdapterHome.ViewHolder) convertView.getTag();
         }
 
         final Recipes rowItem = (Recipes) getItem(position);
@@ -76,17 +76,12 @@ public class RecipeListAdapter extends BaseAdapter {
 
         holder.addRecipe.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if (user != null) {
-                    String uid = user.getUid();
-                    DatabaseReference mspecificUser = mUserRef.child(uid+"/recipes/"+id);
-                    mspecificUser.child("title").setValue(title);
-                    mspecificUser.child("url").setValue(url);
-                    mspecificUser.child("image_url").setValue(img_url);
-
-                    Toast.makeText(v.getContext(), title+" has been added.", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(v.getContext(), "Enjoy the full Vineyard experience through signing up/signing in.", Toast.LENGTH_LONG).show();
-                }
+                String uid = user.getUid();
+                DatabaseReference mUserRecipe = mUserRef.child(uid+"/recipes");
+                mUserRecipe.child(id).removeValue();
+                rowItems.remove(rowItem);
+                RecipeListAdapterHome.this.notifyDataSetChanged();
+                Toast.makeText(v.getContext(), title+" removed.", Toast.LENGTH_SHORT).show();
             }
         });
 
