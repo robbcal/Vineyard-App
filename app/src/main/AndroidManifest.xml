@@ -24,6 +24,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".SignupActivity" />
+        <activity android:name=".ResetPasswordActivity" />
+        <activity android:name=".ProfileEditActivity" />
         <activity android:name=".LandingpageActivity" />
         <activity android:name=".LandingpageActivity_User" />
         <activity android:name=".SpecificRecipe"></activity>

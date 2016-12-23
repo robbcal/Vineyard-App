@@ -46,6 +46,17 @@
             android:textColorHint="@android:color/white"
             android:layout_weight="0.10" />
 
+        <Button
+            android:id="@+id/btn_reset"
+            android:background="@drawable/forgotpassword"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:textSize="15dp"
+            android:layout_width="140dp"
+            android:layout_height="15dp"
+            android:layout_gravity="left"
+            android:layout_marginTop="20dp" />
+
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -62,47 +73,30 @@
 
         <Button
             android:id="@+id/btn_login"
-            android:layout_marginTop="90dp"
+            android:layout_marginTop="70dp"
             android:background="@drawable/nloginbtn"
             android:layout_weight="0.24"
             android:layout_width="340dp"
-            android:layout_height="18dp" />
+            android:layout_height="10dp"/>
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="45dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="10dp"
-            android:layout_weight="0.01">
-
-            <Button
-                android:id="@+id/facebook"
-                android:layout_width="168dp"
-                android:layout_height="45dp"
-                android:background="@drawable/facebooklink"/>
-            <Button
-                android:id="@+id/google"
-                android:layout_width="168dp"
-                android:layout_height="45dp"
-                android:background="@drawable/googlelink"
-                android:layout_toRightOf="@id/facebook"/>
-
-        </RelativeLayout>
+        <Button
+            android:id="@+id/google"
+            android:background="@drawable/nsocialbtn"
+            android:layout_weight="0.24"
+            android:layout_width="340dp"
+            android:layout_height="10dp" />
 
 
         <Button
             android:id="@+id/btn_signup"
-            android:layout_marginTop="10dip"
+            android:layout_marginTop="20dip"
             android:background="@drawable/donthaveanaccount"
             android:textAllCaps="false"
             android:textColor="@android:color/white"
-            android:onClick="onSignUpClicked"
             android:textSize="15dp"
-            android:layout_weight="0.02"
-            android:layout_width="185dp"
-            android:layout_height="27dp" />
-
-        <!-- Link to Login Screen -->
+            android:layout_width="216dp"
+            android:layout_height="14dp"
+            android:layout_weight="0.02" />
 
         <Button
             android:id="@+id/btn_guest"
@@ -110,9 +104,11 @@
             android:textAllCaps="false"
             android:textColor="@android:color/white"
             android:textSize="15dp"
-            android:onClick="onGuestClicked"
-            android:layout_width="140dp"
-            android:layout_height="30dp" />
+            android:layout_width="130dp"
+            android:layout_height="13dp"
+            android:layout_marginTop="15dip"
+            android:layout_weight="0.02"
+            android:layout_marginBottom="10dip" />
     </LinearLayout>
 
     <ProgressBar

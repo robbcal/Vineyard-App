@@ -171,7 +171,7 @@ public class SearchFragment_User extends Fragment {
                                     String search = searchedIngredients.get(a);
                                     if(ingr.contains(search.toLowerCase())) {
                                         count++;
-                                       //Log.d(TAG, "test: ingredient found");
+                                        //Log.d(TAG, "test: ingredient found");
                                     }
                                 }
                             }
@@ -235,3 +235,4 @@ public class SearchFragment_User extends Fragment {
     }
 
 }
+
