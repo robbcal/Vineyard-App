@@ -2,12 +2,14 @@ package com.example.vineyard_2;
 
 import android.app.Activity;
 import android.content.Context;
+import android.media.Image;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,10 +24,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
-
-/**
- * Created by chiz on 12/22/16.
- */
 
 public class RecipeListAdapter extends BaseAdapter {
     Context context;
@@ -46,7 +44,8 @@ public class RecipeListAdapter extends BaseAdapter {
         TextView txtTitle;
         TextView txtUrl;
         TextView txtID;
-        Button addRecipe;
+        ImageButton addRecipe;
+        TextView txtDescription;
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -57,11 +56,13 @@ public class RecipeListAdapter extends BaseAdapter {
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.custom_list, null);
             holder = new ViewHolder();
-            holder.txtUrl = (TextView) convertView.findViewById(R.id.Text2);
-            holder.txtTitle = (TextView) convertView.findViewById(R.id.Text1);
+            holder.txtUrl = (TextView) convertView.findViewById(R.id.recipe_url);
+            holder.txtTitle = (TextView) convertView.findViewById(R.id.recipe_title);
             holder.imageView = (ImageView) convertView.findViewById(R.id.icon);
-            holder.txtID = (TextView) convertView.findViewById(R.id.Text3);
-            holder.addRecipe = (Button) convertView.findViewById(R.id.add);
+            holder.txtDescription = (TextView) convertView.findViewById(R.id.recipe_description);
+            holder.txtID = (TextView) convertView.findViewById(R.id.recipe_key);
+
+            holder.addRecipe = (ImageButton) convertView.findViewById(R.id.add);
             convertView.setTag(holder);
         }
         else {
@@ -74,17 +75,23 @@ public class RecipeListAdapter extends BaseAdapter {
         final String title = rowItem.getTitle();
         final String img_url = rowItem.getImage_url();
         final String id = rowItem.getID();
+        final String description = rowItem.getDescription();
 
         holder.txtUrl.setText(url);
         holder.txtTitle.setText(title);
         Picasso.with(context).load(img_url).error(R.drawable.placeholder_error).into(holder.imageView);
         holder.txtID.setText(id);
+        holder.txtDescription.setText(description);
 
         holder.addRecipe.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (user != null) {
                     String uid = user.getUid();
                     final DatabaseReference mspecificUser = mUserRef.child(uid+"/recipes/"+id);
+                    mspecificUser.child("title").setValue(title);
+                    mspecificUser.child("url").setValue(url);
+                    mspecificUser.child("image_url").setValue(img_url);
+                    mspecificUser.child("description").setValue(description);
 
                     mRecipeRef.child(id).addValueEventListener(new ValueEventListener() {
                         @Override

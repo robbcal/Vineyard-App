@@ -5,90 +5,94 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.example.vineyard_2.ProfileFragment_User">
 
-    <ScrollView android:id="@+id/ScrollView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="49dp">
 
+        <ImageView
+            android:id="@+id/header_cover_image"
+            android:layout_width="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/header"
+            android:layout_height="260dp" />
+
+        <ImageButton
+            android:id="@+id/user_profile_photo"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_below="@+id/header_cover_image"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="-60dp"
+            android:background="@drawable/chef"
+            android:elevation="5dp"
+            android:scaleType="centerCrop"
+            />
 
         <RelativeLayout
+            android:id="@+id/profile_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="49dp">
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/header_cover_image"
+            android:background="#fff"
+            android:elevation="4dp"
+            android:paddingBottom="24dp">
 
-            <ImageView
-                android:id="@+id/header_cover_image"
-                android:layout_width="match_parent"
-                android:scaleType="centerCrop"
-                android:src="@drawable/header"
-                android:layout_height="240dp" />
-
-            <ImageButton
-                android:id="@+id/user_profile_photo"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
-                android:layout_below="@+id/header_cover_image"
+            <TextView
+                android:id="@+id/user_profile_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="-60dp"
-                android:background="@drawable/chef"
-                android:elevation="5dp"
-                android:scaleType="centerCrop"
-                />
+                android:layout_marginTop="76dp"
+                android:textColor="#000"
+                android:text="Name"
+                android:textSize="32sp"
+                android:textStyle="bold" />
 
-            <RelativeLayout
-                android:id="@+id/profile_layout"
-                android:layout_width="match_parent"
-                android:layout_height="320dp"
-                android:layout_below="@+id/header_cover_image"
-                android:background="#fff"
-                android:elevation="4dp"
-                android:paddingBottom="24dp">
-
-                <TextView
-                    android:id="@+id/user_profile_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="76dp"
-                    android:textColor="#000"
-                    android:text="Name"
-                    android:textSize="30sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/user_email"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="115dp"
-                    android:text="Email"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-
-                <Button
-                    android:id="@+id/btn_logout"
-                    android:background="@drawable/nsignoutbtn"
-                    android:layout_width="340dp"
-                    android:layout_height="60dp"
-                    android:layout_weight="0.33"
-                    android:layout_gravity="center_horizontal"
-                    android:onClick="onClickLogout"
-                    android:layout_below="@+id/btn_edit"
-                    android:layout_alignLeft="@+id/btn_edit"
-                    android:layout_alignStart="@+id/btn_edit" />
-
-                <Button
-                    android:id="@+id/btn_edit"
-                    android:background="@drawable/editdetails"
-                    android:layout_width="340dp"
-                    android:layout_height="60dp"
-                    android:layout_weight="0.33"
-                    android:layout_gravity="center_horizontal"
-                    android:onClick="onClickEdit"
-                    android:layout_marginTop="41dp"
-                    android:layout_below="@+id/user_email"
-                    android:layout_centerHorizontal="true" />
-            </RelativeLayout>
-
+            <TextView
+                android:id="@+id/user_email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="115dp"
+                android:text="Email"
+                android:textSize="16sp"
+                android:textStyle="bold" />
         </RelativeLayout>
-    </ScrollView>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="450dp"
+        android:layout_gravity="center|bottom">
+
+        <Button
+            android:id="@+id/btn_edit"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="#fff"
+            android:clickable="true"
+            android:onClick="onClickEdit"
+            android:elevation="3dp"
+            android:text="EDIT DETAILS"/>
+
+        <Button
+            android:id="@+id/btn_logout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/cardview_dark_background"
+            android:clickable="true"
+            android:onClick="onClickLogout"
+            android:elevation="3dp"
+            android:text="SIGN OUT"
+            android:layout_gravity="bottom"
+            android:textColor="@color/white"
+            android:layout_marginTop="20dp"/>
+
+    </LinearLayout>
+
 </FrameLayout>
+

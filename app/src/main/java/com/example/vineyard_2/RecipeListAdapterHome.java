@@ -19,10 +19,6 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-/**
- * Created by chiz on 12/22/16.
- */
-
 public class RecipeListAdapterHome extends BaseAdapter {
     Context context;
     List<Recipes> rowItems;
@@ -51,10 +47,10 @@ public class RecipeListAdapterHome extends BaseAdapter {
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.custom_list_home, null);
             holder = new RecipeListAdapterHome.ViewHolder();
-            holder.txtUrl = (TextView) convertView.findViewById(R.id.Text2);
-            holder.txtTitle = (TextView) convertView.findViewById(R.id.Text1);
+            holder.txtUrl = (TextView) convertView.findViewById(R.id.recipe_url);
+            holder.txtTitle = (TextView) convertView.findViewById(R.id.recipe_title);
             holder.imageView = (ImageView) convertView.findViewById(R.id.icon);
-            holder.txtID = (TextView) convertView.findViewById(R.id.Text3);
+            holder.txtID = (TextView) convertView.findViewById(R.id.recipe_key);
             holder.addRecipe = (Button) convertView.findViewById(R.id.add);
             convertView.setTag(holder);
         }

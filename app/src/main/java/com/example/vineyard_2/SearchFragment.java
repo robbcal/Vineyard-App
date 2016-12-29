@@ -14,6 +14,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -94,16 +95,10 @@ public class SearchFragment extends Fragment {
                 final String title = r.getTitle();
                 final String imgUrl = r.getImage_url();
 
-                /*Log.d(TAG, "key: "+recipeKey);
-                Log.d(TAG, "title: "+title);
-                Log.d(TAG, "url: "+url);
-                Log.d(TAG, "image_url: "+imgUrl);
-                Log.d(TAG, "-----");*/
-
                 Picasso.with(getActivity().getApplicationContext()).load(imgUrl).error(R.drawable.placeholder_error).into((ImageView) view.findViewById(R.id.icon));
-                ((TextView)view.findViewById(R.id.Text1)).setText(title);
-                ((TextView) view.findViewById(R.id.Text2)).setText(url);
-                ((TextView) view.findViewById(R.id.Text3)).setText(recipeKey);
+                ((TextView)view.findViewById(R.id.recipe_title)).setText(title);
+                ((TextView) view.findViewById(R.id.recipe_url)).setText(url);
+                ((TextView) view.findViewById(R.id.recipe_key)).setText(recipeKey);
 
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -114,7 +109,7 @@ public class SearchFragment extends Fragment {
                     }
                 });
 
-                ((Button) view.findViewById(R.id.add)).setOnClickListener(new View.OnClickListener() {
+                ((ImageButton) view.findViewById(R.id.add)).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (user != null) {
@@ -152,12 +147,6 @@ public class SearchFragment extends Fragment {
                     final String image_url = postSnapshot.child("image_url").getValue(String.class);
                     DatabaseReference mIngredientRef = mRootRef.child("recipes/"+recipeKey+"/content/ingredients");
 
-                    /*Log.d(TAG, "recipeKey: "+recipeKey);
-                    Log.d(TAG, "title: "+title);
-                    Log.d(TAG, "url: "+url);
-                    Log.d(TAG, "image_url: "+image_url);
-                    Log.d(TAG, "-----");*/
-
                     mIngredientRef.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -172,11 +161,9 @@ public class SearchFragment extends Fragment {
                                     String search = searchedIngredients.get(a);
                                     if(ingr.contains(search.toLowerCase())) {
                                         count++;
-                                        //Log.d(TAG, "test: ingredient found");
                                     }
                                 }
                             }
-                            //Log.d(TAG, "title: "+title+"-size: "+size+"-count: "+count);
                             if(count >= size) {
                                 Recipes item = new Recipes(title, url, image_url, recipeKey);
                                 rowItems.add(item);
@@ -187,7 +174,7 @@ public class SearchFragment extends Fragment {
                                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                     @Override
                                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                        TextView text = (TextView) view.findViewById(R.id.Text2);
+                                        TextView text = (TextView) view.findViewById(R.id.recipe_url);
                                         String recipe_url = text.getText().toString().trim();
 
                                         Intent intent = new Intent(getActivity().getApplicationContext(), SpecificRecipe.class);

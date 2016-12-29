@@ -1,13 +1,11 @@
 package com.example.vineyard_2;
 
-/**
- * Created by chiz on 12/23/16.
- */
 
 public class Recipe {
     private String title;
     private String url;
     private String image_url;
+    private String description;
 
     public Recipe() {
     }
@@ -16,10 +14,15 @@ public class Recipe {
         this.title = title;
         this.url = url;
         this.image_url = image_url;
+        this.description = description;
     }
 
     public String getTitle() {
         return title;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public String getUrl() {

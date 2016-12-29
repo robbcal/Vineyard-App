@@ -14,6 +14,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -35,22 +36,22 @@ import java.util.List;
 
 public class HomeFragment_User extends Fragment{
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
     String uid = user.getUid();
     DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
     DatabaseReference mRecipeRef = mRootRef.child("users/"+uid+"/recipes");
+
     ListView listView;
     EditText searchField;
     Button searchButton;
     Button clearButton;
     List<Recipes> rowItems;
     RecipeListAdapterHome adapter;
-    FirebaseListAdapter<Recipe> mAdapter;
-    private static final String TAG = "Chiz";
+    FirebaseListAdapter<Recipe> mAdapter = null;
+    private static final String TAG = "Vineyard";
     View v;
 
-    public HomeFragment_User() {
-
-    }
+    public HomeFragment_User() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -83,6 +84,7 @@ public class HomeFragment_User extends Fragment{
     }
 
     public void getData(){
+
         mAdapter = new FirebaseListAdapter<Recipe>(getActivity(), Recipe.class, R.layout.custom_list_home, mRecipeRef.orderByChild("title")) {
             @Override
             protected void populateView(View view, Recipe r, int position) {
@@ -92,17 +94,13 @@ public class HomeFragment_User extends Fragment{
                 final String url = r.getUrl();
                 final String title = r.getTitle();
                 final String imgUrl = r.getImage_url();
-
-                /*Log.d(TAG, "key: "+recipeKey);
-                Log.d(TAG, "title: "+title);
-                Log.d(TAG, "url: "+url);
-                Log.d(TAG, "image_url: "+imgUrl);
-                Log.d(TAG, "-----");*/
+                final String description = r.getDescription();
 
                 Picasso.with(getActivity().getApplicationContext()).load(imgUrl).error(R.drawable.placeholder_error).into((ImageView) view.findViewById(R.id.icon));
-                ((TextView)view.findViewById(R.id.Text1)).setText(title);
-                ((TextView) view.findViewById(R.id.Text2)).setText(url);
-                ((TextView) view.findViewById(R.id.Text3)).setText(recipeKey);
+                ((TextView)view.findViewById(R.id.recipe_title)).setText(title);
+                ((TextView) view.findViewById(R.id.recipe_url)).setText(url);
+                ((TextView) view.findViewById(R.id.recipe_key)).setText(recipeKey);
+                ((TextView) view.findViewById(R.id.recipe_description)).setText(description);
 
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -114,7 +112,7 @@ public class HomeFragment_User extends Fragment{
                     }
                 });
 
-                ((Button) view.findViewById(R.id.add)).setOnClickListener(new View.OnClickListener() {
+                ((ImageButton) view.findViewById(R.id.remove)).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         mRecipeRef.child(recipeKey).removeValue();
@@ -128,6 +126,7 @@ public class HomeFragment_User extends Fragment{
     }
 
     public void searchRecipe(){
+
         hideKeypad();
         listView.setAdapter(null);
         final String search = searchField.getText().toString();
@@ -141,16 +140,10 @@ public class HomeFragment_User extends Fragment{
                     final String title = postSnapshot.child("title").getValue(String.class);
                     final String url = postSnapshot.child("url").getValue(String.class);
                     final String image_url = postSnapshot.child("image_url").getValue(String.class);
+                    final String description = postSnapshot.child("description").getValue(String.class);
                     String t = title.toLowerCase();
 
-                    /*Log.d(TAG, "recipeKey: "+recipeKey);
-                    Log.d(TAG, "title: "+title);
-                    Log.d(TAG, "url: "+url);
-                    Log.d(TAG, "image_url: "+image_url);
-                    Log.d(TAG, "-----");*/
-
                     if(t.contains(search.toLowerCase())){
-                        //Log.d(TAG, "test: recipe found");
                         Recipes item = new Recipes(title, url, image_url, recipeKey);
                         rowItems.add(item);
 
@@ -160,7 +153,7 @@ public class HomeFragment_User extends Fragment{
                         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                             @Override
                             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                TextView text = (TextView) view.findViewById(R.id.Text2);
+                                TextView text = (TextView) view.findViewById(R.id.recipe_url);
                                 String recipe_url = text.getText().toString().trim();
 
                                 Intent intent = new Intent(getActivity().getApplicationContext(), SpecificRecipe_User.class);

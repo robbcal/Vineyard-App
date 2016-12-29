@@ -3,8 +3,12 @@ package com.example.vineyard_2;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +18,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -39,6 +44,7 @@ public class SearchFragment_User extends Fragment {
     DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
     DatabaseReference mUserRef = mRootRef.child("users");
     DatabaseReference mRecipeRef = mRootRef.child("recipes");
+
     ListView listView;
     EditText searchField;
     Button searchButton;
@@ -46,22 +52,22 @@ public class SearchFragment_User extends Fragment {
     List<Recipes> rowItems;
     ArrayList<String> searchedIngredients;
     FirebaseListAdapter<Recipe> mAdapter;
-    private static final String TAG = "Chiz";
+    private static final String TAG = "Vineyard";
 
     public SearchFragment_User() {
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_search, container, false);
+        View v = inflater.inflate(R.layout.fragment_search_user, container, false);
 
         searchField =(EditText)v.findViewById(R.id.search_field);
         searchButton = (Button)v.findViewById(R.id.search_button);
         clearButton = (Button)v.findViewById(R.id.clearSearch);
         listView = (ListView)v.findViewById(R.id.recipe_list);
+
 
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
@@ -92,17 +98,13 @@ public class SearchFragment_User extends Fragment {
                 final String url = r.getUrl();
                 final String title = r.getTitle();
                 final String imgUrl = r.getImage_url();
-
-                /*Log.d(TAG, "key: "+recipeKey);
-                Log.d(TAG, "title: "+title);
-                Log.d(TAG, "url: "+url);
-                Log.d(TAG, "image_url: "+imgUrl);
-                Log.d(TAG, "-----");*/
+                final String description = r.getDescription();
 
                 Picasso.with(getActivity().getApplicationContext()).load(imgUrl).error(R.drawable.placeholder_error).into((ImageView) view.findViewById(R.id.icon));
-                ((TextView)view.findViewById(R.id.Text1)).setText(title);
-                ((TextView) view.findViewById(R.id.Text2)).setText(url);
-                ((TextView) view.findViewById(R.id.Text3)).setText(recipeKey);
+                ((TextView)view.findViewById(R.id.recipe_title)).setText(title);
+                ((TextView) view.findViewById(R.id.recipe_url)).setText(url);
+                ((TextView) view.findViewById(R.id.recipe_key)).setText(recipeKey);
+                ((TextView) view.findViewById(R.id.recipe_description)).setText(description);
 
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -114,9 +116,10 @@ public class SearchFragment_User extends Fragment {
                     }
                 });
 
-                ((Button) view.findViewById(R.id.add)).setOnClickListener(new View.OnClickListener() {
+                ((ImageButton) view.findViewById(R.id.add)).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+
                         if (user != null) {
                             String uid = user.getUid();
                             final DatabaseReference mspecificUser = mUserRef.child(uid+"/recipes/"+recipeKey);
@@ -137,6 +140,7 @@ public class SearchFragment_User extends Fragment {
                         } else {
                             Toast.makeText(v.getContext(), "Enjoy the full Vineyard experience through signing up/signing in.", Toast.LENGTH_LONG).show();
                         }
+
                     }
                 });
 
@@ -159,13 +163,8 @@ public class SearchFragment_User extends Fragment {
                     final String title = postSnapshot.child("title").getValue(String.class);
                     final String url = postSnapshot.child("url").getValue(String.class);
                     final String image_url = postSnapshot.child("image_url").getValue(String.class);
+                    final String description = postSnapshot.child("description").getValue(String.class);
                     DatabaseReference mIngredientRef = mRootRef.child("recipes/"+recipeKey+"/content/ingredients");
-
-                   /*Log.d(TAG, "recipeKey: "+recipeKey);
-                    Log.d(TAG, "title: "+title);
-                    Log.d(TAG, "url: "+url);
-                    Log.d(TAG, "image_url: "+image_url);
-                    Log.d(TAG, "-----");*/
 
                     mIngredientRef.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
@@ -181,11 +180,9 @@ public class SearchFragment_User extends Fragment {
                                     String search = searchedIngredients.get(a);
                                     if(ingr.contains(search.toLowerCase())) {
                                         count++;
-                                        //Log.d(TAG, "test: ingredient found");
                                     }
                                 }
                             }
-                            //Log.d(TAG, "title: "+title+"-size: "+size+"-count: "+count);
                             if(count >= size) {
                                 Recipes item = new Recipes(title, url, image_url, recipeKey);
                                 rowItems.add(item);
@@ -196,7 +193,7 @@ public class SearchFragment_User extends Fragment {
                                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                     @Override
                                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                        TextView text = (TextView) view.findViewById(R.id.Text2);
+                                        TextView text = (TextView) view.findViewById(R.id.recipe_url);
                                         String recipe_url = text.getText().toString().trim();
 
                                         Intent intent = new Intent(getActivity().getApplicationContext(), SpecificRecipe.class);

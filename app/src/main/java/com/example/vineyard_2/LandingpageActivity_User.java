@@ -69,6 +69,7 @@ public class LandingpageActivity_User extends AppCompatActivity {
         tabLayout.getTabAt(0).setIcon(R.drawable.nhome);
         tabLayout.getTabAt(1).setIcon(R.drawable.nsearch);
         tabLayout.getTabAt(2).setIcon(R.drawable.nmenu);
+
     }
 
     @Override

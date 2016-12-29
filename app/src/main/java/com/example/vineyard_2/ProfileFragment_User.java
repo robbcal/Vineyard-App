@@ -1,6 +1,7 @@
 package com.example.vineyard_2;
 
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.Image;
 import android.net.Uri;
@@ -9,9 +10,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -26,6 +29,7 @@ public class ProfileFragment_User extends Fragment {
 
     private TextView userProfileName, userProfileEmail;
     private ImageButton userProfilePhoto;
+
     private FirebaseAuth auth;
     private FirebaseUser user;
     private DatabaseReference databaseUser;
