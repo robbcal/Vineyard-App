@@ -14,10 +14,8 @@ public class SpecificRecipe extends AppCompatActivity {
 
         Intent intent = getIntent();
         String url = intent.getStringExtra("url");
-
         WebView webview = new WebView(this);
         setContentView(webview);
-
         webview.loadUrl(url);
     }
 }

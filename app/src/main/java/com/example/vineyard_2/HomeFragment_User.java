@@ -107,7 +107,8 @@ public class HomeFragment_User extends Fragment{
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(getActivity().getApplicationContext(), SpecificRecipe.class);
+                        Intent intent = new Intent(getActivity().getApplicationContext(), SpecificRecipe_User.class);
+                        intent.putExtra("key", recipeKey);
                         intent.putExtra("url", url);
                         startActivity(intent);
                     }
@@ -162,7 +163,8 @@ public class HomeFragment_User extends Fragment{
                                 TextView text = (TextView) view.findViewById(R.id.Text2);
                                 String recipe_url = text.getText().toString().trim();
 
-                                Intent intent = new Intent(getActivity().getApplicationContext(), SpecificRecipe.class);
+                                Intent intent = new Intent(getActivity().getApplicationContext(), SpecificRecipe_User.class);
+                                intent.putExtra("key", recipeKey);
                                 intent.putExtra("url", recipe_url);
                                 startActivity(intent);
                             }

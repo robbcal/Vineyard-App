@@ -108,6 +108,7 @@ public class SearchFragment_User extends Fragment {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(getActivity().getApplicationContext(), SpecificRecipe.class);
+                        intent.putExtra("key", recipeKey);
                         intent.putExtra("url", url);
                         startActivity(intent);
                     }
@@ -118,10 +119,19 @@ public class SearchFragment_User extends Fragment {
                     public void onClick(View v) {
                         if (user != null) {
                             String uid = user.getUid();
-                            DatabaseReference mspecificUser = mUserRef.child(uid+"/recipes/"+recipeKey);
-                            mspecificUser.child("title").setValue(title);
-                            mspecificUser.child("url").setValue(url);
-                            mspecificUser.child("image_url").setValue(imgUrl);
+                            final DatabaseReference mspecificUser = mUserRef.child(uid+"/recipes/"+recipeKey);
+
+                            mRecipeRef.child(recipeKey).addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot snapshot) {
+                                    //Log.d(TAG, "value"+snapshot.getValue());
+                                    mspecificUser.setValue(snapshot.getValue());
+
+                                }
+                                @Override public void onCancelled(DatabaseError databaseError) {
+                                    Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                                }
+                            });
 
                             Toast.makeText(v.getContext(), title+" has been added.", Toast.LENGTH_SHORT).show();
                         } else {
@@ -190,6 +200,7 @@ public class SearchFragment_User extends Fragment {
                                         String recipe_url = text.getText().toString().trim();
 
                                         Intent intent = new Intent(getActivity().getApplicationContext(), SpecificRecipe.class);
+                                        intent.putExtra("key", recipeKey);
                                         intent.putExtra("url", recipe_url);
                                         startActivity(intent);
                                     }

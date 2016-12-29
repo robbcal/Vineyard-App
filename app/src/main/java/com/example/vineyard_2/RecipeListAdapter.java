@@ -2,6 +2,7 @@ package com.example.vineyard_2;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +14,11 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -27,7 +31,9 @@ public class RecipeListAdapter extends BaseAdapter {
     Context context;
     List<Recipes> rowItems;
     DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
+    DatabaseReference mRecipeRef = mRootRef.child("recipes");
     DatabaseReference mUserRef = mRootRef.child("users");
+    private static final String TAG = "Chiz";
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
     public RecipeListAdapter ( Context context, List<Recipes> items ) {
@@ -78,10 +84,19 @@ public class RecipeListAdapter extends BaseAdapter {
             public void onClick(View v) {
                 if (user != null) {
                     String uid = user.getUid();
-                    DatabaseReference mspecificUser = mUserRef.child(uid+"/recipes/"+id);
-                    mspecificUser.child("title").setValue(title);
-                    mspecificUser.child("url").setValue(url);
-                    mspecificUser.child("image_url").setValue(img_url);
+                    final DatabaseReference mspecificUser = mUserRef.child(uid+"/recipes/"+id);
+
+                    mRecipeRef.child(id).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot snapshot) {
+                            //Log.d(TAG, "value"+snapshot.getValue());
+                            mspecificUser.setValue(snapshot.getValue());
+
+                        }
+                        @Override public void onCancelled(DatabaseError databaseError) {
+                            Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                        }
+                    });
 
                     Toast.makeText(v.getContext(), title+" has been added.", Toast.LENGTH_SHORT).show();
                 } else {
