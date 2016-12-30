@@ -63,11 +63,10 @@ public class SearchFragment_User extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_search_user, container, false);
 
-        searchField =(EditText)v.findViewById(R.id.search_field);
-        searchButton = (Button)v.findViewById(R.id.search_button);
-        clearButton = (Button)v.findViewById(R.id.clearSearch);
-        listView = (ListView)v.findViewById(R.id.recipe_list);
-
+        searchField =(EditText) v.findViewById(R.id.search_field);
+        searchButton = (Button) v.findViewById(R.id.search_button);
+        clearButton = (Button) v.findViewById(R.id.clearSearch);
+        listView = (ListView) v.findViewById(R.id.recipe_list);
 
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
@@ -127,7 +126,6 @@ public class SearchFragment_User extends Fragment {
                             mRecipeRef.child(recipeKey).addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot snapshot) {
-                                    //Log.d(TAG, "value"+snapshot.getValue());
                                     mspecificUser.setValue(snapshot.getValue());
 
                                 }
@@ -164,6 +162,7 @@ public class SearchFragment_User extends Fragment {
                     final String url = postSnapshot.child("url").getValue(String.class);
                     final String image_url = postSnapshot.child("image_url").getValue(String.class);
                     final String description = postSnapshot.child("description").getValue(String.class);
+
                     DatabaseReference mIngredientRef = mRootRef.child("recipes/"+recipeKey+"/content/ingredients");
 
                     mIngredientRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -184,7 +183,7 @@ public class SearchFragment_User extends Fragment {
                                 }
                             }
                             if(count >= size) {
-                                Recipes item = new Recipes(title, url, image_url, recipeKey);
+                                Recipes item = new Recipes(title, url, image_url, recipeKey, description);
                                 rowItems.add(item);
 
                                 RecipeListAdapter adapter = new RecipeListAdapter(getActivity().getApplicationContext(), rowItems);

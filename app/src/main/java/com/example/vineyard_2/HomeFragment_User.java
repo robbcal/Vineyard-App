@@ -141,10 +141,11 @@ public class HomeFragment_User extends Fragment{
                     final String url = postSnapshot.child("url").getValue(String.class);
                     final String image_url = postSnapshot.child("image_url").getValue(String.class);
                     final String description = postSnapshot.child("description").getValue(String.class);
+
                     String t = title.toLowerCase();
 
                     if(t.contains(search.toLowerCase())){
-                        Recipes item = new Recipes(title, url, image_url, recipeKey);
+                        Recipes item = new Recipes(title, url, image_url, recipeKey, description);
                         rowItems.add(item);
 
                         adapter = new RecipeListAdapterHome(getActivity().getApplicationContext(), rowItems);

@@ -10,7 +10,7 @@ public class Recipes {
     public Recipes() {
     }
 
-    public Recipes(String title, String url, String image_url, String id){
+    public Recipes(String title, String url, String image_url, String id, String description){
         super();
         this.title = title;
         this.url = url;

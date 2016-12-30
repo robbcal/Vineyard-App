@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -94,11 +95,13 @@ public class SearchFragment extends Fragment {
                 final String url = r.getUrl();
                 final String title = r.getTitle();
                 final String imgUrl = r.getImage_url();
+                final String description = r.getDescription();
 
                 Picasso.with(getActivity().getApplicationContext()).load(imgUrl).error(R.drawable.placeholder_error).into((ImageView) view.findViewById(R.id.icon));
                 ((TextView)view.findViewById(R.id.recipe_title)).setText(title);
                 ((TextView) view.findViewById(R.id.recipe_url)).setText(url);
                 ((TextView) view.findViewById(R.id.recipe_key)).setText(recipeKey);
+                ((TextView) view.findViewById(R.id.recipe_description)).setText(description);
 
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -106,23 +109,6 @@ public class SearchFragment extends Fragment {
                         Intent intent = new Intent(getActivity().getApplicationContext(), SpecificRecipe.class);
                         intent.putExtra("url", url);
                         startActivity(intent);
-                    }
-                });
-
-                ((ImageButton) view.findViewById(R.id.add)).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (user != null) {
-                            String uid = user.getUid();
-                            DatabaseReference mspecificUser = mUserRef.child(uid+"/recipes/"+recipeKey);
-                            mspecificUser.child("title").setValue(title);
-                            mspecificUser.child("url").setValue(url);
-                            mspecificUser.child("image_url").setValue(imgUrl);
-
-                            Toast.makeText(v.getContext(), title+" has been added.", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(v.getContext(), "Enjoy the full Vineyard experience through signing up/signing in.", Toast.LENGTH_LONG).show();
-                        }
                     }
                 });
 
@@ -145,6 +131,7 @@ public class SearchFragment extends Fragment {
                     final String title = postSnapshot.child("title").getValue(String.class);
                     final String url = postSnapshot.child("url").getValue(String.class);
                     final String image_url = postSnapshot.child("image_url").getValue(String.class);
+                    final String description = postSnapshot.child("description").getValue(String.class);
                     DatabaseReference mIngredientRef = mRootRef.child("recipes/"+recipeKey+"/content/ingredients");
 
                     mIngredientRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -165,7 +152,7 @@ public class SearchFragment extends Fragment {
                                 }
                             }
                             if(count >= size) {
-                                Recipes item = new Recipes(title, url, image_url, recipeKey);
+                                Recipes item = new Recipes(title, url, image_url, recipeKey, description);
                                 rowItems.add(item);
 
                                 RecipeListAdapter adapter = new RecipeListAdapter(getActivity().getApplicationContext(), rowItems);

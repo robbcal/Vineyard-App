@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,7 +37,8 @@ public class RecipeListAdapterHome extends BaseAdapter {
         TextView txtTitle;
         TextView txtUrl;
         TextView txtID;
-        Button addRecipe;
+        ImageButton removeRecipe;
+        TextView txtDescription;
     }
 
     public View getView(final int position, View convertView, ViewGroup parent) {
@@ -51,7 +53,9 @@ public class RecipeListAdapterHome extends BaseAdapter {
             holder.txtTitle = (TextView) convertView.findViewById(R.id.recipe_title);
             holder.imageView = (ImageView) convertView.findViewById(R.id.icon);
             holder.txtID = (TextView) convertView.findViewById(R.id.recipe_key);
-            holder.addRecipe = (Button) convertView.findViewById(R.id.add);
+            holder.txtDescription = (TextView) convertView.findViewById(R.id.recipe_description);
+
+            holder.removeRecipe = (ImageButton) convertView.findViewById(R.id.remove);
             convertView.setTag(holder);
         }
         else {
@@ -64,13 +68,15 @@ public class RecipeListAdapterHome extends BaseAdapter {
         final String title = rowItem.getTitle();
         final String img_url = rowItem.getImage_url();
         final String id = rowItem.getID();
+        final String description = rowItem.getDescription();
 
         holder.txtUrl.setText(url);
         holder.txtTitle.setText(title);
         Picasso.with(context).load(img_url).error(R.drawable.placeholder_error).into(holder.imageView);
         holder.txtID.setText(id);
+        holder.txtDescription.setText(description);
 
-        holder.addRecipe.setOnClickListener(new View.OnClickListener() {
+        holder.removeRecipe.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 String uid = user.getUid();
                 DatabaseReference mUserRecipe = mUserRef.child(uid+"/recipes");
