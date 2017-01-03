@@ -3,12 +3,8 @@ package com.example.vineyard_2;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +13,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -45,6 +42,10 @@ public class SearchFragment_User extends Fragment {
     DatabaseReference mUserRef = mRootRef.child("users");
     DatabaseReference mRecipeRef = mRootRef.child("recipes");
 
+    CheckBox breakfast;
+    CheckBox lunch;
+    CheckBox snacks;
+    CheckBox dinner;
     ListView listView;
     EditText searchField;
     Button searchButton;
@@ -62,6 +63,11 @@ public class SearchFragment_User extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_search_user, container, false);
+
+        breakfast = (CheckBox) v.findViewById(R.id.Breakfast);
+        lunch = (CheckBox) v.findViewById(R.id.Lunch);
+        snacks = (CheckBox) v.findViewById(R.id.Snacks);
+        dinner = (CheckBox) v.findViewById(R.id.Dinner);
 
         searchField =(EditText) v.findViewById(R.id.search_field);
         searchButton = (Button) v.findViewById(R.id.search_button);
