@@ -39,9 +39,38 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         />
+
+    <CheckBox
+        android:layout_below="@+id/search_button"
+        android:id="@+id/Breakfast"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Breakfast" />
+    <CheckBox
+        android:layout_below="@+id/search_button"
+        android:layout_toRightOf="@+id/Breakfast"
+        android:id="@+id/Lunch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Lunch"/>
+    <CheckBox
+        android:layout_below="@+id/search_button"
+        android:layout_toRightOf="@id/Lunch"
+        android:id="@+id/Snacks"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Snacks"/>
+    <CheckBox
+        android:layout_below="@+id/search_button"
+        android:layout_toRightOf="@id/Snacks"
+        android:id="@+id/Dinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Dinner" />
+
     <ListView
         android:id="@+id/recipe_list"
-        android:layout_below="@+id/search_button"
+        android:layout_below="@+id/Breakfast"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
     </ListView>

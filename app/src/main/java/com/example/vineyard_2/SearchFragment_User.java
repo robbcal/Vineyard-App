@@ -69,6 +69,34 @@ public class SearchFragment_User extends Fragment {
         snacks = (CheckBox) v.findViewById(R.id.Snacks);
         dinner = (CheckBox) v.findViewById(R.id.Dinner);
 
+        breakfast.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        lunch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        snacks.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        dinner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
         searchField =(EditText) v.findViewById(R.id.search_field);
         searchButton = (Button) v.findViewById(R.id.search_button);
         clearButton = (Button) v.findViewById(R.id.clearSearch);
@@ -168,6 +196,32 @@ public class SearchFragment_User extends Fragment {
                     final String url = postSnapshot.child("url").getValue(String.class);
                     final String image_url = postSnapshot.child("image_url").getValue(String.class);
                     final String description = postSnapshot.child("description").getValue(String.class);
+                    String descSearch = description.toLowerCase();
+                    final boolean filter[] = new boolean[4];
+
+                    if(breakfast.isChecked()) {
+                        if(descSearch.contains("breakfast")){
+                            filter[0] = true;
+                        }
+                    }
+
+                    if(lunch.isChecked()) {
+                        if(descSearch.contains("lunch")) {
+                            filter[1] = true;
+                        }
+                    }
+
+                    if(snacks.isChecked()) {
+                        if(descSearch.contains("snack")){
+                            filter[2] = true;
+                        }
+                    }
+
+                    if(dinner.isChecked()) {
+                        if(descSearch.contains("dinner") || descSearch.contains("supper")){
+                            filter[3] = true;
+                        }
+                    }
 
                     DatabaseReference mIngredientRef = mRootRef.child("recipes/"+recipeKey+"/content/ingredients");
 
@@ -189,31 +243,56 @@ public class SearchFragment_User extends Fragment {
                                 }
                             }
                             if(count >= size) {
-                                Recipes item = new Recipes(title, url, image_url, recipeKey, description);
-                                rowItems.add(item);
+                                if(breakfast.isChecked() || lunch.isChecked() || snacks.isChecked() || dinner.isChecked()){
+                                    int x;
+                                    for(x = 0; x < 4 && filter[x] != true; x++){}
+                                    if(x < 4){
+                                        Recipes item = new Recipes(title, url, image_url, recipeKey, description);
+                                        rowItems.add(item);
 
-                                RecipeListAdapter adapter = new RecipeListAdapter(getActivity().getApplicationContext(), rowItems);
-                                listView.setAdapter(adapter);
+                                        RecipeListAdapter adapter = new RecipeListAdapter(getActivity().getApplicationContext(), rowItems);
+                                        listView.setAdapter(adapter);
 
-                                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                    @Override
-                                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                        TextView text = (TextView) view.findViewById(R.id.recipe_url);
-                                        String recipe_url = text.getText().toString().trim();
+                                        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                            @Override
+                                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                                TextView text = (TextView) view.findViewById(R.id.recipe_url);
+                                                String recipe_url = text.getText().toString().trim();
 
-                                        Intent intent = new Intent(getActivity().getApplicationContext(), SpecificRecipe.class);
-                                        intent.putExtra("key", recipeKey);
-                                        intent.putExtra("url", recipe_url);
-                                        startActivity(intent);
+                                                Intent intent = new Intent(getActivity().getApplicationContext(), SpecificRecipe.class);
+                                                intent.putExtra("key", recipeKey);
+                                                intent.putExtra("url", recipe_url);
+                                                startActivity(intent);
+                                            }
+                                        });
                                     }
-                                });
+                                }else{
+                                    Recipes item = new Recipes(title, url, image_url, recipeKey, description);
+                                    rowItems.add(item);
+
+                                    RecipeListAdapter adapter = new RecipeListAdapter(getActivity().getApplicationContext(), rowItems);
+                                    listView.setAdapter(adapter);
+
+                                    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                        @Override
+                                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                            TextView text = (TextView) view.findViewById(R.id.recipe_url);
+                                            String recipe_url = text.getText().toString().trim();
+
+                                            Intent intent = new Intent(getActivity().getApplicationContext(), SpecificRecipe.class);
+                                            intent.putExtra("key", recipeKey);
+                                            intent.putExtra("url", recipe_url);
+                                            startActivity(intent);
+                                        }
+                                    });
+                                }
                             }
                         }
                         @Override
                         public void onCancelled(DatabaseError databaseError) {
                             Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
                         }
-                    });
+                    });//End of ingredient chuchu
 
                 }
             }
