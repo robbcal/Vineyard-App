@@ -10,11 +10,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
-//import com.firebase.ui.auth.AuthUI;
-//import com.facebook.appevents.AppEventsLogger;
+
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -37,7 +35,6 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private FirebaseUser user;
     private FirebaseAuth.AuthStateListener mAuthListener;
-    private ProgressBar progressBar;
     private Button btnLogin, btnGoogle, btnSignUp, btnGuest, btnReset;
 
     private DatabaseReference database;
@@ -76,7 +73,6 @@ public class LoginActivity extends AppCompatActivity {
         btnReset = (Button) findViewById(R.id.btn_reset);
         inputEmail = (EditText) findViewById(R.id.email);
         inputPassword = (EditText) findViewById(R.id.password);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         progress = new ProgressDialog(this);
 
@@ -100,7 +96,8 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 signIn();
-                progressBar.setVisibility(View.VISIBLE);
+                progress.setMessage("Logging In...");
+                progress.show();
             }
         });
 
@@ -191,7 +188,6 @@ public class LoginActivity extends AppCompatActivity {
                                 Toast.makeText(LoginActivity.this, getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
                             }
                         } else {
-                            progress.dismiss();
                             Intent intent = new Intent(LoginActivity.this, LandingpageActivity_User.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(intent);
@@ -211,12 +207,14 @@ public class LoginActivity extends AppCompatActivity {
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
+
                 Intent intent = new Intent(LoginActivity.this, LandingpageActivity_User.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
             } else {
                 // Google Sign In failed, update UI appropriately
                 // ...
+                progress.dismiss();
                 Toast.makeText(LoginActivity.this, "Error signing in with google", Toast.LENGTH_LONG).show();
             }
         }
@@ -234,6 +232,7 @@ public class LoginActivity extends AppCompatActivity {
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
+                            progress.dismiss();
                             Log.w(TAG, "signInWithCredential", task.getException());
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();

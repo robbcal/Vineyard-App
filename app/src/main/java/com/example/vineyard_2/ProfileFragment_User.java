@@ -30,6 +30,8 @@ public class ProfileFragment_User extends Fragment {
     private TextView userProfileName, userProfileEmail;
     private ImageButton userProfilePhoto;
 
+    private Button btnLogout;
+
     private FirebaseAuth auth;
     private FirebaseUser user;
     private DatabaseReference databaseUser;
@@ -44,6 +46,8 @@ public class ProfileFragment_User extends Fragment {
         userProfileName = (TextView) v.findViewById(R.id.user_profile_name);
         userProfileEmail = (TextView) v.findViewById(R.id.user_email);
         userProfilePhoto = (ImageButton) v.findViewById(R.id.user_profile_photo);
+
+        btnLogout = (Button) v.findViewById(R.id.btn_logout);
 
         //Get Firebase auth instance
         auth = FirebaseAuth.getInstance();

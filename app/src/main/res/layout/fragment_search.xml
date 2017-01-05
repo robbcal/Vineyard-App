@@ -1,10 +1,10 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.vineyard_2.SearchFragment"
-    android:background="@drawable/nrecipesearch">
+    tools:context="com.example.vineyard_2.SearchFragment_User"
+    android:background="@color/white" >
 
     <EditText
         android:id="@+id/search_field"
@@ -12,33 +12,30 @@
         android:layout_height="wrap_content"
         android:hint="Input ingredient/s"
         android:layout_marginTop="56dp"
-        android:background="@android:color/white"
+        android:background="@color/cardview_shadow_end_color"
         android:drawableLeft="@android:drawable/ic_menu_search"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        >
+        android:padding="10dp">
     </EditText>
     <Button
         android:id="@+id/clearSearch"
         android:layout_width="50dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="55dp"
         android:layout_alignRight="@id/search_field"
         android:background="@android:color/transparent"
         android:textColor="@android:color/darker_gray"
         android:text="X"
-        android:onClick="clearSearchText"
-        />
+        android:onClick="clearSearchText" />
     <Button
         android:id="@+id/search_button"
         android:layout_below="@id/search_field"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="SEARCH"
-        android:onClick="searchIngredient"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        />
+        android:onClick="searchRecipe"
+        android:layout_margin="5dp" />
 
     <CheckBox
         android:layout_below="@+id/search_button"
@@ -71,8 +68,8 @@
     <ListView
         android:id="@+id/recipe_list"
         android:layout_below="@+id/Breakfast"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     </ListView>
 
 </RelativeLayout>

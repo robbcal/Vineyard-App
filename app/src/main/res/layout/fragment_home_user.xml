@@ -13,11 +13,10 @@
         android:layout_height="wrap_content"
         android:hint="Input recipe"
         android:layout_marginTop="56dp"
-        android:background="@android:color/white"
+        android:background="@color/cardview_shadow_end_color"
         android:drawableLeft="@android:drawable/ic_menu_search"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:elevation="3dp"
         android:padding="10dp">
     </EditText>
     <Button

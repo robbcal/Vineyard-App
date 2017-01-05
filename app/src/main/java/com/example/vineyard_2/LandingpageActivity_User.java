@@ -14,6 +14,8 @@ import android.widget.Button;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class LandingpageActivity_User extends AppCompatActivity {
     Toolbar toolbar;
@@ -25,7 +27,8 @@ public class LandingpageActivity_User extends AppCompatActivity {
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseUser user;
 
-    public static String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+    public static String uid;
+    private DatabaseReference database;
 
     private Button btnLogout;
 
@@ -35,6 +38,7 @@ public class LandingpageActivity_User extends AppCompatActivity {
         setContentView(R.layout.activity_main_user);
 
         btnLogout = (Button) findViewById(R.id.btn_logout);
+        database = FirebaseDatabase.getInstance().getReference().child("users");
 
         //Get Firebase auth instance
         auth = FirebaseAuth.getInstance();
@@ -50,19 +54,36 @@ public class LandingpageActivity_User extends AppCompatActivity {
             }
         };
 
-        toolbar = (Toolbar)findViewById(R.id.toolBar);
-        setSupportActionBar(toolbar);
-        tabLayout = (TabLayout) findViewById(R.id.tabLayout);
-        viewPager = (ViewPager) findViewById(R.id.viewPager);
-        viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
-        viewPagerAdapter.addFragments(new HomeFragment_User());
-        viewPagerAdapter.addFragments(new SearchFragment_User());
-        viewPagerAdapter.addFragments(new ProfileFragment_User());
-        viewPager.setAdapter(viewPagerAdapter);
-        tabLayout.setupWithViewPager(viewPager);
-        tabLayout.getTabAt(0).setIcon(R.drawable.nhome);
-        tabLayout.getTabAt(1).setIcon(R.drawable.nsearch);
-        tabLayout.getTabAt(2).setIcon(R.drawable.nmenu);
+        if (user != null) {
+            uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+            if (FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString() != "default") {
+                String userid = auth.getCurrentUser().getUid();
+                String username = auth.getCurrentUser().getDisplayName();
+                String email = auth.getCurrentUser().getEmail();
+                String image = auth.getCurrentUser().getPhotoUrl().toString();
+
+                DatabaseReference currentUserDB =  database.child(userid);
+                currentUserDB.child("name").setValue(username);
+                currentUserDB.child("image").setValue(image);
+                currentUserDB.child("email").setValue(email);
+                currentUserDB.child("usertype").setValue("user");
+            }
+
+            toolbar = (Toolbar)findViewById(R.id.toolBar);
+            setSupportActionBar(toolbar);
+            tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+            viewPager = (ViewPager) findViewById(R.id.viewPager);
+            viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+            viewPagerAdapter.addFragments(new HomeFragment_User());
+            viewPagerAdapter.addFragments(new SearchFragment_User());
+            viewPagerAdapter.addFragments(new ProfileFragment_User());
+            viewPager.setAdapter(viewPagerAdapter);
+            tabLayout.setupWithViewPager(viewPager);
+            tabLayout.getTabAt(0).setIcon(R.drawable.nhome);
+            tabLayout.getTabAt(1).setIcon(R.drawable.nsearch);
+            tabLayout.getTabAt(2).setIcon(R.drawable.nmenu);
+        }
 
     }
 

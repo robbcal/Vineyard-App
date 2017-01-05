@@ -34,7 +34,6 @@ public class SignupActivity extends AppCompatActivity {
 
     private EditText inputEmail, inputPassword, inputName;
     private Button btnSignUp, btnLogin, btnGuest, btnGoogle;
-    private ProgressBar progressBar;
     private FirebaseAuth auth;
     private FirebaseUser user;
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -75,7 +74,6 @@ public class SignupActivity extends AppCompatActivity {
         inputEmail = (EditText) findViewById(R.id.email);
         inputName = (EditText) findViewById(R.id.name);
         inputPassword = (EditText) findViewById(R.id.password);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         progress = new ProgressDialog(this);
 
@@ -99,7 +97,8 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 signUp();
-                progressBar.setVisibility(View.VISIBLE);
+                progress.setMessage("Signing Up...");
+                progress.show();
             }
         });
 
@@ -172,7 +171,6 @@ public class SignupActivity extends AppCompatActivity {
 
         progress.setMessage("Signing Up...");
         progress.show();
-        //progressBar.setVisibility(View.VISIBLE);
         //create user
         auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(SignupActivity.this, new OnCompleteListener<AuthResult>() {
@@ -182,6 +180,7 @@ public class SignupActivity extends AppCompatActivity {
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
+                            progress.dismiss();
                             Toast.makeText(SignupActivity.this, "Authentication failed." + task.getException(),
                                     Toast.LENGTH_SHORT).show();
                         } else {
