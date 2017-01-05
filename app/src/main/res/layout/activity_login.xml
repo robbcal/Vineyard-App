@@ -23,6 +23,7 @@
             android:layout_height="@dimen/logo_w_h"
             android:layout_gravity="center_horizontal"
             android:src="@drawable/vineyard_logo"
+            android:layout_marginTop="10dip"
             android:layout_weight="0.10" />
 
         <EditText
@@ -73,7 +74,7 @@
 
         <Button
             android:id="@+id/btn_login"
-            android:layout_marginTop="70dp"
+            android:layout_marginTop="80dp"
             android:background="@drawable/nloginbtn"
             android:layout_weight="0.24"
             android:layout_width="340dp"
@@ -107,15 +108,7 @@
             android:layout_width="130dp"
             android:layout_height="13dp"
             android:layout_marginTop="15dip"
-            android:layout_weight="0.02"
-            android:layout_marginBottom="10dip" />
+            android:layout_marginBottom="-10dip"
+            android:layout_weight="0.02" />
     </LinearLayout>
-
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_gravity="center|bottom"
-        android:layout_marginBottom="7dp"
-        android:visibility="gone" />
 </android.support.design.widget.CoordinatorLayout>
