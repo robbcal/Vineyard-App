@@ -12,8 +12,9 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -40,7 +41,7 @@ public class HomeFragment_User extends Fragment{
     DatabaseReference mRecipeRef = mRootRef.child("users/"+uid+"/recipes");
 
     ListView listView;
-    EditText searchField;
+    AutoCompleteTextView searchField;
     Button searchButton;
     Button clearButton;
     List<Recipes> rowItems;
@@ -57,7 +58,7 @@ public class HomeFragment_User extends Fragment{
 
         mRecipeRef.keepSynced(true);
 
-        searchField =(EditText)v.findViewById(R.id.search_field);
+        searchField =(AutoCompleteTextView)v.findViewById(R.id.search_field);
         searchButton = (Button)v.findViewById(R.id.search_button);
         clearButton = (Button)v.findViewById(R.id.clearSearch);
         listView = (ListView)v.findViewById(R.id.recipe_list);
@@ -78,6 +79,24 @@ public class HomeFragment_User extends Fragment{
             }
         });
 
+        mRecipeRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ArrayList<String> recipes = new ArrayList<String>();
+                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                    String recipe = postSnapshot.child("title").getValue(String.class);
+                    recipes.add(recipe);
+                }
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity().getApplicationContext(), R.layout.auto_complete, recipes);
+                searchField.setAdapter(adapter);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        
         return v;
     }
 
