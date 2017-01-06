@@ -93,7 +93,7 @@ public class SearchFragment extends Fragment {
         mIngredients.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                ArrayList<String> ingredients = new ArrayList<String>();;
+                ArrayList<String> ingredients = new ArrayList<String>();
                 for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
                     String ingredient = postSnapshot.child("ingredient").getValue(String.class);
                     ingredients.add(ingredient);
