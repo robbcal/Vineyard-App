@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="com.example.vineyard_2.ProfileFragment_User">
+    tools:context="com.example.vineyard_2.ProfileFragment_Google">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:scaleType="centerCrop"
             android:src="@drawable/header"
-            android:layout_height="260dp" />
+            android:layout_height="290dp" />
 
         <ImageView
             android:id="@+id/user_profile_photo"
@@ -67,16 +67,6 @@
         android:orientation="vertical"
         android:layout_marginTop="450dp"
         android:layout_gravity="center|bottom">
-
-        <Button
-            android:id="@+id/btn_edit"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="#fff"
-            android:clickable="true"
-            android:onClick="onClickEditGoogle"
-            android:elevation="3dp"
-            android:text="EDIT DETAILS"/>
 
         <Button
             android:id="@+id/btn_logout"

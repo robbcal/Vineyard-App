@@ -29,6 +29,7 @@
         <activity android:name=".ProfileEditActivity" />
         <activity android:name=".LandingpageActivity" />
         <activity android:name=".LandingpageActivity_User" />
+        <activity android:name=".LandingpageActivity_Google" />
         <activity android:name=".SpecificRecipe_User" />
         <activity android:name=".SpecificRecipe"></activity>
     </application>

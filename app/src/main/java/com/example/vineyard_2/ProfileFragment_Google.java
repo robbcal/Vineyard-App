@@ -20,7 +20,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 
-public class ProfileFragment_User extends Fragment {
+public class ProfileFragment_Google extends Fragment {
 
     private TextView userProfileName, userProfileEmail;
     private ImageView userProfilePhoto;
@@ -31,7 +31,7 @@ public class ProfileFragment_User extends Fragment {
     private FirebaseUser user;
     private DatabaseReference databaseUser;
 
-    public ProfileFragment_User() {}
+    public ProfileFragment_Google() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

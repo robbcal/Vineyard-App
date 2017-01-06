@@ -12,7 +12,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -28,6 +27,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -45,6 +45,8 @@ public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LOGIN_ACTIVITY";
     private ProgressDialog progress;
 
+    private String defaultImg = "https://lh3.googleusercontent.com/-avIikemoRt0/WG-kGcpmQ3I/AAAAAAAAACk/UpOzjOBXA5ke7g17Rq5KnCygLRi6f5DLQCEw/w140-h139-p/vineyard.jpg";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,8 +60,13 @@ public class LoginActivity extends AppCompatActivity {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 if (user != null) {
                     // User is already signed in
-                    Intent loginIntent = new Intent(LoginActivity.this, LandingpageActivity_User.class);
-                    startActivity(loginIntent);
+                    if (user.getPhotoUrl().toString() != defaultImg) {
+                        Intent loginIntent = new Intent(LoginActivity.this, LandingpageActivity_Google.class);
+                        startActivity(loginIntent);
+                    } else {
+                        Intent loginIntent = new Intent(LoginActivity.this, LandingpageActivity_User.class);
+                        startActivity(loginIntent);
+                    }
                 }
             }
         };
@@ -207,8 +214,9 @@ public class LoginActivity extends AppCompatActivity {
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
+                progress.dismiss();
 
-                Intent intent = new Intent(LoginActivity.this, LandingpageActivity_User.class);
+                Intent intent = new Intent(LoginActivity.this, LandingpageActivity_Google.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
             } else {
@@ -236,22 +244,6 @@ public class LoginActivity extends AppCompatActivity {
                             Log.w(TAG, "signInWithCredential", task.getException());
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
-                        }else {
-                            String userid = auth.getCurrentUser().getUid();
-                            String username = auth.getCurrentUser().getDisplayName();
-                            String email = auth.getCurrentUser().getEmail();
-                            String image = auth.getCurrentUser().getPhotoUrl().toString();
-
-                            DatabaseReference currentUserDB =  database.child(userid);
-                            currentUserDB.child("name").setValue(username);
-                            currentUserDB.child("image").setValue(image);
-                            currentUserDB.child("email").setValue(email);
-                            currentUserDB.child("usertype").setValue("user");
-
-                            progress.dismiss();
-                            Intent mainIntent = new Intent(LoginActivity.this, LandingpageActivity_User.class);
-                            mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            startActivity(mainIntent);
                         }
                     }
                 });

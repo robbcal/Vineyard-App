@@ -46,6 +46,8 @@ public class SignupActivity extends AppCompatActivity {
     private static final String TAG = "SIGNUP_ACTIVITY";
     private ProgressDialog progress;
 
+    private String defaultImg = "https://lh3.googleusercontent.com/-avIikemoRt0/WG-kGcpmQ3I/AAAAAAAAACk/UpOzjOBXA5ke7g17Rq5KnCygLRi6f5DLQCEw/w140-h139-p/vineyard.jpg";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -188,7 +190,7 @@ public class SignupActivity extends AppCompatActivity {
 
                             DatabaseReference currentUserDB =  database.child(userid);
                             currentUserDB.child("name").setValue(name);
-                            currentUserDB.child("image").setValue("default");
+                            currentUserDB.child("image").setValue(defaultImg);
                             currentUserDB.child("email").setValue(email);
                             currentUserDB.child("password").setValue(password);
                             currentUserDB.child("usertype").setValue("user");
@@ -213,7 +215,9 @@ public class SignupActivity extends AppCompatActivity {
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
-                Intent intent = new Intent(SignupActivity.this, LandingpageActivity_User.class);
+                progress.dismiss();
+
+                Intent intent = new Intent(SignupActivity.this, LandingpageActivity_Google.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
             } else {
@@ -239,22 +243,6 @@ public class SignupActivity extends AppCompatActivity {
                             Log.w(TAG, "signInWithCredential", task.getException());
                             Toast.makeText(SignupActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
-                        } else {
-                            String userid = auth.getCurrentUser().getUid();
-                            String username = auth.getCurrentUser().getDisplayName();
-                            String email = auth.getCurrentUser().getEmail();
-                            String image = auth.getCurrentUser().getPhotoUrl().toString();
-
-                            DatabaseReference currentUserDB =  database.child(userid);
-                            currentUserDB.child("name").setValue(username);
-                            currentUserDB.child("image").setValue(image);
-                            currentUserDB.child("email").setValue(email);
-                            currentUserDB.child("usertype").setValue("user");
-
-                            progress.dismiss();
-                            Intent mainIntent = new Intent(SignupActivity.this, LandingpageActivity_User.class);
-                            mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            startActivity(mainIntent);
                         }
                     }
                 });

@@ -18,7 +18,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class LandingpageActivity_User extends AppCompatActivity {
+public class LandingpageActivity_Google extends AppCompatActivity {
     Toolbar toolbar;
     TabLayout tabLayout;
     ViewPager viewPager;
@@ -32,6 +32,7 @@ public class LandingpageActivity_User extends AppCompatActivity {
     private DatabaseReference database;
 
     private Button btnLogout;
+    private String defaultImg = "https://lh3.googleusercontent.com/-avIikemoRt0/WG-kGcpmQ3I/AAAAAAAAACk/UpOzjOBXA5ke7g17Rq5KnCygLRi6f5DLQCEw/w140-h139-p/vineyard.jpg";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +50,7 @@ public class LandingpageActivity_User extends AppCompatActivity {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 if (user == null) {
                     // User is not signed in
-                    Intent loginIntent = new Intent(LandingpageActivity_User.this, LoginActivity.class);
+                    Intent loginIntent = new Intent(LandingpageActivity_Google.this, LoginActivity.class);
                     startActivity(loginIntent);
                 }
             }
@@ -58,14 +59,27 @@ public class LandingpageActivity_User extends AppCompatActivity {
         if (user != null) {
             uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
+            if (FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString() != defaultImg) {
+                String userid = auth.getCurrentUser().getUid();
+                String username = auth.getCurrentUser().getDisplayName();
+                String email = auth.getCurrentUser().getEmail();
+                String image = auth.getCurrentUser().getPhotoUrl().toString();
+
+                DatabaseReference currentUserDB =  database.child(userid);
+                currentUserDB.child("name").setValue(username);
+                currentUserDB.child("image").setValue(image);
+                currentUserDB.child("email").setValue(email);
+                currentUserDB.child("usertype").setValue("user");
+            }
+
             toolbar = (Toolbar)findViewById(R.id.toolBar);
             setSupportActionBar(toolbar);
             tabLayout = (TabLayout) findViewById(R.id.tabLayout);
             viewPager = (ViewPager) findViewById(R.id.viewPager);
             viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
-            viewPagerAdapter.addFragments(new HomeFragment_User());
+            viewPagerAdapter.addFragments(new HomeFragment_Google());
             viewPagerAdapter.addFragments(new SearchFragment_User());
-            viewPagerAdapter.addFragments(new ProfileFragment_User());
+            viewPagerAdapter.addFragments(new ProfileFragment_Google());
             viewPager.setAdapter(viewPagerAdapter);
             tabLayout.setupWithViewPager(viewPager);
             tabLayout.getTabAt(0).setIcon(R.drawable.nhome);
@@ -83,7 +97,7 @@ public class LandingpageActivity_User extends AppCompatActivity {
     }
 
     public void onClickLogout (View view) {
-        new AlertDialog.Builder(LandingpageActivity_User.this)
+        new AlertDialog.Builder(LandingpageActivity_Google.this)
                 .setTitle("Sign Out")
                 .setMessage("Are you sure you want to sign out from your account?")
                 .setNegativeButton("No", null)
@@ -96,11 +110,5 @@ public class LandingpageActivity_User extends AppCompatActivity {
                     }
                 }).create().show();
     }
-
-    public void onClickEdit(View view) {
-        Intent intent = new Intent(LandingpageActivity_User.this, ProfileEditActivity.class);
-        startActivity(intent);
-    }
-
 
 }
