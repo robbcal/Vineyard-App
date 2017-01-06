@@ -6,18 +6,19 @@
     tools:context="com.example.vineyard_2.SearchFragment_User"
     android:background="@color/white" >
 
-    <EditText
+    <MultiAutoCompleteTextView
         android:id="@+id/search_field"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Input ingredient/s"
         android:layout_marginTop="56dp"
         android:background="@color/cardview_shadow_end_color"
         android:drawableLeft="@android:drawable/ic_menu_search"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:padding="10dp">
-    </EditText>
+        android:padding="10dp"
+        android:hint="Input ingredient/s"
+        android:textColor="@android:color/black">
+    </MultiAutoCompleteTextView>
     <Button
         android:id="@+id/clearSearch"
         android:layout_width="50dp"

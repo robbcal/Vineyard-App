@@ -12,12 +12,13 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.MultiAutoCompleteTextView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,13 +42,14 @@ public class SearchFragment_User extends Fragment {
     DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
     DatabaseReference mUserRef = mRootRef.child("users");
     DatabaseReference mRecipeRef = mRootRef.child("recipes");
+    DatabaseReference mIngredients = mRootRef.child("ingredients");
 
     CheckBox breakfast;
     CheckBox lunch;
     CheckBox snacks;
     CheckBox dinner;
     ListView listView;
-    EditText searchField;
+    MultiAutoCompleteTextView searchField;
     Button searchButton;
     Button clearButton;
     List<Recipes> rowItems;
@@ -69,35 +71,7 @@ public class SearchFragment_User extends Fragment {
         snacks = (CheckBox) v.findViewById(R.id.Snacks);
         dinner = (CheckBox) v.findViewById(R.id.Dinner);
 
-        breakfast.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
-        lunch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
-        snacks.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
-        dinner.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
-        searchField =(EditText) v.findViewById(R.id.search_field);
+        searchField =(MultiAutoCompleteTextView) v.findViewById(R.id.search_field);
         searchButton = (Button) v.findViewById(R.id.search_button);
         clearButton = (Button) v.findViewById(R.id.clearSearch);
         listView = (ListView) v.findViewById(R.id.recipe_list);
@@ -115,6 +89,25 @@ public class SearchFragment_User extends Fragment {
         clearButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 clearSearchText();
+            }
+        });
+
+        mIngredients.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ArrayList<String> ingredients = new ArrayList<String>();;
+                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                    String ingredient = postSnapshot.child("ingredient").getValue(String.class);
+                    ingredients.add(ingredient);
+                }
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity().getApplicationContext(), R.layout.auto_complete, ingredients);
+                searchField.setAdapter(adapter);
+                searchField.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
             }
         });
 
@@ -308,7 +301,17 @@ public class SearchFragment_User extends Fragment {
         //Log.d(TAG, "test: comma separated string: "+string);
 
         searchedIngredients = new ArrayList<String>(Arrays.asList(string.split(",|\\, |\\ , |\\ ,")));
-        //Log.d(TAG, "test: ArrayList size: "+searchedIngredients.size());
+        /*Log.d(TAG, "test: ArrayList size: "+searchedIngredients.size());
+        for(int i = 0; i < searchedIngredients.size(); i++){
+            Log.d(TAG, "test: ingredient - "+searchedIngredients.get(i));
+        }*/
+        int size = searchedIngredients.size();
+        for(int i = 0; i < size; i++){
+            String word = searchedIngredients.get(i);
+            if(word.trim().isEmpty()){
+                searchedIngredients.remove(i);
+            }
+        }
     }
 
     public void clearSearchText(){
