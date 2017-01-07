@@ -142,7 +142,7 @@ public class SearchFragment_User extends Fragment {
                     }
                 });
 
-                ((ImageButton) view.findViewById(R.id.add)).setOnClickListener(new View.OnClickListener() {
+                ((Button) view.findViewById(R.id.add)).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 

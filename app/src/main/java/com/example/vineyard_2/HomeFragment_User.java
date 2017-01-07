@@ -129,7 +129,7 @@ public class HomeFragment_User extends Fragment{
                     }
                 });
 
-                ((ImageButton) view.findViewById(R.id.remove)).setOnClickListener(new View.OnClickListener() {
+                ((Button) view.findViewById(R.id.remove)).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         mRecipeRef.child(recipeKey).removeValue();

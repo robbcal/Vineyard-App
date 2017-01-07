@@ -2,7 +2,6 @@ package com.example.vineyard_2;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -27,6 +26,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.auth.UserInfo;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -60,9 +60,15 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 if (user != null) {
-                    // User is already signed in
-                    Intent intent = new Intent(SignupActivity.this, LandingpageActivity_User.class);
-                    startActivity(intent);
+                    for (UserInfo user: FirebaseAuth.getInstance().getCurrentUser().getProviderData()) {
+                        if (user.getProviderId().equals("google.com")) {
+                            Intent loginIntent = new Intent(SignupActivity.this, LandingpageActivity_Google.class);
+                            startActivity(loginIntent);
+                        } else {
+                            Intent loginIntent = new Intent(SignupActivity.this, LandingpageActivity_User.class);
+                            startActivity(loginIntent);
+                        }
+                    }
                 }
             }
         };
@@ -137,8 +143,15 @@ public class SignupActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
         auth.addAuthStateListener(mAuthListener);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mAuthListener != null) {
+            auth.removeAuthStateListener(mAuthListener);
+        }
     }
 
     private void signUp() {

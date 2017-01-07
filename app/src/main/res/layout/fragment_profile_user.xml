@@ -74,7 +74,7 @@
             android:layout_height="wrap_content"
             android:background="#fff"
             android:clickable="true"
-            android:onClick="onClickEditGoogle"
+            android:onClick="onClickEdit"
             android:elevation="3dp"
             android:text="EDIT DETAILS"/>
 

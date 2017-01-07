@@ -25,6 +25,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.auth.UserInfo;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -45,8 +46,6 @@ public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LOGIN_ACTIVITY";
     private ProgressDialog progress;
 
-    private String defaultImg = "https://lh3.googleusercontent.com/-avIikemoRt0/WG-kGcpmQ3I/AAAAAAAAACk/UpOzjOBXA5ke7g17Rq5KnCygLRi6f5DLQCEw/w140-h139-p/vineyard.jpg";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,13 +58,14 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 if (user != null) {
-                    // User is already signed in
-                    if (user.getPhotoUrl().toString() != defaultImg) {
-                        Intent loginIntent = new Intent(LoginActivity.this, LandingpageActivity_Google.class);
-                        startActivity(loginIntent);
-                    } else {
-                        Intent loginIntent = new Intent(LoginActivity.this, LandingpageActivity_User.class);
-                        startActivity(loginIntent);
+                    for (UserInfo user: FirebaseAuth.getInstance().getCurrentUser().getProviderData()) {
+                        if (user.getProviderId().equals("google.com")) {
+                            Intent loginIntent = new Intent(LoginActivity.this, LandingpageActivity_Google.class);
+                            startActivity(loginIntent);
+                        } else {
+                            Intent loginIntent = new Intent(LoginActivity.this, LandingpageActivity_User.class);
+                            startActivity(loginIntent);
+                        }
                     }
                 }
             }
@@ -152,8 +152,15 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
         auth.addAuthStateListener(mAuthListener);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mAuthListener != null) {
+            auth.removeAuthStateListener(mAuthListener);
+        }
     }
 
     private void signIn() {

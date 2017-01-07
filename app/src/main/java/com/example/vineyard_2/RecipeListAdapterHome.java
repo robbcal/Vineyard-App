@@ -37,7 +37,7 @@ public class RecipeListAdapterHome extends BaseAdapter {
         TextView txtTitle;
         TextView txtUrl;
         TextView txtID;
-        ImageButton removeRecipe;
+        Button removeRecipe;
         TextView txtDescription;
     }
 
@@ -55,7 +55,7 @@ public class RecipeListAdapterHome extends BaseAdapter {
             holder.txtID = (TextView) convertView.findViewById(R.id.recipe_key);
             holder.txtDescription = (TextView) convertView.findViewById(R.id.recipe_description);
 
-            holder.removeRecipe = (ImageButton) convertView.findViewById(R.id.remove);
+            holder.removeRecipe = (Button) convertView.findViewById(R.id.remove);
             convertView.setTag(holder);
         }
         else {
