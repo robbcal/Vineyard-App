@@ -32,11 +32,11 @@ import com.google.firebase.auth.UserInfo;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class SignupActivity extends AppCompatActivity {
+public class AccountLoginActivity extends AppCompatActivity {
 
-    private EditText inputEmail, inputPassword, inputName;
-    private TextView signupText;
-    private Button btnSignUp, btnCancel, btnGuest;
+    private EditText inputEmail, inputPassword;
+    private TextView signinText;
+    private Button btnLogin, btnCancel, btnGuest, btnReset;
     private SignInButton btnGoogle;
     private FirebaseAuth auth;
     private FirebaseUser user;
@@ -52,12 +52,10 @@ public class SignupActivity extends AppCompatActivity {
     private static final String TAG = "SIGNUP_ACTIVITY";
     private ProgressDialog progress;
 
-    private String defaultImg = "https://lh3.googleusercontent.com/-avIikemoRt0/WG-kGcpmQ3I/AAAAAAAAACk/UpOzjOBXA5ke7g17Rq5KnCygLRi6f5DLQCEw/w140-h139-p/vineyard.jpg";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_signup);
+        setContentView(R.layout.activity_account_login);
 
         typeFace = Typeface.createFromAsset(getAssets(), "HelveticaNeueLight.ttf");
 
@@ -70,10 +68,10 @@ public class SignupActivity extends AppCompatActivity {
                 if (user != null) {
                     for (UserInfo user: FirebaseAuth.getInstance().getCurrentUser().getProviderData()) {
                         if (user.getProviderId().equals("google.com")) {
-                            Intent loginIntent = new Intent(SignupActivity.this, LandingpageActivity_Google.class);
+                            Intent loginIntent = new Intent(AccountLoginActivity.this, LandingpageActivity_Google.class);
                             startActivity(loginIntent);
                         } else {
-                            Intent loginIntent = new Intent(SignupActivity.this, LandingpageActivity_User.class);
+                            Intent loginIntent = new Intent(AccountLoginActivity.this, LandingpageActivity_User.class);
                             startActivity(loginIntent);
                         }
                     }
@@ -83,23 +81,23 @@ public class SignupActivity extends AppCompatActivity {
 
         database = FirebaseDatabase.getInstance().getReference().child("users");
 
-        btnSignUp = (Button) findViewById(R.id.btn_signup);
+        btnLogin = (Button) findViewById(R.id.btn_login);
         btnCancel = (Button) findViewById(R.id.btn_cancel);
         btnGuest = (Button) findViewById(R.id.btn_guest);
+        btnReset = (Button) findViewById(R.id.btn_reset);
         btnGoogle = (SignInButton) findViewById(R.id.google);
         inputEmail = (EditText) findViewById(R.id.email);
-        inputName = (EditText) findViewById(R.id.name);
         inputPassword = (EditText) findViewById(R.id.password);
-        signupText = (TextView) findViewById(R.id.signup_text);
+        signinText = (TextView) findViewById(R.id.signin_text);
 
         //set font typeface
-        btnSignUp.setTypeface(typeFace);
+        btnLogin.setTypeface(typeFace);
         btnCancel.setTypeface(typeFace);
         btnGuest.setTypeface(typeFace);
+        btnReset.setTypeface(typeFace);
         inputEmail.setTypeface(typeFace);
-        inputName.setTypeface(typeFace);
         inputPassword.setTypeface(typeFace);
-        signupText.setTypeface(typeFace);
+        signinText.setTypeface(typeFace);
 
         progress = new ProgressDialog(this);
 
@@ -113,7 +111,7 @@ public class SignupActivity extends AppCompatActivity {
                 .enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
                     @Override
                     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-                        Toast.makeText(SignupActivity.this, "Error signing up with google", Toast.LENGTH_LONG).show();
+                        Toast.makeText(AccountLoginActivity.this, "Error signing in with google", Toast.LENGTH_LONG).show();
                     }
                 })
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
@@ -122,23 +120,31 @@ public class SignupActivity extends AppCompatActivity {
         btnGoogle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                signUp();
-                progress.setMessage("Signing Up...");
+                signIn();
+                progress.setMessage("Signing In...");
                 progress.show();
             }
         });
 
-        btnSignUp.setOnClickListener(new View.OnClickListener() {
+        btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startRegister();
+                startLogin();
             }
         });
 
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
+                Intent intent = new Intent(AccountLoginActivity.this, LoginActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        btnReset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AccountLoginActivity.this, ResetPasswordActivity.class);
                 startActivity(intent);
             }
         });
@@ -146,7 +152,7 @@ public class SignupActivity extends AppCompatActivity {
         btnGuest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(SignupActivity.this, LandingpageActivity.class);
+                Intent intent = new Intent(AccountLoginActivity.this, LandingpageActivity.class);
                 startActivity(intent);
             }
         });
@@ -166,20 +172,14 @@ public class SignupActivity extends AppCompatActivity {
         }
     }
 
-    private void signUp() {
+    private void signIn() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
-    public void startRegister() {
-        final String name = inputName.getText().toString().trim();
-        final String email = inputEmail.getText().toString().trim();
-        final String password = inputPassword.getText().toString().trim();
-
-        if (TextUtils.isEmpty(name)) {
-            Toast.makeText(getApplicationContext(), "Enter name.", Toast.LENGTH_SHORT).show();
-            return;
-        }
+    public void startLogin() {
+        String email = inputEmail.getText().toString();
+        final String password = inputPassword.getText().toString();
 
         if (TextUtils.isEmpty(email)) {
             Toast.makeText(getApplicationContext(), "Enter email address.", Toast.LENGTH_SHORT).show();
@@ -191,16 +191,12 @@ public class SignupActivity extends AppCompatActivity {
             return;
         }
 
-        if (password.length() < 6) {
-            Toast.makeText(getApplicationContext(), "Password too short, enter a minimum of 6 characters.", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        progress.setMessage("Signing Up...");
+        progress.setMessage("Logging In...");
         progress.show();
-        //create user
-        auth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(SignupActivity.this, new OnCompleteListener<AuthResult>() {
+
+        //authenticate user
+        auth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(AccountLoginActivity.this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         // If sign in fails, display a message to the user. If sign in succeeds
@@ -208,22 +204,16 @@ public class SignupActivity extends AppCompatActivity {
                         // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
                             progress.dismiss();
-                            Toast.makeText(SignupActivity.this, "Authentication failed." + task.getException(),
-                                    Toast.LENGTH_SHORT).show();
+                            // there was an error
+                            if (password.length() < 6) {
+                                inputPassword.setError(getString(R.string.minimum_password));
+                            } else {
+                                Toast.makeText(AccountLoginActivity.this, getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
+                            }
                         } else {
-                            String userid = auth.getCurrentUser().getUid();
-
-                            DatabaseReference currentUserDB =  database.child(userid);
-                            currentUserDB.child("name").setValue(name);
-                            currentUserDB.child("image").setValue(defaultImg);
-                            currentUserDB.child("email").setValue(email);
-                            currentUserDB.child("password").setValue(password);
-                            currentUserDB.child("usertype").setValue("user");
-
-                            progress.dismiss();
-                            Intent mainIntent = new Intent(SignupActivity.this, LandingpageActivity_User.class);
-                            mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            startActivity(mainIntent);
+                            Intent intent = new Intent(AccountLoginActivity.this, LandingpageActivity_User.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(intent);
                         }
                     }
                 });
@@ -242,13 +232,14 @@ public class SignupActivity extends AppCompatActivity {
                 firebaseAuthWithGoogle(account);
                 progress.dismiss();
 
-                Intent intent = new Intent(SignupActivity.this, LandingpageActivity_Google.class);
+                Intent intent = new Intent(AccountLoginActivity.this, LandingpageActivity_Google.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
             } else {
                 // Google Sign In failed, update UI appropriately
                 // ...
-                Toast.makeText(SignupActivity.this, "Error signing in with google", Toast.LENGTH_LONG).show();
+                progress.dismiss();
+                Toast.makeText(AccountLoginActivity.this, "Error signing in with google", Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -265,8 +256,9 @@ public class SignupActivity extends AppCompatActivity {
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
+                            progress.dismiss();
                             Log.w(TAG, "signInWithCredential", task.getException());
-                            Toast.makeText(SignupActivity.this, "Authentication failed.",
+                            Toast.makeText(AccountLoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         }
                     }

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.example.vineyard_2.SignupActivity"
+    tools:context="com.example.vineyard_2.AccountLoginActivity"
     android:background="@drawable/photo2"
     android:gravity="center">
 
@@ -20,28 +20,14 @@
         android:layout_marginRight="45dp" />
 
     <TextView
-        android:id="@+id/signup_text"
+        android:id="@+id/signin_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/sign_up_email"
+        android:text="@string/sign_in_acc"
         android:textColor="@color/input_login_hint"
         android:textSize="18sp"
         android:layout_marginTop="40dp"
         android:layout_centerInParent="true" />
-
-    <EditText
-        android:id="@+id/name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="text"
-        android:textSize="17sp"
-        android:textColor="@color/secondaryColor"
-        android:textColorHint="@color/input_login_hint"
-        android:hint="Name"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="30dp"
-        android:textColorLink="@color/mainColor" />
 
     <EditText
         android:id="@+id/email"
@@ -54,7 +40,7 @@
         android:hint="Email"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="30dp"
         android:textColorLink="@color/mainColor" />
 
     <EditText
@@ -70,6 +56,19 @@
         android:layout_marginRight="20dp"
         android:layout_marginTop="10dp"
         android:textColorLink="@color/mainColor" />
+
+    <Button
+        android:id="@+id/btn_reset"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#0000"
+        android:text="Forgot password?"
+        android:textColor="@color/secondaryColor"
+        android:textSize="14sp"
+        android:layout_marginTop="10dp"
+        android:textAllCaps="false"
+        android:layout_gravity="left"
+        android:layout_marginLeft="20dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -88,11 +87,11 @@
             android:textAllCaps="false"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:layout_marginLeft="20dp"/>
+            android:layout_marginLeft="20dp" />
 
         <Button
-            android:id="@+id/btn_signup"
-            android:text="Sign up"
+            android:id="@+id/btn_login"
+            android:text="Sign in"
             android:background="@color/mainColor"
             android:textColor="@color/white"
             android:layout_width="0dp"
@@ -102,7 +101,10 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:layout_marginLeft="15dp"
-            android:layout_marginRight="20dp"/>
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/btn_cancel"
+            android:layout_toEndOf="@+id/btn_cancel"
+            android:layout_marginRight="20dp" />
 
     </LinearLayout>
 

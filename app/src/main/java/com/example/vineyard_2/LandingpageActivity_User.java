@@ -68,9 +68,9 @@ public class LandingpageActivity_User extends AppCompatActivity {
             viewPagerAdapter.addFragments(new ProfileFragment_User());
             viewPager.setAdapter(viewPagerAdapter);
             tabLayout.setupWithViewPager(viewPager);
-            tabLayout.getTabAt(0).setIcon(R.drawable.nhome);
-            tabLayout.getTabAt(1).setIcon(R.drawable.nsearch);
-            tabLayout.getTabAt(2).setIcon(R.drawable.nmenu);
+            tabLayout.getTabAt(0).setIcon(R.drawable.home);
+            tabLayout.getTabAt(1).setIcon(R.drawable.search);
+            tabLayout.getTabAt(2).setIcon(R.drawable.menu);
         }
 
     }

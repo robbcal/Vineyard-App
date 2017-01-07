@@ -1,6 +1,7 @@
 package com.example.vineyard_2;
 
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -25,11 +26,13 @@ public class ProfileFragment_User extends Fragment {
     private TextView userProfileName, userProfileEmail;
     private ImageView userProfilePhoto;
 
-    private Button btnLogout;
+    private Button btnLogout, btnEdit;
 
     private FirebaseAuth auth;
     private FirebaseUser user;
     private DatabaseReference databaseUser;
+
+    private Typeface typeFace;
 
     public ProfileFragment_User() {}
 
@@ -38,11 +41,20 @@ public class ProfileFragment_User extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_profile_user, container, false);
 
+        typeFace = Typeface.createFromAsset(getActivity().getAssets(), "HelveticaNeueLight.ttf");
+
         userProfileName = (TextView) v.findViewById(R.id.user_profile_name);
         userProfileEmail = (TextView) v.findViewById(R.id.user_email);
         userProfilePhoto = (ImageView) v.findViewById(R.id.user_profile_photo);
 
         btnLogout = (Button) v.findViewById(R.id.btn_logout);
+        btnEdit = (Button) v.findViewById(R.id.btn_edit);
+
+        //set font typeface
+        userProfileName.setTypeface(typeFace);
+        userProfileEmail.setTypeface(typeFace);
+        btnLogout.setTypeface(typeFace);
+        btnEdit.setTypeface(typeFace);
 
         //Get Firebase auth instance
         auth = FirebaseAuth.getInstance();

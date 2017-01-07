@@ -3,6 +3,7 @@ package com.example.vineyard_2;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -52,7 +53,10 @@ public class SearchFragment extends Fragment {
     List<Recipes> rowItems;
     ArrayList<String> searchedIngredients;
     FirebaseListAdapter<Recipe> mAdapter;
-    private static final String TAG = "Chiz";
+
+    private Typeface typeFace;
+
+    private static final String TAG = "Vineyard";
 
     public SearchFragment() {
         // Required empty public constructor
@@ -64,6 +68,8 @@ public class SearchFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_search, container, false);
 
+        typeFace = Typeface.createFromAsset(getActivity().getAssets(), "HelveticaNeueLight.ttf");
+
         breakfast = (CheckBox) v.findViewById(R.id.Breakfast);
         lunch = (CheckBox) v.findViewById(R.id.Lunch);
         snacks = (CheckBox) v.findViewById(R.id.Snacks);
@@ -73,6 +79,10 @@ public class SearchFragment extends Fragment {
         searchButton = (Button)v.findViewById(R.id.search_button);
         clearButton = (Button)v.findViewById(R.id.clearSearch);
         listView = (ListView)v.findViewById(R.id.recipe_list);
+
+        //set font typeface
+        searchButton.setTypeface(typeFace);
+        searchField.setTypeface(typeFace);
 
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 

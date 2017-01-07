@@ -3,6 +3,7 @@ package com.example.vineyard_2;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -48,6 +49,9 @@ public class HomeFragment_User extends Fragment{
     RecipeListAdapterHome adapter;
     FirebaseListAdapter<Recipe> mAdapter = null;
     private static final String TAG = "Vineyard";
+
+    private Typeface typeFace;
+
     View v;
 
     public HomeFragment_User() {}
@@ -56,12 +60,18 @@ public class HomeFragment_User extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_home_user, container, false);
 
+        typeFace = Typeface.createFromAsset(getActivity().getAssets(), "HelveticaNeueLight.ttf");
+
         mRecipeRef.keepSynced(true);
 
         searchField =(AutoCompleteTextView)v.findViewById(R.id.search_field);
         searchButton = (Button)v.findViewById(R.id.search_button);
         clearButton = (Button)v.findViewById(R.id.clearSearch);
         listView = (ListView)v.findViewById(R.id.recipe_list);
+
+        //set font typeface
+        searchButton.setTypeface(typeFace);
+        searchField.setTypeface(typeFace);
 
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 

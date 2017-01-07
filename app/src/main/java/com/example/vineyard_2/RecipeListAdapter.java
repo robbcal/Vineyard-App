@@ -2,6 +2,7 @@ package com.example.vineyard_2;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.media.Image;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,7 +32,8 @@ public class RecipeListAdapter extends BaseAdapter {
     DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
     DatabaseReference mRecipeRef = mRootRef.child("recipes");
     DatabaseReference mUserRef = mRootRef.child("users");
-    private static final String TAG = "Chiz";
+    private static final String TAG = "Vineyard";
+
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
     public RecipeListAdapter ( Context context, List<Recipes> items ) {

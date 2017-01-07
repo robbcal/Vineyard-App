@@ -17,8 +17,10 @@
         android:layout_marginRight="10dp"
         android:padding="10dp"
         android:hint="Input ingredient/s"
-        android:textColor="@android:color/black">
+        android:textColor="@color/darkColor"
+        android:textColorHint="@color/darkColor">
     </MultiAutoCompleteTextView>
+
     <Button
         android:id="@+id/clearSearch"
         android:layout_width="50dp"
@@ -26,9 +28,10 @@
         android:layout_marginTop="55dp"
         android:layout_alignRight="@id/search_field"
         android:background="@android:color/transparent"
-        android:textColor="@android:color/darker_gray"
+        android:textColor="@color/darkColor"
         android:text="X"
         android:onClick="clearSearchText" />
+
     <Button
         android:id="@+id/search_button"
         android:layout_below="@id/search_field"
@@ -36,35 +39,46 @@
         android:layout_height="wrap_content"
         android:text="SEARCH"
         android:onClick="searchRecipe"
-        android:layout_margin="5dp" />
+        android:background="@color/mainColor"
+        android:textColor="@color/secondaryColor"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp" />
 
     <CheckBox
         android:layout_below="@+id/search_button"
         android:id="@+id/Breakfast"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Breakfast" />
+        android:text="Breakfast"
+        android:layout_marginTop="5dp"/>
+
     <CheckBox
         android:layout_below="@+id/search_button"
         android:layout_toRightOf="@+id/Breakfast"
         android:id="@+id/Lunch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Lunch"/>
+        android:text="Lunch"
+        android:layout_marginTop="5dp"/>
+
     <CheckBox
         android:layout_below="@+id/search_button"
         android:layout_toRightOf="@id/Lunch"
         android:id="@+id/Snacks"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Snacks"/>
+        android:text="Snacks"
+        android:layout_marginTop="5dp"/>
+
     <CheckBox
         android:layout_below="@+id/search_button"
         android:layout_toRightOf="@id/Snacks"
         android:id="@+id/Dinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Dinner" />
+        android:text="Dinner"
+        android:layout_marginTop="5dp"/>
 
     <ListView
         android:id="@+id/recipe_list"

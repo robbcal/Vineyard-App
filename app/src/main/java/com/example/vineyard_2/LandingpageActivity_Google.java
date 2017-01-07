@@ -11,7 +11,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -82,9 +81,9 @@ public class LandingpageActivity_Google extends AppCompatActivity {
             viewPagerAdapter.addFragments(new ProfileFragment_Google());
             viewPager.setAdapter(viewPagerAdapter);
             tabLayout.setupWithViewPager(viewPager);
-            tabLayout.getTabAt(0).setIcon(R.drawable.nhome);
-            tabLayout.getTabAt(1).setIcon(R.drawable.nsearch);
-            tabLayout.getTabAt(2).setIcon(R.drawable.nmenu);
+            tabLayout.getTabAt(0).setIcon(R.drawable.home);
+            tabLayout.getTabAt(1).setIcon(R.drawable.search);
+            tabLayout.getTabAt(2).setIcon(R.drawable.menu);
         }
 
     }

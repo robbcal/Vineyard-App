@@ -43,7 +43,12 @@
     <string name="forgot_password_msg">We just need your registered Email Id to sent you password reset instructions.</string>
     <string name="cont_guest">Continue as guest</string>
 
-    <string name="facebook_app_id">234114673683116</string>
-    <string name="fb_login_protocol_scheme">fb234114673683116</string>
+    <string name="desc1">Healthy recipes</string>
+    <string name="desc2">curated just for you.</string>
+    <string name="create_acc">Create an account</string>
+    <string name="sign_up_email">Or sign up with your email address</string>
+    <string name="sign_in_acc">Or sign in with your account</string>
+    <string name="reset_text">A reset password link will be sent to your email address.</string>
+    <string name="enjoy">Enjoy the full Vineyard experience.</string>
 
 </resources>
