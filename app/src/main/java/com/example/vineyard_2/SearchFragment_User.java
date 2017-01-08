@@ -85,6 +85,10 @@ public class SearchFragment_User extends Fragment {
         //set font typeface
         searchButton.setTypeface(typeFace);
         searchField.setTypeface(typeFace);
+        breakfast.setTypeface(typeFace);
+        lunch.setTypeface(typeFace);
+        snacks.setTypeface(typeFace);
+        dinner.setTypeface(typeFace);
 
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 

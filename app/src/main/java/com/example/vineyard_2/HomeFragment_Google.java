@@ -2,10 +2,12 @@ package com.example.vineyard_2;
 
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -123,8 +125,19 @@ public class HomeFragment_Google extends Fragment{
                 ((Button) view.findViewById(R.id.remove)).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mRecipeRef.child(recipeKey).removeValue();
-                        Toast.makeText(getActivity().getApplicationContext(), title+" removed.",Toast.LENGTH_SHORT).show();
+                        new AlertDialog.Builder(getActivity())
+                                .setTitle("Delete Saved Recipe")
+                                .setMessage("Are you sure you want to delete this recipe?")
+                                .setNegativeButton("No", null)
+                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                                        mRecipeRef.child(recipeKey).removeValue();
+                                        Toast.makeText(getActivity().getApplicationContext(), title+" removed.",Toast.LENGTH_SHORT).show();
+
+                                    }
+                                }).create().show();
                     }
                 });
 

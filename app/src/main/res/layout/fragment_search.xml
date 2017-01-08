@@ -45,44 +45,55 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp" />
 
-    <CheckBox
-        android:layout_below="@+id/search_button"
-        android:id="@+id/Breakfast"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Breakfast"
-        android:layout_marginTop="5dp"/>
+        android:layout_below="@+id/search_button"
+        android:id="@+id/extra_filters"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:gravity="center">
 
-    <CheckBox
-        android:layout_below="@+id/search_button"
-        android:layout_toRightOf="@+id/Breakfast"
-        android:id="@+id/Lunch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Lunch"
-        android:layout_marginTop="5dp"/>
+        <CheckBox
+            android:layout_below="@+id/search_button"
+            android:id="@+id/Breakfast"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Breakfast"
+            android:layout_marginRight="5dp"/>
 
-    <CheckBox
-        android:layout_below="@+id/search_button"
-        android:layout_toRightOf="@id/Lunch"
-        android:id="@+id/Snacks"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Snacks"
-        android:layout_marginTop="5dp"/>
+        <CheckBox
+            android:layout_below="@+id/search_button"
+            android:layout_toRightOf="@+id/Breakfast"
+            android:id="@+id/Lunch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Lunch"
+            android:layout_marginRight="5dp"/>
 
-    <CheckBox
-        android:layout_below="@+id/search_button"
-        android:layout_toRightOf="@id/Snacks"
-        android:id="@+id/Dinner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Dinner"
-        android:layout_marginTop="5dp"/>
+        <CheckBox
+            android:layout_below="@+id/search_button"
+            android:layout_toRightOf="@id/Lunch"
+            android:id="@+id/Snacks"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Snacks"
+            android:layout_marginRight="5dp"/>
+
+        <CheckBox
+            android:layout_below="@+id/search_button"
+            android:layout_toRightOf="@id/Snacks"
+            android:id="@+id/Dinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dinner"
+            android:layout_marginRight="5dp"/>
+
+    </LinearLayout>
 
     <ListView
         android:id="@+id/recipe_list"
-        android:layout_below="@+id/Breakfast"
+        android:layout_below="@id/extra_filters"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     </ListView>
