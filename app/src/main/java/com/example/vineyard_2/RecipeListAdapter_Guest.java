@@ -2,6 +2,9 @@ package com.example.vineyard_2;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Typeface;
+import android.media.Image;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,20 +17,28 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class RecipeListAdapterHome extends BaseAdapter {
+public class RecipeListAdapter_Guest extends BaseAdapter {
     Context context;
     List<Recipes> rowItems;
     DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
+    DatabaseReference mRecipeRef = mRootRef.child("recipes");
     DatabaseReference mUserRef = mRootRef.child("users");
+    private static final String TAG = "Vineyard";
+
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-    public RecipeListAdapterHome (Context context, List<Recipes> items ) {
+    private Typeface typeFace;
+
+    public RecipeListAdapter_Guest ( Context context, List<Recipes> items ) {
         this.context = context;
         this.rowItems = items;
     }
@@ -37,29 +48,29 @@ public class RecipeListAdapterHome extends BaseAdapter {
         TextView txtTitle;
         TextView txtUrl;
         TextView txtID;
-        Button removeRecipe;
         TextView txtDescription;
     }
 
-    public View getView(final int position, View convertView, ViewGroup parent) {
-        RecipeListAdapterHome.ViewHolder holder = null;
+    public View getView(int position, View convertView, ViewGroup parent) {
+        ViewHolder holder = null;
+
+        typeFace = Typeface.createFromAsset(context.getAssets(), "HelveticaNeueLight.ttf");
 
         LayoutInflater mInflater = (LayoutInflater)
                 context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.custom_list_home, null);
-            holder = new RecipeListAdapterHome.ViewHolder();
+            convertView = mInflater.inflate(R.layout.custom_list_guest, null);
+            holder = new ViewHolder();
             holder.txtUrl = (TextView) convertView.findViewById(R.id.recipe_url);
             holder.txtTitle = (TextView) convertView.findViewById(R.id.recipe_title);
             holder.imageView = (ImageView) convertView.findViewById(R.id.icon);
-            holder.txtID = (TextView) convertView.findViewById(R.id.recipe_key);
             holder.txtDescription = (TextView) convertView.findViewById(R.id.recipe_description);
+            holder.txtID = (TextView) convertView.findViewById(R.id.recipe_key);
 
-            holder.removeRecipe = (Button) convertView.findViewById(R.id.remove);
             convertView.setTag(holder);
         }
         else {
-            holder = (RecipeListAdapterHome.ViewHolder) convertView.getTag();
+            holder = (ViewHolder) convertView.getTag();
         }
 
         final Recipes rowItem = (Recipes) getItem(position);
@@ -76,16 +87,9 @@ public class RecipeListAdapterHome extends BaseAdapter {
         holder.txtID.setText(id);
         holder.txtDescription.setText(description);
 
-        holder.removeRecipe.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                String uid = user.getUid();
-                DatabaseReference mUserRecipe = mUserRef.child(uid+"/recipes");
-                mUserRecipe.child(id).removeValue();
-                rowItems.remove(rowItem);
-                RecipeListAdapterHome.this.notifyDataSetChanged();
-                Toast.makeText(v.getContext(), title+" removed.", Toast.LENGTH_SHORT).show();
-            }
-        });
+        //set font typeface
+        holder.txtTitle.setTypeface(typeFace);
+        holder.txtDescription.setTypeface(typeFace);
 
         return convertView;
     }

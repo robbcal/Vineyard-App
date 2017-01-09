@@ -3,42 +3,33 @@ package com.example.vineyard_2;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
-import android.media.Image;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class RecipeListAdapter extends BaseAdapter {
+public class RecipeListAdapter_Home extends BaseAdapter {
     Context context;
     List<Recipes> rowItems;
     DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
-    DatabaseReference mRecipeRef = mRootRef.child("recipes");
     DatabaseReference mUserRef = mRootRef.child("users");
-    private static final String TAG = "Vineyard";
-
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
     private Typeface typeFace;
 
-    public RecipeListAdapter ( Context context, List<Recipes> items ) {
+    public RecipeListAdapter_Home(Context context, List<Recipes> items ) {
         this.context = context;
         this.rowItems = items;
     }
@@ -48,31 +39,31 @@ public class RecipeListAdapter extends BaseAdapter {
         TextView txtTitle;
         TextView txtUrl;
         TextView txtID;
-        Button addRecipe;
+        Button removeRecipe;
         TextView txtDescription;
     }
 
-    public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder = null;
+    public View getView(final int position, View convertView, ViewGroup parent) {
+        RecipeListAdapter_Home.ViewHolder holder = null;
 
         typeFace = Typeface.createFromAsset(context.getAssets(), "HelveticaNeueLight.ttf");
 
         LayoutInflater mInflater = (LayoutInflater)
                 context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.custom_list, null);
-            holder = new ViewHolder();
+            convertView = mInflater.inflate(R.layout.custom_list_home, null);
+            holder = new RecipeListAdapter_Home.ViewHolder();
             holder.txtUrl = (TextView) convertView.findViewById(R.id.recipe_url);
             holder.txtTitle = (TextView) convertView.findViewById(R.id.recipe_title);
             holder.imageView = (ImageView) convertView.findViewById(R.id.icon);
-            holder.txtDescription = (TextView) convertView.findViewById(R.id.recipe_description);
             holder.txtID = (TextView) convertView.findViewById(R.id.recipe_key);
+            holder.txtDescription = (TextView) convertView.findViewById(R.id.recipe_description);
 
-            holder.addRecipe = (Button) convertView.findViewById(R.id.add);
+            holder.removeRecipe = (Button) convertView.findViewById(R.id.remove);
             convertView.setTag(holder);
         }
         else {
-            holder = (ViewHolder) convertView.getTag();
+            holder = (RecipeListAdapter_Home.ViewHolder) convertView.getTag();
         }
 
         final Recipes rowItem = (Recipes) getItem(position);
@@ -88,41 +79,23 @@ public class RecipeListAdapter extends BaseAdapter {
         Picasso.with(context).load(img_url).error(R.drawable.placeholder_error).into(holder.imageView);
         holder.txtID.setText(id);
         holder.txtDescription.setText(description);
-        holder.addRecipe.setTextSize(14);
+        holder.removeRecipe.setTextSize(14);
 
-        holder.addRecipe.setOnClickListener(new View.OnClickListener() {
+        holder.removeRecipe.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if (user != null) {
-                    String uid = user.getUid();
-                    final DatabaseReference mspecificUser = mUserRef.child(uid+"/recipes/"+id);
-                    mspecificUser.child("title").setValue(title);
-                    mspecificUser.child("url").setValue(url);
-                    mspecificUser.child("image_url").setValue(img_url);
-                    mspecificUser.child("description").setValue(description);
-
-                    mRecipeRef.child(id).addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot snapshot) {
-                            //Log.d(TAG, "value"+snapshot.getValue());
-                            mspecificUser.setValue(snapshot.getValue());
-
-                        }
-                        @Override public void onCancelled(DatabaseError databaseError) {
-                            Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
-                        }
-                    });
-
-                    Toast.makeText(v.getContext(), title+" has been added.", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(v.getContext(), "Enjoy the full Vineyard experience through signing up/signing in.", Toast.LENGTH_LONG).show();
-                }
+                String uid = user.getUid();
+                DatabaseReference mUserRecipe = mUserRef.child(uid+"/recipes");
+                mUserRecipe.child(id).removeValue();
+                rowItems.remove(rowItem);
+                RecipeListAdapter_Home.this.notifyDataSetChanged();
+                Toast.makeText(v.getContext(), title+" removed.", Toast.LENGTH_SHORT).show();
             }
         });
 
         //set font typeface
         holder.txtTitle.setTypeface(typeFace);
         holder.txtDescription.setTypeface(typeFace);
-        holder.addRecipe.setTypeface(typeFace);
+        holder.removeRecipe.setTypeface(typeFace);
 
         return convertView;
     }

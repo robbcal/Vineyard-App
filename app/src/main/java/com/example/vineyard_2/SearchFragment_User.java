@@ -45,6 +45,8 @@ public class SearchFragment_User extends Fragment {
     DatabaseReference mRecipeRef = mRootRef.child("recipes");
     DatabaseReference mIngredients = mRootRef.child("ingredients");
 
+    TextView recipeUrl, recipeTitle, recipeDescription, recipeKey;
+    Button addRecipe;
     CheckBox breakfast;
     CheckBox lunch;
     CheckBox snacks;
@@ -197,30 +199,41 @@ public class SearchFragment_User extends Fragment {
             @Override
             protected void populateView(View view, Recipe r, int position) {
                 DatabaseReference recipeRef = getRef(position);
-                final String recipeKey = recipeRef.getKey();
+                final String recipekey = recipeRef.getKey();
 
                 final String url = r.getUrl();
                 final String title = r.getTitle();
                 final String imgUrl = r.getImage_url();
                 final String description = r.getDescription();
 
+                recipeTitle = (TextView) view.findViewById(R.id.recipe_title);
+                recipeKey = (TextView) view.findViewById(R.id.recipe_key);
+                recipeUrl = (TextView) view.findViewById(R.id.recipe_url);
+                recipeDescription = (TextView) view.findViewById(R.id.recipe_description);
+                addRecipe = (Button) view.findViewById(R.id.add);
+
+                //set font typeface
+                recipeTitle.setTypeface(typeFace);
+                recipeDescription.setTypeface(typeFace);
+                addRecipe.setTypeface(typeFace);
+
                 Picasso.with(getActivity().getApplicationContext()).load(imgUrl).error(R.drawable.placeholder_error).into((ImageView) view.findViewById(R.id.icon));
-                ((TextView)view.findViewById(R.id.recipe_title)).setText(title);
-                ((TextView) view.findViewById(R.id.recipe_url)).setText(url);
-                ((TextView) view.findViewById(R.id.recipe_key)).setText(recipeKey);
-                ((TextView) view.findViewById(R.id.recipe_description)).setText(description);
+                recipeTitle.setText(title);
+                recipeUrl.setText(url);
+                recipeKey.setText(recipekey);
+                recipeDescription.setText(description);
 
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(getActivity().getApplicationContext(), SpecificRecipe.class);
-                        intent.putExtra("key", recipeKey);
+                        Intent intent = new Intent(getActivity().getApplicationContext(), SpecificRecipe_User.class);
+                        intent.putExtra("key", recipekey);
                         intent.putExtra("url", url);
                         startActivity(intent);
                     }
                 });
 
-                ((Button) view.findViewById(R.id.add)).setOnClickListener(new View.OnClickListener() {
+                addRecipe.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
@@ -228,7 +241,7 @@ public class SearchFragment_User extends Fragment {
                             String uid = user.getUid();
                             final DatabaseReference mspecificUser = mUserRef.child(uid+"/recipes/"+recipeKey);
 
-                            mRecipeRef.child(recipeKey).addValueEventListener(new ValueEventListener() {
+                            mRecipeRef.child(recipekey).addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot snapshot) {
                                     mspecificUser.setValue(snapshot.getValue());
@@ -330,7 +343,7 @@ public class SearchFragment_User extends Fragment {
                                                 TextView text = (TextView) view.findViewById(R.id.recipe_url);
                                                 String recipe_url = text.getText().toString().trim();
 
-                                                Intent intent = new Intent(getActivity().getApplicationContext(), SpecificRecipe.class);
+                                                Intent intent = new Intent(getActivity().getApplicationContext(), SpecificRecipe_User.class);
                                                 intent.putExtra("key", recipeKey);
                                                 intent.putExtra("url", recipe_url);
                                                 startActivity(intent);
@@ -350,7 +363,7 @@ public class SearchFragment_User extends Fragment {
                                             TextView text = (TextView) view.findViewById(R.id.recipe_url);
                                             String recipe_url = text.getText().toString().trim();
 
-                                            Intent intent = new Intent(getActivity().getApplicationContext(), SpecificRecipe.class);
+                                            Intent intent = new Intent(getActivity().getApplicationContext(), SpecificRecipe_User.class);
                                             intent.putExtra("key", recipeKey);
                                             intent.putExtra("url", recipe_url);
                                             startActivity(intent);
@@ -465,7 +478,7 @@ public class SearchFragment_User extends Fragment {
                                     TextView text = (TextView) view.findViewById(R.id.recipe_url);
                                     String recipe_url = text.getText().toString().trim();
 
-                                    Intent intent = new Intent(getActivity().getApplicationContext(), SpecificRecipe.class);
+                                    Intent intent = new Intent(getActivity().getApplicationContext(), SpecificRecipe_User.class);
                                     intent.putExtra("key", recipeKey);
                                     intent.putExtra("url", recipe_url);
                                     startActivity(intent);

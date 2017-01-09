@@ -17,7 +17,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -42,12 +41,14 @@ public class HomeFragment_Google extends Fragment{
     DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
     DatabaseReference mRecipeRef = mRootRef.child("users/"+uid+"/recipes");
 
+    TextView recipeUrl, recipeTitle, recipeDescription, recipekey;
+    Button removeRecipe;
     ListView listView;
     EditText searchField;
     Button searchButton;
     Button clearButton;
     List<Recipes> rowItems;
-    RecipeListAdapterHome adapter;
+    RecipeListAdapter_Home adapter;
     FirebaseListAdapter<Recipe> mAdapter = null;
     private static final String TAG = "Vineyard";
 
@@ -106,11 +107,22 @@ public class HomeFragment_Google extends Fragment{
                 final String imgUrl = r.getImage_url();
                 final String description = r.getDescription();
 
+                recipeTitle = (TextView) view.findViewById(R.id.recipe_title);
+                recipekey = (TextView) view.findViewById(R.id.recipe_key);
+                recipeUrl = (TextView) view.findViewById(R.id.recipe_url);
+                recipeDescription = (TextView) view.findViewById(R.id.recipe_description);
+                removeRecipe = (Button) view.findViewById(R.id.remove);
+
+                //set font typeface
+                recipeTitle.setTypeface(typeFace);
+                recipeDescription.setTypeface(typeFace);
+                removeRecipe.setTypeface(typeFace);
+
                 Picasso.with(getActivity().getApplicationContext()).load(imgUrl).error(R.drawable.placeholder_error).into((ImageView) view.findViewById(R.id.icon));
-                ((TextView)view.findViewById(R.id.recipe_title)).setText(title);
-                ((TextView) view.findViewById(R.id.recipe_url)).setText(url);
-                ((TextView) view.findViewById(R.id.recipe_key)).setText(recipeKey);
-                ((TextView) view.findViewById(R.id.recipe_description)).setText(description);
+                recipeTitle.setText(title);
+                recipeUrl.setText(url);
+                recipekey.setText(recipeKey);
+                recipeDescription.setText(description);
 
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -122,7 +134,7 @@ public class HomeFragment_Google extends Fragment{
                     }
                 });
 
-                ((Button) view.findViewById(R.id.remove)).setOnClickListener(new View.OnClickListener() {
+                removeRecipe.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         new AlertDialog.Builder(getActivity())
@@ -169,7 +181,7 @@ public class HomeFragment_Google extends Fragment{
                         Recipes item = new Recipes(title, url, image_url, recipeKey, description);
                         rowItems.add(item);
 
-                        adapter = new RecipeListAdapterHome(getActivity().getApplicationContext(), rowItems);
+                        adapter = new RecipeListAdapter_Home(getActivity().getApplicationContext(), rowItems);
                         listView.setAdapter(adapter);
 
                         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

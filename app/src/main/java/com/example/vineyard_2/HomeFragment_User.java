@@ -2,10 +2,12 @@ package com.example.vineyard_2;
 
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,10 +15,8 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.ImageButton;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -41,12 +41,14 @@ public class HomeFragment_User extends Fragment{
     DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
     DatabaseReference mRecipeRef = mRootRef.child("users/"+uid+"/recipes");
 
+    TextView recipeUrl, recipeTitle, recipeDescription, recipekey;
+    Button removeRecipe;
     ListView listView;
-    AutoCompleteTextView searchField;
+    EditText searchField;
     Button searchButton;
     Button clearButton;
     List<Recipes> rowItems;
-    RecipeListAdapterHome adapter;
+    RecipeListAdapter_Home adapter;
     FirebaseListAdapter<Recipe> mAdapter = null;
     private static final String TAG = "Vineyard";
 
@@ -64,7 +66,7 @@ public class HomeFragment_User extends Fragment{
 
         mRecipeRef.keepSynced(true);
 
-        searchField =(AutoCompleteTextView)v.findViewById(R.id.search_field);
+        searchField =(EditText)v.findViewById(R.id.search_field);
         searchButton = (Button)v.findViewById(R.id.search_button);
         clearButton = (Button)v.findViewById(R.id.clearSearch);
         listView = (ListView)v.findViewById(R.id.recipe_list);
@@ -89,24 +91,6 @@ public class HomeFragment_User extends Fragment{
             }
         });
 
-        mRecipeRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                ArrayList<String> recipes = new ArrayList<String>();
-                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
-                    String recipe = postSnapshot.child("title").getValue(String.class);
-                    recipes.add(recipe);
-                }
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity().getApplicationContext(), R.layout.auto_complete, recipes);
-                searchField.setAdapter(adapter);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-        
         return v;
     }
 
@@ -123,11 +107,22 @@ public class HomeFragment_User extends Fragment{
                 final String imgUrl = r.getImage_url();
                 final String description = r.getDescription();
 
+                recipeTitle = (TextView) view.findViewById(R.id.recipe_title);
+                recipekey = (TextView) view.findViewById(R.id.recipe_key);
+                recipeUrl = (TextView) view.findViewById(R.id.recipe_url);
+                recipeDescription = (TextView) view.findViewById(R.id.recipe_description);
+                removeRecipe = (Button) view.findViewById(R.id.remove);
+
+                //set font typeface
+                recipeTitle.setTypeface(typeFace);
+                recipeDescription.setTypeface(typeFace);
+                removeRecipe.setTypeface(typeFace);
+
                 Picasso.with(getActivity().getApplicationContext()).load(imgUrl).error(R.drawable.placeholder_error).into((ImageView) view.findViewById(R.id.icon));
-                ((TextView)view.findViewById(R.id.recipe_title)).setText(title);
-                ((TextView) view.findViewById(R.id.recipe_url)).setText(url);
-                ((TextView) view.findViewById(R.id.recipe_key)).setText(recipeKey);
-                ((TextView) view.findViewById(R.id.recipe_description)).setText(description);
+                recipeTitle.setText(title);
+                recipeUrl.setText(url);
+                recipekey.setText(recipeKey);
+                recipeDescription.setText(description);
 
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -139,11 +134,22 @@ public class HomeFragment_User extends Fragment{
                     }
                 });
 
-                ((Button) view.findViewById(R.id.remove)).setOnClickListener(new View.OnClickListener() {
+                removeRecipe.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mRecipeRef.child(recipeKey).removeValue();
-                        Toast.makeText(getActivity().getApplicationContext(), title+" removed.",Toast.LENGTH_SHORT).show();
+                        new AlertDialog.Builder(getActivity())
+                                .setTitle("Delete Saved Recipe")
+                                .setMessage("Are you sure you want to delete this recipe?")
+                                .setNegativeButton("No", null)
+                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                                        mRecipeRef.child(recipeKey).removeValue();
+                                        Toast.makeText(getActivity().getApplicationContext(), title+" removed.",Toast.LENGTH_SHORT).show();
+
+                                    }
+                                }).create().show();
                     }
                 });
 
@@ -175,7 +181,7 @@ public class HomeFragment_User extends Fragment{
                         Recipes item = new Recipes(title, url, image_url, recipeKey, description);
                         rowItems.add(item);
 
-                        adapter = new RecipeListAdapterHome(getActivity().getApplicationContext(), rowItems);
+                        adapter = new RecipeListAdapter_Home(getActivity().getApplicationContext(), rowItems);
                         listView.setAdapter(adapter);
 
                         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

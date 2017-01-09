@@ -43,6 +43,7 @@ public class SearchFragment extends Fragment {
     DatabaseReference mRecipeRef = mRootRef.child("recipes");
     DatabaseReference mIngredients = mRootRef.child("ingredients");
 
+    TextView recipeUrl, recipeTitle, recipeDescription, recipeKey;
     CheckBox breakfast;
     CheckBox lunch;
     CheckBox snacks;
@@ -196,18 +197,27 @@ public class SearchFragment extends Fragment {
             @Override
             protected void populateView(View view, Recipe r, int position) {
                 DatabaseReference recipeRef = getRef(position);
-                final String recipeKey = recipeRef.getKey();
+                final String recipekey = recipeRef.getKey();
 
                 final String url = r.getUrl();
                 final String title = r.getTitle();
                 final String imgUrl = r.getImage_url();
                 final String description = r.getDescription();
 
+                recipeTitle = (TextView) view.findViewById(R.id.recipe_title);
+                recipeKey = (TextView) view.findViewById(R.id.recipe_key);
+                recipeUrl = (TextView) view.findViewById(R.id.recipe_url);
+                recipeDescription = (TextView) view.findViewById(R.id.recipe_description);
+
+                //set font typeface
+                recipeTitle.setTypeface(typeFace);
+                recipeDescription.setTypeface(typeFace);
+
                 Picasso.with(getActivity().getApplicationContext()).load(imgUrl).error(R.drawable.placeholder_error).into((ImageView) view.findViewById(R.id.icon));
-                ((TextView)view.findViewById(R.id.recipe_title)).setText(title);
-                ((TextView) view.findViewById(R.id.recipe_url)).setText(url);
-                ((TextView) view.findViewById(R.id.recipe_key)).setText(recipeKey);
-                ((TextView) view.findViewById(R.id.recipe_description)).setText(description);
+                recipeTitle.setText(title);
+                recipeUrl.setText(url);
+                recipeKey.setText(recipekey);
+                recipeDescription.setText(description);
 
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -292,7 +302,7 @@ public class SearchFragment extends Fragment {
                                         Recipes item = new Recipes(title, url, image_url, recipeKey, description);
                                         rowItems.add(item);
 
-                                        RecipeListAdapter adapter = new RecipeListAdapter(getActivity().getApplicationContext(), rowItems);
+                                        RecipeListAdapter_Guest adapter = new RecipeListAdapter_Guest(getActivity().getApplicationContext(), rowItems);
                                         listView.setAdapter(adapter);
 
                                         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -312,7 +322,7 @@ public class SearchFragment extends Fragment {
                                     Recipes item = new Recipes(title, url, image_url, recipeKey, description);
                                     rowItems.add(item);
 
-                                    RecipeListAdapter adapter = new RecipeListAdapter(getActivity().getApplicationContext(), rowItems);
+                                    RecipeListAdapter_Guest adapter = new RecipeListAdapter_Guest(getActivity().getApplicationContext(), rowItems);
                                     listView.setAdapter(adapter);
 
                                     listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -428,7 +438,7 @@ public class SearchFragment extends Fragment {
                             Recipes item = new Recipes(title, url, image_url, recipeKey, description);
                             rowItems.add(item);
 
-                            RecipeListAdapter adapter = new RecipeListAdapter(getActivity().getApplicationContext(), rowItems);
+                            RecipeListAdapter_Guest adapter = new RecipeListAdapter_Guest(getActivity().getApplicationContext(), rowItems);
                             listView.setAdapter(adapter);
 
                             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

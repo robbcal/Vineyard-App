@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:scaleType="centerCrop"
             android:src="@drawable/header"
-            android:layout_height="290dp" />
+            android:layout_height="310dp" />
 
         <ImageView
             android:id="@+id/user_profile_photo"

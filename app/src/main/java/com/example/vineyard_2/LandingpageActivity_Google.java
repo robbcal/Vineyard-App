@@ -106,6 +106,10 @@ public class LandingpageActivity_Google extends AppCompatActivity {
 
                         auth.signOut();
 
+                        Intent intent  = new Intent(LandingpageActivity_Google.this, LoginActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+
                     }
                 }).create().show();
     }

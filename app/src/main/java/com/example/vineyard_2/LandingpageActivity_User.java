@@ -93,6 +93,10 @@ public class LandingpageActivity_User extends AppCompatActivity {
 
                         auth.signOut();
 
+                        Intent intent  = new Intent(LandingpageActivity_User.this, LoginActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+
                     }
                 }).create().show();
     }

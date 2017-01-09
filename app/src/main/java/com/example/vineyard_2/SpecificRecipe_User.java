@@ -2,17 +2,14 @@ package com.example.vineyard_2;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Gravity;
 import android.webkit.WebView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,17 +23,24 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 public class SpecificRecipe_User extends AppCompatActivity {
+
+    private ImageView recipeImage;
+    private TextView recipeTitle, recipeDescription, recipeIngredients, recipeDirections, directionHeader, ingredientHeader;
+    private Typeface typeFace;
+
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     String uid = user.getUid();
     DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
     DatabaseReference mRecipeRef = mRootRef.child("users/"+uid+"/recipes");
-    private static final String TAG = "Chiz";
+
+    private static final String TAG = "Vineyard";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_specific_recipe_user);
 
-        final LinearLayout linearLayout = (LinearLayout) findViewById(R.id.ll);
+        typeFace = Typeface.createFromAsset(getAssets(), "HelveticaNeueLight.ttf");
 
         Intent intent = getIntent();
         final String url = intent.getStringExtra("url");
@@ -52,6 +56,23 @@ public class SpecificRecipe_User extends AppCompatActivity {
             Log.d(TAG, "not connected");
 
             if (user != null) {
+
+                recipeImage = (ImageView) findViewById(R.id.recipe_image);
+                recipeTitle = (TextView) findViewById(R.id.recipe_title);
+                recipeDescription = (TextView) findViewById(R.id.recipe_description);
+                recipeIngredients = (TextView) findViewById(R.id.recipe_ingredients);
+                recipeDirections = (TextView) findViewById(R.id.recipe_directions);
+                directionHeader = (TextView) findViewById(R.id.directions_header);
+                ingredientHeader = (TextView) findViewById(R.id.ingredient_header);
+
+                //set font typeface
+                recipeTitle.setTypeface(typeFace);
+                recipeDescription.setTypeface(typeFace);
+                recipeIngredients.setTypeface(typeFace);
+                recipeDirections.setTypeface(typeFace);
+                directionHeader.setTypeface(typeFace);
+                ingredientHeader.setTypeface(typeFace);
+
                 mRecipeRef.child(key).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot snapshot) {
@@ -59,45 +80,25 @@ public class SpecificRecipe_User extends AppCompatActivity {
                         final String desc = snapshot.child("description").getValue(String.class);
                         String img = snapshot.child("image_url").getValue(String.class);
 
-                        ImageView img1 = new ImageView(getApplicationContext());
-                        LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(600,600);
-                        parms.gravity= Gravity.CENTER;
-                        img1.setLayoutParams(parms);
-                        Picasso.with(getApplicationContext()).load(img).error(R.drawable.placeholder_error).into(img1);
-                        linearLayout.addView(img1);
-
-                        TextView tv1 = new TextView(getApplicationContext());
-                        tv1.setText(title);
-                        tv1.setTextSize(30);
-                        tv1.setTypeface(null, Typeface.BOLD);
-                        tv1.setTextColor(Color.BLACK);
-                        linearLayout.addView(tv1);
-
-                        TextView tv2 = new TextView(getApplicationContext());
-                        tv2.setText(desc);
-                        tv2.setTextSize(20);
-                        tv2.setTextColor(Color.BLACK);
-                        linearLayout.addView(tv2);
+                        Picasso.with(getApplicationContext()).load(img).error(R.drawable.placeholder_error).into(recipeImage);
+                        recipeTitle.setText(title);
+                        recipeDescription.setText(desc);
 
                         mRecipeRef.child(key+"/content/ingredients").addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                TextView tv3 = new TextView(getApplicationContext());
-                                tv3.setText("\nIngredients:");
-                                tv3.setTextSize(20);
-                                tv3.setTextColor(Color.BLACK);
-                                linearLayout.addView(tv3);
+//                                TextView tv3 = new TextView(getApplicationContext());
+//                                tv3.setText("\nIngredients:");
+//                                tv3.setTextSize(20);
+//                                tv3.setTextColor(Color.BLACK);
+//                                linearLayout.addView(tv3);
 
                                 for (DataSnapshot ingSnapshot: dataSnapshot.getChildren()) {
                                     String ingr = ingSnapshot.getValue().toString().toLowerCase();
                                     ingr = ingr.replace("{ingredient=","");
                                     ingr = ingr.replaceAll("\\}", "");
 
-                                    TextView text= new TextView(getApplicationContext());
-                                    text.setText("> "+ingr);
-                                    text.setTextSize(15);
-                                    text.setTextColor(Color.BLACK);
-                                    linearLayout.addView(text);
+                                    recipeIngredients.append("> " + ingr + "\n");
                                 }
 
                             }
@@ -111,10 +112,6 @@ public class SpecificRecipe_User extends AppCompatActivity {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 TextView tv4 = new TextView(getApplicationContext());
-                                tv4.setText("\nDirections:");
-                                tv4.setTextSize(20);
-                                tv4.setTextColor(Color.BLACK);
-                                linearLayout.addView(tv4);
 
                                 for (DataSnapshot dirSnapshot: dataSnapshot.getChildren()) {
                                     String dir = dirSnapshot.getValue().toString().toLowerCase();
@@ -123,12 +120,8 @@ public class SpecificRecipe_User extends AppCompatActivity {
 
                                     if(dir.matches("[\\n]+")){
 
-                                    }else {
-                                        TextView text = new TextView(getApplicationContext());
-                                        text.setText("> " + dir);
-                                        text.setTextSize(15);
-                                        text.setTextColor(Color.BLACK);
-                                        linearLayout.addView(text);
+                                    } else {
+                                        recipeDirections.append("> " + dir + "\n");
                                     }
                                 }
 

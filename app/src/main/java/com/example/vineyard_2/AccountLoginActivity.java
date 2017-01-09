@@ -45,6 +45,7 @@ public class AccountLoginActivity extends AppCompatActivity {
     private Typeface typeFace;
 
     private DatabaseReference database;
+    private String uid;
 
     private static final int RC_SIGN_IN = 1;
     private GoogleApiClient mGoogleApiClient;
@@ -58,6 +59,7 @@ public class AccountLoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_account_login);
 
         typeFace = Typeface.createFromAsset(getAssets(), "HelveticaNeueLight.ttf");
+        database = FirebaseDatabase.getInstance().getReference().child("users");
 
         //Get Firebase auth instance
         auth = FirebaseAuth.getInstance();
@@ -78,8 +80,6 @@ public class AccountLoginActivity extends AppCompatActivity {
                 }
             }
         };
-
-        database = FirebaseDatabase.getInstance().getReference().child("users");
 
         btnLogin = (Button) findViewById(R.id.btn_login);
         btnCancel = (Button) findViewById(R.id.btn_cancel);
