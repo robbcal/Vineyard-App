@@ -199,7 +199,7 @@ public class SearchFragment_User extends Fragment {
             @Override
             protected void populateView(View view, Recipe r, int position) {
                 DatabaseReference recipeRef = getRef(position);
-                final String recipekey = recipeRef.getKey();
+                final String recipe_key = recipeRef.getKey();
 
                 final String url = r.getUrl();
                 final String title = r.getTitle();
@@ -220,14 +220,14 @@ public class SearchFragment_User extends Fragment {
                 Picasso.with(getActivity().getApplicationContext()).load(imgUrl).error(R.drawable.placeholder_error).into((ImageView) view.findViewById(R.id.icon));
                 recipeTitle.setText(title);
                 recipeUrl.setText(url);
-                recipeKey.setText(recipekey);
+                recipeKey.setText(recipe_key);
                 recipeDescription.setText(description);
 
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(getActivity().getApplicationContext(), SpecificRecipe_User.class);
-                        intent.putExtra("key", recipekey);
+                        intent.putExtra("key", recipe_key);
                         intent.putExtra("url", url);
                         startActivity(intent);
                     }
@@ -239,9 +239,9 @@ public class SearchFragment_User extends Fragment {
 
                         if (user != null) {
                             String uid = user.getUid();
-                            final DatabaseReference mspecificUser = mUserRef.child(uid+"/recipes/"+recipeKey);
+                            final DatabaseReference mspecificUser = mUserRef.child(uid+"/recipes/"+recipe_key);
 
-                            mRecipeRef.child(recipekey).addValueEventListener(new ValueEventListener() {
+                            mRecipeRef.child(recipe_key).addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot snapshot) {
                                     mspecificUser.setValue(snapshot.getValue());
