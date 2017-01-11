@@ -59,6 +59,8 @@ public class ProfileFragment_Google extends Fragment {
         user = auth.getCurrentUser();
         databaseUser = FirebaseDatabase.getInstance().getReference().child("users").child(user.getUid());
 
+        databaseUser.keepSynced(true);
+
         databaseUser.addValueEventListener(new com.google.firebase.database.ValueEventListener() {
             @Override
             public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {

@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:scaleType="centerCrop"
             android:src="@drawable/header"
-            android:layout_height="310dp" />
+            android:layout_height="260dp" />
 
         <ImageView
             android:id="@+id/user_profile_photo"
@@ -78,9 +78,21 @@
             android:onClick="onClickLogout"
             android:elevation="3dp"
             android:text="Sign out"
+            android:textColor="@color/secondaryColor"/>
+
+        <Button
+            android:id="@+id/btn_delete"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/holo_red_light"
+            android:clickable="true"
+            android:onClick="onClickDelete"
+            android:textAllCaps="false"
+            android:elevation="3dp"
+            android:text="Delete Account"
             android:layout_gravity="bottom"
-            android:textColor="@color/secondaryColor"
-            android:layout_marginTop="20dp"/>
+            android:layout_marginTop="20dp"
+            android:textColor="@color/secondaryColor"/>
 
     </LinearLayout>
 

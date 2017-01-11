@@ -27,6 +27,7 @@ import com.google.firebase.database.FirebaseDatabase;
 public class ProfileEditActivity extends AppCompatActivity {
 
     private Button btnEdit;
+    private Button btnDelete;
     private EditText inputEmail, inputPassword, inputName;
     private ProgressBar progressBar;
     private TextView editText;
@@ -48,6 +49,7 @@ public class ProfileEditActivity extends AppCompatActivity {
         inputPassword = (EditText) findViewById(R.id.password);
         inputName = (EditText) findViewById(R.id.name);
         btnEdit = (Button) findViewById(R.id.btn_edit);
+        btnDelete = (Button) findViewById(R.id.btn_delete);
         editText = (TextView) findViewById(R.id.edit_header);
 
         //Get Firebase auth instance
@@ -145,6 +147,33 @@ public class ProfileEditActivity extends AppCompatActivity {
 
 
 
+            }
+        });
+
+        btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                new AlertDialog.Builder(ProfileEditActivity.this)
+                        .setTitle("Delete Account")
+                        .setMessage("Are you sure you want to delete this account? All saved recipes will also be deleted.")
+                        .setNegativeButton("No", null)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                databaseUser.removeValue();
+                                user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            Intent intent  = new Intent(ProfileEditActivity.this, LoginActivity.class);
+                                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                            startActivity(intent);
+                                        }
+                                    }
+                                });
+                            }
+                        }).create().show();
             }
         });
     }
