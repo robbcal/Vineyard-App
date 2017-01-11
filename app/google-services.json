@@ -8,56 +8,20 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:558097717869:android:16a4675790ece2b3",
-        "android_client_info": {
-          "package_name": "com.example.chiz.newapplication"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "558097717869-fabd1h7ivto4p2f4q1kvnui7jffkgrvl.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.chiz.newapplication",
-            "certificate_hash": "97A5AB1A74E0153A1EC1C97E2A1C4C72B234A401"
-          }
-        },
-        {
-          "client_id": "558097717869-9s9knmkjlobv6bbub693h0d3ctsdieu6.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyC1cxsMXiaq6GmdsGsQ6ZfQACV-3jfmJOc"
-        }
-      ],
-      "services": {
-        "analytics_service": {
-          "status": 1
-        },
-        "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "558097717869-9s9knmkjlobv6bbub693h0d3ctsdieu6.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        },
-        "ads_service": {
-          "status": 2
-        }
-      }
-    },
-    {
-      "client_info": {
         "mobilesdk_app_id": "1:558097717869:android:bf47fadc31b653c7",
         "android_client_info": {
           "package_name": "com.example.vineyard_2"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "558097717869-vga9blshmj8v5kkv4cd0fra8d2kh21q4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.vineyard_2",
+            "certificate_hash": "97A5AB1A74E0153A1EC1C97E2A1C4C72B234A401"
+          }
+        },
         {
           "client_id": "558097717869-qh8gge0n4kdtakte6anv2aqcd8gi0bhm.apps.googleusercontent.com",
           "client_type": 1,
