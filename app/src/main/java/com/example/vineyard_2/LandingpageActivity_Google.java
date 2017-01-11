@@ -34,7 +34,8 @@ public class LandingpageActivity_Google extends AppCompatActivity {
 
     private Button btnLogout;
     private Button btnDelete;
-    private String defaultImg = "https://lh3.googleusercontent.com/-avIikemoRt0/WG-kGcpmQ3I/AAAAAAAAACk/UpOzjOBXA5ke7g17Rq5KnCygLRi6f5DLQCEw/w140-h139-p/vineyard.jpg";
+
+    private String defaultImg = "https://lh3.googleusercontent.com/-BggmCt8LnM4/WHX9NbrLN8I/AAAAAAAAADU/PhdBGCpCyYwxp3K_XIWCM3JusfUgOImSgCEw/w139-h140-p/icon.jpg";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

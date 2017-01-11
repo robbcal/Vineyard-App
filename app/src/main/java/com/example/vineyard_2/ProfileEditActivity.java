@@ -62,6 +62,7 @@ public class ProfileEditActivity extends AppCompatActivity {
         inputPassword.setTypeface(typeFace);
         inputName.setTypeface(typeFace);
         btnEdit.setTypeface(typeFace);
+        btnDelete.setTypeface(typeFace);
         editText.setTypeface(typeFace);
 
         databaseUser.addValueEventListener(new com.google.firebase.database.ValueEventListener() {
