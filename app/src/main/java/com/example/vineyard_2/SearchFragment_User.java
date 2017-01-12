@@ -226,7 +226,7 @@ public class SearchFragment_User extends Fragment {
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(getActivity().getApplicationContext(), SpecificRecipe_User.class);
+                        Intent intent = new Intent(getActivity().getApplicationContext(), SpecificRecipe.class);
                         intent.putExtra("key", recipe_key);
                         intent.putExtra("url", url);
                         startActivity(intent);
@@ -343,7 +343,7 @@ public class SearchFragment_User extends Fragment {
                                                 TextView text = (TextView) view.findViewById(R.id.recipe_url);
                                                 String recipe_url = text.getText().toString().trim();
 
-                                                Intent intent = new Intent(getActivity().getApplicationContext(), SpecificRecipe_User.class);
+                                                Intent intent = new Intent(getActivity().getApplicationContext(), SpecificRecipe.class);
                                                 intent.putExtra("key", recipeKey);
                                                 intent.putExtra("url", recipe_url);
                                                 startActivity(intent);
@@ -363,7 +363,7 @@ public class SearchFragment_User extends Fragment {
                                             TextView text = (TextView) view.findViewById(R.id.recipe_url);
                                             String recipe_url = text.getText().toString().trim();
 
-                                            Intent intent = new Intent(getActivity().getApplicationContext(), SpecificRecipe_User.class);
+                                            Intent intent = new Intent(getActivity().getApplicationContext(), SpecificRecipe.class);
                                             intent.putExtra("key", recipeKey);
                                             intent.putExtra("url", recipe_url);
                                             startActivity(intent);
@@ -478,7 +478,7 @@ public class SearchFragment_User extends Fragment {
                                     TextView text = (TextView) view.findViewById(R.id.recipe_url);
                                     String recipe_url = text.getText().toString().trim();
 
-                                    Intent intent = new Intent(getActivity().getApplicationContext(), SpecificRecipe_User.class);
+                                    Intent intent = new Intent(getActivity().getApplicationContext(), SpecificRecipe.class);
                                     intent.putExtra("key", recipeKey);
                                     intent.putExtra("url", recipe_url);
                                     startActivity(intent);
