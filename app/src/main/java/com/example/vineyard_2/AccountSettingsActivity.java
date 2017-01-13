@@ -25,7 +25,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 
-public class ProfileEditActivity extends AppCompatActivity {
+public class AccountSettingsActivity extends AppCompatActivity {
 
     private Button btnEdit;
     private Button btnDelete;
@@ -116,7 +116,7 @@ public class ProfileEditActivity extends AppCompatActivity {
                     return;
                 }
 
-                new AlertDialog.Builder(ProfileEditActivity.this)
+                new AlertDialog.Builder(AccountSettingsActivity.this)
                         .setTitle("Edit Details")
                         .setMessage("Are you sure you want to edit your details?")
                         .setNegativeButton("No", null)
@@ -142,9 +142,9 @@ public class ProfileEditActivity extends AppCompatActivity {
                                             }
                                         });
 
-                                Toast.makeText(ProfileEditActivity.this, "Successfully edited user details.", Toast.LENGTH_LONG).show();
+                                Toast.makeText(AccountSettingsActivity.this, "Successfully edited user details.", Toast.LENGTH_LONG).show();
 
-                                Intent intent = new Intent(ProfileEditActivity.this, LandingpageActivity_User.class);
+                                Intent intent = new Intent(AccountSettingsActivity.this, LandingpageActivity_User.class);
                                 startActivity(intent);
                             }
                         }).create().show();
@@ -158,7 +158,7 @@ public class ProfileEditActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                new AlertDialog.Builder(ProfileEditActivity.this)
+                new AlertDialog.Builder(AccountSettingsActivity.this)
                         .setTitle("Delete Account")
                         .setMessage("Are you sure you want to delete this account? All saved recipes will also be deleted.")
                         .setNegativeButton("No", null)
@@ -173,11 +173,11 @@ public class ProfileEditActivity extends AppCompatActivity {
                                             progress.setMessage("This may take a while...");
                                             progress.show();
 
-                                            Intent intent  = new Intent(ProfileEditActivity.this, LoginActivity.class);
+                                            Intent intent  = new Intent(AccountSettingsActivity.this, LoginActivity.class);
                                             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                             startActivity(intent);
 
-                                            Toast.makeText(ProfileEditActivity.this, "Successfully deleted account.",
+                                            Toast.makeText(AccountSettingsActivity.this, "Successfully deleted account.",
                                                     Toast.LENGTH_LONG).show();
                                         }
                                     }

@@ -27,8 +27,8 @@
         <activity android:name=".AccountLoginActivity" />
         <activity android:name=".SignupActivity" />
         <activity android:name=".ResetPasswordActivity" />
-        <activity android:name=".ProfileEditActivity" />
-        <activity android:name=".ProfileEditActivity_Google" />
+        <activity android:name=".AccountSettingsActivity" />
+        <activity android:name=".AccountSettingsActivity_Google" />
         <activity android:name=".LandingpageActivity" />
         <activity android:name=".LandingpageActivity_User" />
         <activity android:name=".LandingpageActivity_Google" />
