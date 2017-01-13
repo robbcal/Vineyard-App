@@ -26,7 +26,7 @@ public class ProfileFragment_User extends Fragment {
     private TextView userProfileName, userProfileEmail;
     private ImageView userProfilePhoto;
 
-    private Button btnLogout, btnEdit;
+    private Button btnLogout, btnSettings;
 
     private FirebaseAuth auth;
     private FirebaseUser user;
@@ -48,13 +48,13 @@ public class ProfileFragment_User extends Fragment {
         userProfilePhoto = (ImageView) v.findViewById(R.id.user_profile_photo);
 
         btnLogout = (Button) v.findViewById(R.id.btn_logout);
-        btnEdit = (Button) v.findViewById(R.id.btn_edit);
+        btnSettings = (Button) v.findViewById(R.id.btn_settings);
 
         //set font typeface
         userProfileName.setTypeface(typeFace);
         userProfileEmail.setTypeface(typeFace);
         btnLogout.setTypeface(typeFace);
-        btnEdit.setTypeface(typeFace);
+        btnSettings.setTypeface(typeFace);
 
         //Get Firebase auth instance
         auth = FirebaseAuth.getInstance();

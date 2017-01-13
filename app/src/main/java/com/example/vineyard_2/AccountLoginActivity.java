@@ -191,7 +191,7 @@ public class AccountLoginActivity extends AppCompatActivity {
             return;
         }
 
-        progress.setMessage("Logging In...");
+        progress.setMessage("Signing In...");
         progress.show();
 
         //authenticate user
@@ -230,7 +230,6 @@ public class AccountLoginActivity extends AppCompatActivity {
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
-                progress.dismiss();
 
                 Intent intent = new Intent(AccountLoginActivity.this, LandingpageActivity_Google.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

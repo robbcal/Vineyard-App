@@ -69,15 +69,15 @@
         android:layout_gravity="center|bottom">
 
         <Button
-            android:id="@+id/btn_edit"
+            android:id="@+id/btn_settings"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:background="@color/secondaryColor"
             android:clickable="true"
-            android:onClick="onClickEdit"
+            android:onClick="onClickUserSettings"
             android:textAllCaps="false"
             android:elevation="3dp"
-            android:text="Edit Details"
+            android:text="Account Settings"
             android:textColor="@color/darkColor"/>
 
         <Button

@@ -69,6 +69,18 @@
         android:layout_gravity="center|bottom">
 
         <Button
+            android:id="@+id/btn_settings"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/secondaryColor"
+            android:clickable="true"
+            android:onClick="onClickGoogleSettings"
+            android:textAllCaps="false"
+            android:elevation="3dp"
+            android:text="Account Settings"
+            android:textColor="@color/darkColor"/>
+
+        <Button
             android:id="@+id/btn_logout"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -78,18 +90,6 @@
             android:onClick="onClickLogout"
             android:elevation="3dp"
             android:text="Sign out"
-            android:textColor="@color/secondaryColor"/>
-
-        <Button
-            android:id="@+id/btn_delete"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/holo_red_light"
-            android:clickable="true"
-            android:onClick="onClickDelete"
-            android:textAllCaps="false"
-            android:elevation="3dp"
-            android:text="Delete Account"
             android:layout_gravity="bottom"
             android:layout_marginTop="20dp"
             android:textColor="@color/secondaryColor"/>

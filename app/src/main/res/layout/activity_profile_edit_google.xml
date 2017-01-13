@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="com.example.vineyard_2.ProfileEditActivity_Google"
+    android:background="@drawable/photo2"
+    android:gravity="center">
+
+    <TextView
+        android:id="@+id/edit_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Delete Account"
+        android:textColor="@color/secondaryColor"
+        android:textSize="23sp"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="20dp" />
+
+    <TextView
+        android:id="@+id/instructions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Once you delete an account there is no going back. Please be certain."
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textColor="@color/input_register_hint"
+        android:textSize="16sp"
+        android:layout_centerInParent="true"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp" />
+
+    <Button
+        android:id="@+id/btn_delete"
+        android:text="Delete Account"
+        android:background="@color/mainColor"
+        android:textColor="@color/secondaryColor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:textSize="15sp"
+        android:layout_alignParentTop="true"
+        android:layout_gravity="bottom"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="40dp" />
+
+</LinearLayout>

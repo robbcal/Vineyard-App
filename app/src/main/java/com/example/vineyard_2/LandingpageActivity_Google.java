@@ -1,5 +1,6 @@
 package com.example.vineyard_2;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -119,30 +121,9 @@ public class LandingpageActivity_Google extends AppCompatActivity {
                 }).create().show();
     }
 
-    public void onClickDelete(View view){
-        final String UID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        database = FirebaseDatabase.getInstance().getReference().child("users");
-
-        new AlertDialog.Builder(LandingpageActivity_Google.this)
-               .setTitle("Delete Account")
-                .setMessage("Are you sure you want to delete this account? All saved recipes will also be deleted.")
-                .setNegativeButton("No", null)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        database.child(UID).removeValue();
-                        user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    Intent intent  = new Intent(LandingpageActivity_Google.this, LoginActivity.class);
-                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                    startActivity(intent);
-                                }
-                            }
-                        });
-                    }
-                }).create().show();
+    public void onClickGoogleSettings(View view) {
+        Intent intent = new Intent(LandingpageActivity_Google.this, ProfileEditActivity_Google.class);
+        startActivity(intent);
     }
 
 }

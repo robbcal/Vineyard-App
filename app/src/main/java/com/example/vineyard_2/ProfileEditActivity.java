@@ -1,5 +1,6 @@
 package com.example.vineyard_2;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -37,6 +38,7 @@ public class ProfileEditActivity extends AppCompatActivity {
     private DatabaseReference databaseUser;
 
     private Typeface typeFace;
+    private ProgressDialog progress;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,6 +46,7 @@ public class ProfileEditActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile_edit);
 
         typeFace = Typeface.createFromAsset(getAssets(), "HelveticaNeueLight.ttf");
+        progress = new ProgressDialog(this);
 
         inputEmail = (EditText) findViewById(R.id.email);
         inputPassword = (EditText) findViewById(R.id.password);
@@ -167,9 +170,15 @@ public class ProfileEditActivity extends AppCompatActivity {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if (task.isSuccessful()) {
+                                            progress.setMessage("This may take a while...");
+                                            progress.show();
+
                                             Intent intent  = new Intent(ProfileEditActivity.this, LoginActivity.class);
                                             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                             startActivity(intent);
+
+                                            Toast.makeText(ProfileEditActivity.this, "Successfully deleted account.",
+                                                    Toast.LENGTH_LONG).show();
                                         }
                                     }
                                 });
