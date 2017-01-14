@@ -72,6 +72,10 @@ public class SearchFragment_User extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_search_user, container, false);
 
+        mUserRef.keepSynced(true);
+        mRecipeRef.keepSynced(true);
+        mIngredients.keepSynced(true);
+
         typeFace = Typeface.createFromAsset(getActivity().getAssets(), "HelveticaNeueLight.ttf");
 
         breakfast = (CheckBox) v.findViewById(R.id.Breakfast);
