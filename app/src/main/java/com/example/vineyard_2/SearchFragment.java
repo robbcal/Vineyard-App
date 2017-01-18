@@ -42,6 +42,7 @@ public class SearchFragment extends Fragment {
     DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
     DatabaseReference mRecipeRef = mRootRef.child("recipes");
     DatabaseReference mIngredients = mRootRef.child("ingredients");
+    DatabaseReference mContents = mRootRef.child("contents");
 
     TextView recipeUrl, recipeTitle, recipeDescription, recipeKey;
     CheckBox breakfast;
@@ -241,7 +242,7 @@ public class SearchFragment extends Fragment {
         listView.setAdapter(null);
         getSearchedIngredient();
 
-        mRecipeRef.orderByChild("title").addListenerForSingleValueEvent(new ValueEventListener() {
+        /*mRecipeRef.orderByChild("title").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 rowItems = new ArrayList<Recipes>();
@@ -305,7 +306,7 @@ public class SearchFragment extends Fragment {
                                         Recipes item = new Recipes(title, url, image_url, recipeKey, description);
                                         rowItems.add(item);
 
-                                        RecipeListAdapter_Guest adapter = new RecipeListAdapter_Guest(getActivity().getApplicationContext(), rowItems);
+                                        RecipeListAdapter adapter = new RecipeListAdapter(getActivity().getApplicationContext(), rowItems);
                                         listView.setAdapter(adapter);
 
                                         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -325,7 +326,123 @@ public class SearchFragment extends Fragment {
                                     Recipes item = new Recipes(title, url, image_url, recipeKey, description);
                                     rowItems.add(item);
 
-                                    RecipeListAdapter_Guest adapter = new RecipeListAdapter_Guest(getActivity().getApplicationContext(), rowItems);
+                                    RecipeListAdapter adapter = new RecipeListAdapter(getActivity().getApplicationContext(), rowItems);
+                                    listView.setAdapter(adapter);
+
+                                    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                        @Override
+                                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                            TextView text = (TextView) view.findViewById(R.id.recipe_url);
+                                            String recipe_url = text.getText().toString().trim();
+
+                                            Intent intent = new Intent(getActivity().getApplicationContext(), SpecificRecipe.class);
+                                            intent.putExtra("key", recipeKey);
+                                            intent.putExtra("url", recipe_url);
+                                            startActivity(intent);
+                                        }
+                                    });
+                                    //getData();
+                                }
+                            }
+                        }
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                        }
+                    });//End of ingredient chuchu
+
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+            }
+        });*/
+
+        mContents.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                rowItems = new ArrayList<Recipes>();
+                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                    final String recipeKey = postSnapshot.getKey();
+                    String ingr = postSnapshot.child("ingredients").getValue(String.class);
+                    int size = searchedIngredients.size();
+                    int count = 0;
+
+                    for(int a = 0; a <size; a++){
+                        String search = searchedIngredients.get(a);
+                        String ing = ingr.toLowerCase();
+                        if(ing.contains(search.toLowerCase())) {
+                            count++;
+                        }
+                    }
+
+                    if(count >= size) {
+                        mRecipeRef.child(recipeKey).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                final String title = dataSnapshot.child("title").getValue(String.class);
+                                final String url = dataSnapshot.child("url").getValue(String.class);
+                                final String image_url = dataSnapshot.child("image_url").getValue(String.class);
+                                final String description = dataSnapshot.child("description").getValue(String.class);
+                                String descSearch = description.toLowerCase();
+                                final boolean filter[] = new boolean[4];
+
+                                if (breakfast.isChecked()) {
+                                    if (descSearch.contains("breakfast")) {
+                                        filter[0] = true;
+                                    }
+                                }
+
+                                if (lunch.isChecked()) {
+                                    if (descSearch.contains("lunch")) {
+                                        filter[1] = true;
+                                    }
+                                }
+
+                                if (snacks.isChecked()) {
+                                    if (descSearch.contains("snack")) {
+                                        filter[2] = true;
+                                    }
+                                }
+
+                                if (dinner.isChecked()) {
+                                    if (descSearch.contains("dinner") || descSearch.contains("supper")) {
+                                        filter[3] = true;
+                                    }
+                                }
+
+                                if (breakfast.isChecked() || lunch.isChecked() || snacks.isChecked() || dinner.isChecked()) {
+                                    int x;
+                                    for (x = 0; x < 4 && filter[x] != true; x++) {
+                                    }
+                                    if (x < 4) {
+                                        Recipes item = new Recipes(title, url, image_url, recipeKey, description);
+                                        rowItems.add(item);
+
+                                        RecipeListAdapter adapter = new RecipeListAdapter(getActivity().getApplicationContext(), rowItems);
+                                        listView.setAdapter(adapter);
+
+                                        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                            @Override
+                                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                                TextView text = (TextView) view.findViewById(R.id.recipe_url);
+                                                String recipe_url = text.getText().toString().trim();
+
+                                                Intent intent = new Intent(getActivity().getApplicationContext(), SpecificRecipe.class);
+                                                intent.putExtra("key", recipeKey);
+                                                intent.putExtra("url", recipe_url);
+                                                startActivity(intent);
+                                            }
+                                        });
+                                    }
+                                }else if(searchField.getText().toString().trim().length() == 0){
+                                    getData();
+                                }else{
+                                    Recipes item = new Recipes(title, url, image_url, recipeKey, description);
+                                    rowItems.add(item);
+
+                                    RecipeListAdapter adapter = new RecipeListAdapter(getActivity().getApplicationContext(), rowItems);
                                     listView.setAdapter(adapter);
 
                                     listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -342,14 +459,12 @@ public class SearchFragment extends Fragment {
                                     });
                                 }
                             }
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                            Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
-                        }
-                    });
-
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                            }
+                        });
+                    }
                 }
             }
             @Override

@@ -2,8 +2,11 @@ package com.example.vineyard_2;
 
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -44,6 +47,7 @@ public class SearchFragment_User extends Fragment {
     DatabaseReference mUserRef = mRootRef.child("users");
     DatabaseReference mRecipeRef = mRootRef.child("recipes");
     DatabaseReference mIngredients = mRootRef.child("ingredients");
+    DatabaseReference mContents = mRootRef.child("contents");
 
     TextView recipeUrl, recipeTitle, recipeDescription, recipeKey;
     Button addRecipe;
@@ -242,21 +246,40 @@ public class SearchFragment_User extends Fragment {
                     public void onClick(View v) {
 
                         if (user != null) {
-                            String uid = user.getUid();
-                            final DatabaseReference mspecificUser = mUserRef.child(uid+"/recipes/"+recipe_key);
+                            if(haveNetworkConnection() == true) {
+                                String uid = user.getUid();
+                                final DatabaseReference mspecificUser = mUserRef.child(uid + "/recipes/" + recipe_key);
 
-                            mRecipeRef.child(recipe_key).addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot snapshot) {
-                                    mspecificUser.setValue(snapshot.getValue());
+                                mRecipeRef.child(recipe_key).addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot snapshot) {
+                                        mspecificUser.setValue(snapshot.getValue());
 
-                                }
-                                @Override public void onCancelled(DatabaseError databaseError) {
-                                    Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
-                                }
-                            });
+                                    }
 
-                            Toast.makeText(v.getContext(), title+" has been added.", Toast.LENGTH_SHORT).show();
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+                                        Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                                    }
+                                });
+                                //new
+                                mContents.child(recipe_key).addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot snapshot) {
+                                        mspecificUser.child("ingredients").setValue(snapshot.child("ingredients").getValue());
+                                        mspecificUser.child("directions").setValue(snapshot.child("directions").getValue());
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+                                        Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                                    }
+                                });
+
+                                Toast.makeText(v.getContext(), title + " has been added.", Toast.LENGTH_SHORT).show();
+                            }else{
+                                Toast.makeText(v.getContext(), "Cannot add. Network connection is unavailable", Toast.LENGTH_SHORT).show();
+                            }
                         } else {
                             Toast.makeText(v.getContext(), "Enjoy the full Vineyard experience through signing up/signing in.", Toast.LENGTH_LONG).show();
                         }
@@ -269,12 +292,29 @@ public class SearchFragment_User extends Fragment {
         listView.setAdapter(mAdapter);
     }
 
+    private boolean haveNetworkConnection() {
+        boolean haveConnectedWifi = false;
+        boolean haveConnectedMobile = false;
+
+        ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo[] netInfo = cm.getAllNetworkInfo();
+        for (NetworkInfo ni : netInfo) {
+            if (ni.getTypeName().equalsIgnoreCase("WIFI"))
+                if (ni.isConnected())
+                    haveConnectedWifi = true;
+            if (ni.getTypeName().equalsIgnoreCase("MOBILE"))
+                if (ni.isConnected())
+                    haveConnectedMobile = true;
+        }
+        return haveConnectedWifi || haveConnectedMobile;
+    }
+
     public void searchIngredient(){
         hideKeypad();
         listView.setAdapter(null);
         getSearchedIngredient();
 
-        mRecipeRef.orderByChild("title").addListenerForSingleValueEvent(new ValueEventListener() {
+        /*mRecipeRef.orderByChild("title").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 rowItems = new ArrayList<Recipes>();
@@ -373,6 +413,7 @@ public class SearchFragment_User extends Fragment {
                                             startActivity(intent);
                                         }
                                     });
+                                    //getData();
                                 }
                             }
                         }
@@ -382,6 +423,120 @@ public class SearchFragment_User extends Fragment {
                         }
                     });//End of ingredient chuchu
 
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+            }
+        });*/
+
+        mContents.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                rowItems = new ArrayList<Recipes>();
+                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                    final String recipeKey = postSnapshot.getKey();
+                    String ingr = postSnapshot.child("ingredients").getValue(String.class);
+                    int size = searchedIngredients.size();
+                    int count = 0;
+
+                    for(int a = 0; a <size; a++){
+                        String search = searchedIngredients.get(a);
+                        String ing = ingr.toLowerCase();
+                        if(ing.contains(search.toLowerCase())) {
+                            count++;
+                        }
+                    }
+
+                    if(count >= size) {
+                        mRecipeRef.child(recipeKey).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                final String title = dataSnapshot.child("title").getValue(String.class);
+                                final String url = dataSnapshot.child("url").getValue(String.class);
+                                final String image_url = dataSnapshot.child("image_url").getValue(String.class);
+                                final String description = dataSnapshot.child("description").getValue(String.class);
+                                String descSearch = description.toLowerCase();
+                                final boolean filter[] = new boolean[4];
+
+                                if (breakfast.isChecked()) {
+                                    if (descSearch.contains("breakfast")) {
+                                        filter[0] = true;
+                                    }
+                                }
+
+                                if (lunch.isChecked()) {
+                                    if (descSearch.contains("lunch")) {
+                                        filter[1] = true;
+                                    }
+                                }
+
+                                if (snacks.isChecked()) {
+                                    if (descSearch.contains("snack")) {
+                                        filter[2] = true;
+                                    }
+                                }
+
+                                if (dinner.isChecked()) {
+                                    if (descSearch.contains("dinner") || descSearch.contains("supper")) {
+                                        filter[3] = true;
+                                    }
+                                }
+
+                                if (breakfast.isChecked() || lunch.isChecked() || snacks.isChecked() || dinner.isChecked()) {
+                                    int x;
+                                    for (x = 0; x < 4 && filter[x] != true; x++) {
+                                    }
+                                    if (x < 4) {
+                                        Recipes item = new Recipes(title, url, image_url, recipeKey, description);
+                                        rowItems.add(item);
+
+                                        RecipeListAdapter adapter = new RecipeListAdapter(getActivity().getApplicationContext(), rowItems);
+                                        listView.setAdapter(adapter);
+
+                                        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                            @Override
+                                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                                TextView text = (TextView) view.findViewById(R.id.recipe_url);
+                                                String recipe_url = text.getText().toString().trim();
+
+                                                Intent intent = new Intent(getActivity().getApplicationContext(), SpecificRecipe.class);
+                                                intent.putExtra("key", recipeKey);
+                                                intent.putExtra("url", recipe_url);
+                                                startActivity(intent);
+                                            }
+                                        });
+                                    }
+                                }else if(searchField.getText().toString().trim().length() == 0){
+                                    getData();
+                                }else{
+                                    Recipes item = new Recipes(title, url, image_url, recipeKey, description);
+                                    rowItems.add(item);
+
+                                    RecipeListAdapter adapter = new RecipeListAdapter(getActivity().getApplicationContext(), rowItems);
+                                    listView.setAdapter(adapter);
+
+                                    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                        @Override
+                                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                            TextView text = (TextView) view.findViewById(R.id.recipe_url);
+                                            String recipe_url = text.getText().toString().trim();
+
+                                            Intent intent = new Intent(getActivity().getApplicationContext(), SpecificRecipe.class);
+                                            intent.putExtra("key", recipeKey);
+                                            intent.putExtra("url", recipe_url);
+                                            startActivity(intent);
+                                        }
+                                    });
+                                }
+                            }
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                            }
+                        });
+                    }
                 }
             }
             @Override

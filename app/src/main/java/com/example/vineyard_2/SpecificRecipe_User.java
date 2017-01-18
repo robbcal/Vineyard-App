@@ -22,16 +22,22 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class SpecificRecipe_User extends AppCompatActivity {
 
     private ImageView recipeImage;
     private TextView recipeTitle, recipeDescription, recipeIngredients, recipeDirections, directionHeader, ingredientHeader;
     private Typeface typeFace;
+    ArrayList<String> Ingredients;
+    ArrayList<String> Directions;
 
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     String uid = user.getUid();
     DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
     DatabaseReference mRecipeRef = mRootRef.child("users/"+uid+"/recipes");
+    DatabaseReference mContentsRef = mRootRef.child("contents");
 
     private static final String TAG = "Vineyard";
 
@@ -39,6 +45,8 @@ public class SpecificRecipe_User extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_specific_recipe_user);
+
+        mRecipeRef.keepSynced(true);
 
         typeFace = Typeface.createFromAsset(getAssets(), "HelveticaNeueLight.ttf");
 
@@ -79,58 +87,79 @@ public class SpecificRecipe_User extends AppCompatActivity {
                         String title = snapshot.child("title").getValue(String.class);
                         final String desc = snapshot.child("description").getValue(String.class);
                         String img = snapshot.child("image_url").getValue(String.class);
+                        String ingr = snapshot.child("ingredients").getValue(String.class);
+                        String dir = snapshot.child("directions").getValue(String.class);
+
+                        Ingredients = new ArrayList<String>(Arrays.asList(ingr.split("\\|")));
+                        Directions = new ArrayList<String>(Arrays.asList(dir.split("\\|")));
 
                         Picasso.with(getApplicationContext()).load(img).error(R.drawable.placeholder_error).into(recipeImage);
                         recipeTitle.setText(title);
                         recipeDescription.setText(desc);
 
-                        mRecipeRef.child(key+"/content/ingredients").addListenerForSingleValueEvent(new ValueEventListener() {
+                        for(int i = 0; i < Ingredients.size(); i++){
+                            recipeIngredients.append("> " + Ingredients.get(i) + "\n");
+                        }
+
+                        for(int a = 0; a < Directions.size(); a++){
+                            recipeDirections.append("> " + Directions.get(a) + "\n");;
+                        }
+
+//                        mContentsRef.child(key).addValueEventListener(new ValueEventListener() {
+//                            @Override
+//                            public void onDataChange(DataSnapshot snapshot) {
+//                                String ingr = snapshot.child("ingredients").getValue(String.class);
+//                                String dir = snapshot.child("directions").getValue(String.class);
+//
+//                                Ingredients = new ArrayList<String>(Arrays.asList(ingr.split("\\|")));
+//                                for(int i = 0; i < Ingredients.size(); i++){
+//                                    recipeIngredients.append("> " + Ingredients.get(i) + "\n");
+//                                }
+//
+//                                Directions = new ArrayList<String>(Arrays.asList(dir.split("\\|")));
+//                                for(int a = 0; a < Directions.size(); a++){
+//                                    recipeDirections.append("> " + Directions.get(a) + "\n");;
+//                                }
+//                            }
+//                            @Override
+//                            public void onCancelled(DatabaseError databaseError) {
+//                                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+//                            }
+//                        });
+
+                        /*mRecipeRef.child(key).addValueEventListener(new ValueEventListener() {
                             @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-//                                TextView tv3 = new TextView(getApplicationContext());
-//                                tv3.setText("\nIngredients:");
-//                                tv3.setTextSize(20);
-//                                tv3.setTextColor(Color.BLACK);
-//                                linearLayout.addView(tv3);
+                            public void onDataChange(DataSnapshot snapshot) {
+                                String ingr = snapshot.child("ingredients").getValue(String.class);
+                                String dir = snapshot.child("directions").getValue(String.class);
 
-                                for (DataSnapshot ingSnapshot: dataSnapshot.getChildren()) {
-                                    String ingr = ingSnapshot.getValue().toString().toLowerCase();
-                                    ingr = ingr.replace("{ingredient=","");
-                                    ingr = ingr.replaceAll("\\}", "");
-
-                                    recipeIngredients.append("> " + ingr + "\n");
+                                Ingredients = new ArrayList<String>(Arrays.asList(ingr.split("\\|")));
+                                for(int i = 0; i < Ingredients.size(); i++){
+                                    recipeIngredients.append("> " + Ingredients.get(i) + "\n");
                                 }
 
+                                Directions = new ArrayList<String>(Arrays.asList(dir.split("\\|")));
+                                for(int a = 0; a < Directions.size(); a++){
+                                    recipeDirections.append("> " + Directions.get(a) + "\n");;
+                                }
                             }
+
                             @Override
                             public void onCancelled(DatabaseError databaseError) {
                                 Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
                             }
-                        });
+                        });*/
+                        /*Ingredients = new ArrayList<String>(Arrays.asList(ingr.split("\\|")));
+                        for(int i = 0; i < Ingredients.size(); i++){
+                            recipeIngredients.append("> " + Ingredients.get(i) + "\n");
+                        }
 
-                        mRecipeRef.child(key+"/content/directions").addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                TextView tv4 = new TextView(getApplicationContext());
+                        Directions = new ArrayList<String>(Arrays.asList(dir.split("\\|")));
+                        for(int a = 0; a < Directions.size(); a++){
+                            recipeDirections.append("> " + Directions.get(a) + "\n");;
+                        }*/
 
-                                for (DataSnapshot dirSnapshot: dataSnapshot.getChildren()) {
-                                    String dir = dirSnapshot.getValue().toString().toLowerCase();
-                                    dir = dir.replace("{step=","");
-                                    dir = dir.replaceAll("\\}", "");
 
-                                    if(dir.matches("[\\n]+")){
-
-                                    } else {
-                                        recipeDirections.append("> " + dir + "\n");
-                                    }
-                                }
-
-                            }
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-                                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
-                            }
-                        });
                     }
 
                     @Override

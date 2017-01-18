@@ -3,14 +3,14 @@ package com.example.vineyard_2;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
-import android.media.Image;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,6 +32,7 @@ public class RecipeListAdapter extends BaseAdapter {
     DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
     DatabaseReference mRecipeRef = mRootRef.child("recipes");
     DatabaseReference mUserRef = mRootRef.child("users");
+    DatabaseReference mContents = mRootRef.child("contents");
     private static final String TAG = "Vineyard";
 
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -93,26 +94,42 @@ public class RecipeListAdapter extends BaseAdapter {
         holder.addRecipe.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (user != null) {
-                    String uid = user.getUid();
-                    final DatabaseReference mspecificUser = mUserRef.child(uid+"/recipes/"+id);
-                    mspecificUser.child("title").setValue(title);
-                    mspecificUser.child("url").setValue(url);
-                    mspecificUser.child("image_url").setValue(img_url);
-                    mspecificUser.child("description").setValue(description);
+                    if(haveNetworkConnection() == true) {
+                        String uid = user.getUid();
+                        final DatabaseReference mspecificUser = mUserRef.child(uid+"/recipes/"+id);
+                        mspecificUser.child("title").setValue(title);
+                        mspecificUser.child("url").setValue(url);
+                        mspecificUser.child("image_url").setValue(img_url);
+                        mspecificUser.child("description").setValue(description);
 
-                    mRecipeRef.child(id).addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot snapshot) {
-                            //Log.d(TAG, "value"+snapshot.getValue());
-                            mspecificUser.setValue(snapshot.getValue());
+                        mRecipeRef.child(id).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot snapshot) {
+                                mspecificUser.setValue(snapshot.getValue());
 
-                        }
-                        @Override public void onCancelled(DatabaseError databaseError) {
-                            Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
-                        }
-                    });
+                            }
+                            @Override public void onCancelled(DatabaseError databaseError) {
+                                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                            }
+                        });
+                        //new
+                        mContents.child(id).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot snapshot) {
+                                mspecificUser.child("ingredients").setValue(snapshot.child("ingredients").getValue());
+                                mspecificUser.child("directions").setValue(snapshot.child("directions").getValue());
+                            }
 
-                    Toast.makeText(v.getContext(), title+" has been added.", Toast.LENGTH_SHORT).show();
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                            }
+                        });
+
+                        Toast.makeText(v.getContext(), title+" has been added.", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(v.getContext(), "Cannot add. Network connection is unavailable", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
                     Toast.makeText(v.getContext(), "Enjoy the full Vineyard experience through signing up/signing in.", Toast.LENGTH_LONG).show();
                 }
@@ -125,6 +142,23 @@ public class RecipeListAdapter extends BaseAdapter {
         holder.addRecipe.setTypeface(typeFace);
 
         return convertView;
+    }
+
+    private boolean haveNetworkConnection() {
+        boolean haveConnectedWifi = false;
+        boolean haveConnectedMobile = false;
+
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo[] netInfo = cm.getAllNetworkInfo();
+        for (NetworkInfo ni : netInfo) {
+            if (ni.getTypeName().equalsIgnoreCase("WIFI"))
+                if (ni.isConnected())
+                    haveConnectedWifi = true;
+            if (ni.getTypeName().equalsIgnoreCase("MOBILE"))
+                if (ni.isConnected())
+                    haveConnectedMobile = true;
+        }
+        return haveConnectedWifi || haveConnectedMobile;
     }
 
     @Override
