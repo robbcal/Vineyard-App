@@ -47,7 +47,8 @@ public class SearchFragment_User extends Fragment {
     DatabaseReference mUserRef = mRootRef.child("users");
     DatabaseReference mRecipeRef = mRootRef.child("recipes");
     DatabaseReference mIngredients = mRootRef.child("ingredients");
-    DatabaseReference mContents = mRootRef.child("contents");
+    DatabaseReference mContentsIngredients = mRootRef.child("contents_Ingredients");
+    DatabaseReference mContentsDirections = mRootRef.child("contents_Directions");
 
     TextView recipeUrl, recipeTitle, recipeDescription, recipeKey;
     Button addRecipe;
@@ -76,9 +77,7 @@ public class SearchFragment_User extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_search_user, container, false);
 
-        mUserRef.keepSynced(true);
         mRecipeRef.keepSynced(true);
-        mIngredients.keepSynced(true);
 
         typeFace = Typeface.createFromAsset(getActivity().getAssets(), "HelveticaNeueLight.ttf");
 
@@ -202,6 +201,23 @@ public class SearchFragment_User extends Fragment {
         return v;
     }
 
+    private boolean haveNetworkConnection() {
+        boolean haveConnectedWifi = false;
+        boolean haveConnectedMobile = false;
+
+        ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo[] netInfo = cm.getAllNetworkInfo();
+        for (NetworkInfo ni : netInfo) {
+            if (ni.getTypeName().equalsIgnoreCase("WIFI"))
+                if (ni.isConnected())
+                    haveConnectedWifi = true;
+            if (ni.getTypeName().equalsIgnoreCase("MOBILE"))
+                if (ni.isConnected())
+                    haveConnectedMobile = true;
+        }
+        return haveConnectedWifi || haveConnectedMobile;
+    }
+
     public void getData(){
         mAdapter = new FirebaseListAdapter<Recipe>(getActivity(), Recipe.class, R.layout.custom_list, mRecipeRef.orderByChild("title")) {
             @Override
@@ -263,10 +279,21 @@ public class SearchFragment_User extends Fragment {
                                     }
                                 });
                                 //new
-                                mContents.child(recipe_key).addValueEventListener(new ValueEventListener() {
+                                mContentsIngredients.child(recipe_key).addValueEventListener(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(DataSnapshot snapshot) {
                                         mspecificUser.child("ingredients").setValue(snapshot.child("ingredients").getValue());
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+                                        Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                                    }
+                                });
+                                //new
+                                mContentsDirections.child(recipe_key).addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot snapshot) {
                                         mspecificUser.child("directions").setValue(snapshot.child("directions").getValue());
                                     }
 
@@ -290,23 +317,6 @@ public class SearchFragment_User extends Fragment {
             }
         };
         listView.setAdapter(mAdapter);
-    }
-
-    private boolean haveNetworkConnection() {
-        boolean haveConnectedWifi = false;
-        boolean haveConnectedMobile = false;
-
-        ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo[] netInfo = cm.getAllNetworkInfo();
-        for (NetworkInfo ni : netInfo) {
-            if (ni.getTypeName().equalsIgnoreCase("WIFI"))
-                if (ni.isConnected())
-                    haveConnectedWifi = true;
-            if (ni.getTypeName().equalsIgnoreCase("MOBILE"))
-                if (ni.isConnected())
-                    haveConnectedMobile = true;
-        }
-        return haveConnectedWifi || haveConnectedMobile;
     }
 
     public void searchIngredient(){
@@ -431,7 +441,7 @@ public class SearchFragment_User extends Fragment {
             }
         });*/
 
-        mContents.addListenerForSingleValueEvent(new ValueEventListener() {
+        mContentsIngredients.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 rowItems = new ArrayList<Recipes>();

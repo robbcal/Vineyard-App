@@ -42,7 +42,7 @@ public class SearchFragment extends Fragment {
     DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
     DatabaseReference mRecipeRef = mRootRef.child("recipes");
     DatabaseReference mIngredients = mRootRef.child("ingredients");
-    DatabaseReference mContents = mRootRef.child("contents");
+    DatabaseReference mContentsIngredients = mRootRef.child("contents_Ingredients");
 
     TextView recipeUrl, recipeTitle, recipeDescription, recipeKey;
     CheckBox breakfast;
@@ -72,7 +72,6 @@ public class SearchFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_search, container, false);
 
         mRecipeRef.keepSynced(true);
-        mIngredients.keepSynced(true);
 
         typeFace = Typeface.createFromAsset(getActivity().getAssets(), "HelveticaNeueLight.ttf");
 
@@ -359,7 +358,7 @@ public class SearchFragment extends Fragment {
             }
         });*/
 
-        mContents.addListenerForSingleValueEvent(new ValueEventListener() {
+        mContentsIngredients.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 rowItems = new ArrayList<Recipes>();

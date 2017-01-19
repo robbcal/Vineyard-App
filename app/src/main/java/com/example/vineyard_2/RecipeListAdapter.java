@@ -32,7 +32,8 @@ public class RecipeListAdapter extends BaseAdapter {
     DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
     DatabaseReference mRecipeRef = mRootRef.child("recipes");
     DatabaseReference mUserRef = mRootRef.child("users");
-    DatabaseReference mContents = mRootRef.child("contents");
+    DatabaseReference mContentsIngredients = mRootRef.child("contents_Ingredients");
+    DatabaseReference mContentsDirections = mRootRef.child("contents_Directions");
     private static final String TAG = "Vineyard";
 
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -113,10 +114,21 @@ public class RecipeListAdapter extends BaseAdapter {
                             }
                         });
                         //new
-                        mContents.child(id).addValueEventListener(new ValueEventListener() {
+                        mContentsIngredients.child(id).addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot snapshot) {
                                 mspecificUser.child("ingredients").setValue(snapshot.child("ingredients").getValue());
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                            }
+                        });
+                        //new
+                        mContentsDirections.child(id).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot snapshot) {
                                 mspecificUser.child("directions").setValue(snapshot.child("directions").getValue());
                             }
 
