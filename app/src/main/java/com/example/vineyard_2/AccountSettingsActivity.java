@@ -37,7 +37,6 @@ public class AccountSettingsActivity extends AppCompatActivity {
     private FirebaseUser user;
     private DatabaseReference databaseUser;
 
-    private Typeface typeFace;
     private ProgressDialog progress;
 
     @Override
@@ -45,7 +44,6 @@ public class AccountSettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_edit);
 
-        typeFace = Typeface.createFromAsset(getAssets(), "HelveticaNeueLight.ttf");
         progress = new ProgressDialog(this);
 
         inputEmail = (EditText) findViewById(R.id.email);
@@ -59,14 +57,6 @@ public class AccountSettingsActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
         databaseUser = FirebaseDatabase.getInstance().getReference().child("users").child(user.getUid());
-
-        //set font typeface
-        inputEmail.setTypeface(typeFace);
-        inputPassword.setTypeface(typeFace);
-        inputName.setTypeface(typeFace);
-        btnEdit.setTypeface(typeFace);
-        btnDelete.setTypeface(typeFace);
-        editText.setTypeface(typeFace);
 
         databaseUser.addValueEventListener(new com.google.firebase.database.ValueEventListener() {
             @Override

@@ -42,8 +42,6 @@ public class AccountLoginActivity extends AppCompatActivity {
     private FirebaseUser user;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
-    private Typeface typeFace;
-
     private DatabaseReference database;
     private String uid;
 
@@ -58,7 +56,6 @@ public class AccountLoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_login);
 
-        typeFace = Typeface.createFromAsset(getAssets(), "HelveticaNeueLight.ttf");
         database = FirebaseDatabase.getInstance().getReference().child("users");
 
         //Get Firebase auth instance
@@ -89,15 +86,6 @@ public class AccountLoginActivity extends AppCompatActivity {
         inputEmail = (EditText) findViewById(R.id.email);
         inputPassword = (EditText) findViewById(R.id.password);
         signinText = (TextView) findViewById(R.id.signin_text);
-
-        //set font typeface
-        btnLogin.setTypeface(typeFace);
-        btnCancel.setTypeface(typeFace);
-        btnGuest.setTypeface(typeFace);
-        btnReset.setTypeface(typeFace);
-        inputEmail.setTypeface(typeFace);
-        inputPassword.setTypeface(typeFace);
-        signinText.setTypeface(typeFace);
 
         progress = new ProgressDialog(this);
 

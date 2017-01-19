@@ -42,8 +42,6 @@ public class SignupActivity extends AppCompatActivity {
     private FirebaseUser user;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
-    private Typeface typeFace;
-
     private DatabaseReference database;
 
     private static final int RC_SIGN_IN = 1;
@@ -58,8 +56,6 @@ public class SignupActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
-
-        typeFace = Typeface.createFromAsset(getAssets(), "HelveticaNeueLight.ttf");
 
         //Get Firebase auth instance
         auth = FirebaseAuth.getInstance();
@@ -91,15 +87,6 @@ public class SignupActivity extends AppCompatActivity {
         inputName = (EditText) findViewById(R.id.name);
         inputPassword = (EditText) findViewById(R.id.password);
         signupText = (TextView) findViewById(R.id.signup_text);
-
-        //set font typeface
-        btnSignUp.setTypeface(typeFace);
-        btnCancel.setTypeface(typeFace);
-        btnGuest.setTypeface(typeFace);
-        inputEmail.setTypeface(typeFace);
-        inputName.setTypeface(typeFace);
-        inputPassword.setTypeface(typeFace);
-        signupText.setTypeface(typeFace);
 
         progress = new ProgressDialog(this);
 

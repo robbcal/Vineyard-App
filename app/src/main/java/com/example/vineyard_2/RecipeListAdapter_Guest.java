@@ -36,8 +36,6 @@ public class RecipeListAdapter_Guest extends BaseAdapter {
 
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-    private Typeface typeFace;
-
     public RecipeListAdapter_Guest ( Context context, List<Recipes> items ) {
         this.context = context;
         this.rowItems = items;
@@ -53,8 +51,6 @@ public class RecipeListAdapter_Guest extends BaseAdapter {
 
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder = null;
-
-        typeFace = Typeface.createFromAsset(context.getAssets(), "HelveticaNeueLight.ttf");
 
         LayoutInflater mInflater = (LayoutInflater)
                 context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
@@ -86,10 +82,6 @@ public class RecipeListAdapter_Guest extends BaseAdapter {
         Picasso.with(context).load(img_url).error(R.drawable.placeholder_error).into(holder.imageView);
         holder.txtID.setText(id);
         holder.txtDescription.setText(description);
-
-        //set font typeface
-        holder.txtTitle.setTypeface(typeFace);
-        holder.txtDescription.setTypeface(typeFace);
 
         return convertView;
     }

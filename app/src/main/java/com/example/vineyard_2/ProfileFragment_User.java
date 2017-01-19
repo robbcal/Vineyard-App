@@ -32,8 +32,6 @@ public class ProfileFragment_User extends Fragment {
     private FirebaseUser user;
     private DatabaseReference databaseUser;
 
-    private Typeface typeFace;
-
     public ProfileFragment_User() {}
 
     @Override
@@ -41,20 +39,12 @@ public class ProfileFragment_User extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_profile_user, container, false);
 
-        typeFace = Typeface.createFromAsset(getActivity().getAssets(), "HelveticaNeueLight.ttf");
-
         userProfileName = (TextView) v.findViewById(R.id.user_profile_name);
         userProfileEmail = (TextView) v.findViewById(R.id.user_email);
         userProfilePhoto = (ImageView) v.findViewById(R.id.user_profile_photo);
 
         btnLogout = (Button) v.findViewById(R.id.btn_logout);
         btnSettings = (Button) v.findViewById(R.id.btn_settings);
-
-        //set font typeface
-        userProfileName.setTypeface(typeFace);
-        userProfileEmail.setTypeface(typeFace);
-        btnLogout.setTypeface(typeFace);
-        btnSettings.setTypeface(typeFace);
 
         //Get Firebase auth instance
         auth = FirebaseAuth.getInstance();

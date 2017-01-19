@@ -64,8 +64,6 @@ public class SearchFragment_User extends Fragment {
     ArrayList<String> searchedIngredients;
     FirebaseListAdapter<Recipe> mAdapter;
 
-    private Typeface typeFace;
-
     private static final String TAG = "Vineyard";
 
     public SearchFragment_User() {
@@ -79,8 +77,6 @@ public class SearchFragment_User extends Fragment {
 
         mRecipeRef.keepSynced(true);
 
-        typeFace = Typeface.createFromAsset(getActivity().getAssets(), "HelveticaNeueLight.ttf");
-
         breakfast = (CheckBox) v.findViewById(R.id.Breakfast);
         lunch = (CheckBox) v.findViewById(R.id.Lunch);
         snacks = (CheckBox) v.findViewById(R.id.Snacks);
@@ -90,14 +86,6 @@ public class SearchFragment_User extends Fragment {
         searchButton = (Button) v.findViewById(R.id.search_button);
         clearButton = (Button) v.findViewById(R.id.clearSearch);
         listView = (ListView) v.findViewById(R.id.recipe_list);
-
-        //set font typeface
-        searchButton.setTypeface(typeFace);
-        searchField.setTypeface(typeFace);
-        breakfast.setTypeface(typeFace);
-        lunch.setTypeface(typeFace);
-        snacks.setTypeface(typeFace);
-        dinner.setTypeface(typeFace);
 
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
@@ -235,11 +223,6 @@ public class SearchFragment_User extends Fragment {
                 recipeUrl = (TextView) view.findViewById(R.id.recipe_url);
                 recipeDescription = (TextView) view.findViewById(R.id.recipe_description);
                 addRecipe = (Button) view.findViewById(R.id.add);
-
-                //set font typeface
-                recipeTitle.setTypeface(typeFace);
-                recipeDescription.setTypeface(typeFace);
-                addRecipe.setTypeface(typeFace);
 
                 Picasso.with(getActivity().getApplicationContext()).load(imgUrl).error(R.drawable.placeholder_error).into((ImageView) view.findViewById(R.id.icon));
                 recipeTitle.setText(title);

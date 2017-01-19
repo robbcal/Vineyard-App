@@ -32,7 +32,6 @@ public class AccountSettingsActivity_Google extends AppCompatActivity {
     private FirebaseUser user;
     private DatabaseReference databaseUser;
 
-    private Typeface typeFace;
     private ProgressDialog progress;
 
     @Override
@@ -40,7 +39,6 @@ public class AccountSettingsActivity_Google extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_edit_google);
 
-        typeFace = Typeface.createFromAsset(getAssets(), "HelveticaNeueLight.ttf");
         progress = new ProgressDialog(this);
 
         btnDelete = (Button) findViewById(R.id.btn_delete);
@@ -51,11 +49,6 @@ public class AccountSettingsActivity_Google extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
         databaseUser = FirebaseDatabase.getInstance().getReference().child("users").child(user.getUid());
-
-        //set font typeface
-        btnDelete.setTypeface(typeFace);
-        editText.setTypeface(typeFace);
-        instructions.setTypeface(typeFace);
 
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -26,14 +26,11 @@ public class ResetPasswordActivity extends AppCompatActivity {
     private ProgressDialog progress;
 
     private FirebaseAuth auth;
-    private Typeface typeFace;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reset_password);
-
-        typeFace = Typeface.createFromAsset(getAssets(), "HelveticaNeueLight.ttf");
 
         inputEmail = (EditText) findViewById(R.id.email);
         btnReset = (Button) findViewById(R.id.btn_reset);
@@ -43,12 +40,6 @@ public class ResetPasswordActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
 
         progress = new ProgressDialog(this);
-
-        //set font typeface
-        btnReset.setTypeface(typeFace);
-        inputEmail.setTypeface(typeFace);
-        resetHeader.setTypeface(typeFace);
-        resetText.setTypeface(typeFace);
 
         btnReset.setOnClickListener(new View.OnClickListener() {
             @Override

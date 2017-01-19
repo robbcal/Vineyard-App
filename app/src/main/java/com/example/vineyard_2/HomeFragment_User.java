@@ -52,8 +52,6 @@ public class HomeFragment_User extends Fragment{
     FirebaseListAdapter<Recipe> mAdapter = null;
     private static final String TAG = "Vineyard";
 
-    private Typeface typeFace;
-
     View v;
 
     public HomeFragment_User() {}
@@ -62,18 +60,12 @@ public class HomeFragment_User extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_home_user, container, false);
 
-        typeFace = Typeface.createFromAsset(getActivity().getAssets(), "HelveticaNeueLight.ttf");
-
         mRecipeRef.keepSynced(true);
 
         searchField =(EditText)v.findViewById(R.id.search_field);
         searchButton = (Button)v.findViewById(R.id.search_button);
         clearButton = (Button)v.findViewById(R.id.clearSearch);
         listView = (ListView)v.findViewById(R.id.recipe_list);
-
-        //set font typeface
-        searchButton.setTypeface(typeFace);
-        searchField.setTypeface(typeFace);
 
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
@@ -112,11 +104,6 @@ public class HomeFragment_User extends Fragment{
                 recipeUrl = (TextView) view.findViewById(R.id.recipe_url);
                 recipeDescription = (TextView) view.findViewById(R.id.recipe_description);
                 removeRecipe = (Button) view.findViewById(R.id.remove);
-
-                //set font typeface
-                recipeTitle.setTypeface(typeFace);
-                recipeDescription.setTypeface(typeFace);
-                removeRecipe.setTypeface(typeFace);
 
                 Picasso.with(getActivity().getApplicationContext()).load(imgUrl).error(R.drawable.placeholder_error).into((ImageView) view.findViewById(R.id.icon));
                 recipeTitle.setText(title);

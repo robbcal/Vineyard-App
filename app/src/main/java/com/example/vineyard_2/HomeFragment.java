@@ -18,8 +18,6 @@ public class HomeFragment extends Fragment{
     private TextView enjoyText;
     private Button btnSignup;
 
-    private Typeface typeFace, typeFaceHeader;
-
     public HomeFragment() {
 
     }
@@ -31,13 +29,6 @@ public class HomeFragment extends Fragment{
 
         enjoyText = (TextView) view.findViewById(R.id.signup_text);
         btnSignup = (Button) view.findViewById(R.id.btn_signup);
-
-        typeFace = Typeface.createFromAsset(getActivity().getAssets(), "HelveticaNeueLight.ttf");
-        typeFaceHeader = Typeface.createFromAsset(getActivity().getAssets(), "HelveticaNeuBold.ttf");
-
-        //set font typeface
-        enjoyText.setTypeface(typeFaceHeader);
-        btnSignup.setTypeface(typeFace);
 
         return view;
     }

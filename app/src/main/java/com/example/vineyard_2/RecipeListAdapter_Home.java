@@ -27,8 +27,6 @@ public class RecipeListAdapter_Home extends BaseAdapter {
     DatabaseReference mUserRef = mRootRef.child("users");
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-    private Typeface typeFace;
-
     public RecipeListAdapter_Home(Context context, List<Recipes> items ) {
         this.context = context;
         this.rowItems = items;
@@ -45,8 +43,6 @@ public class RecipeListAdapter_Home extends BaseAdapter {
 
     public View getView(final int position, View convertView, ViewGroup parent) {
         RecipeListAdapter_Home.ViewHolder holder = null;
-
-        typeFace = Typeface.createFromAsset(context.getAssets(), "HelveticaNeueLight.ttf");
 
         LayoutInflater mInflater = (LayoutInflater)
                 context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
@@ -91,11 +87,6 @@ public class RecipeListAdapter_Home extends BaseAdapter {
                 Toast.makeText(v.getContext(), title+" removed.", Toast.LENGTH_SHORT).show();
             }
         });
-
-        //set font typeface
-        holder.txtTitle.setTypeface(typeFace);
-        holder.txtDescription.setTypeface(typeFace);
-        holder.removeRecipe.setTypeface(typeFace);
 
         return convertView;
     }

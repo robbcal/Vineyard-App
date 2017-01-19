@@ -27,14 +27,10 @@ public class LoginActivity extends AppCompatActivity {
 
     private DatabaseReference database;
 
-    private Typeface typeFace;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-        typeFace = Typeface.createFromAsset(getAssets(), "HelveticaNeueLight.ttf");
 
         //Get Firebase auth instance
         auth = FirebaseAuth.getInstance();
@@ -64,12 +60,6 @@ public class LoginActivity extends AppCompatActivity {
         desc2 = (TextView) findViewById(R.id.desc2);
         btnSignup = (Button) findViewById(R.id.btn_signup);
         btnLogin = (Button) findViewById(R.id.btn_login);
-
-        //set font typeface
-        desc1.setTypeface(typeFace);
-        desc2.setTypeface(typeFace);
-        btnSignup.setTypeface(typeFace);
-        btnLogin.setTypeface(typeFace);
 
         btnSignup.setOnClickListener(new View.OnClickListener() {
             @Override

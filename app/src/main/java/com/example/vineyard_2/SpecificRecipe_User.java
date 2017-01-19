@@ -29,7 +29,6 @@ public class SpecificRecipe_User extends AppCompatActivity {
 
     private ImageView recipeImage;
     private TextView recipeTitle, recipeDescription, recipeIngredients, recipeDirections, directionHeader, ingredientHeader;
-    private Typeface typeFace;
     ArrayList<String> Ingredients;
     ArrayList<String> Directions;
 
@@ -47,8 +46,6 @@ public class SpecificRecipe_User extends AppCompatActivity {
         setContentView(R.layout.activity_specific_recipe_user);
 
         mRecipeRef.keepSynced(true);
-
-        typeFace = Typeface.createFromAsset(getAssets(), "HelveticaNeueLight.ttf");
 
         Intent intent = getIntent();
         final String url = intent.getStringExtra("url");
@@ -72,14 +69,6 @@ public class SpecificRecipe_User extends AppCompatActivity {
                 recipeDirections = (TextView) findViewById(R.id.recipe_directions);
                 directionHeader = (TextView) findViewById(R.id.directions_header);
                 ingredientHeader = (TextView) findViewById(R.id.ingredient_header);
-
-                //set font typeface
-                recipeTitle.setTypeface(typeFace);
-                recipeDescription.setTypeface(typeFace);
-                recipeIngredients.setTypeface(typeFace);
-                recipeDirections.setTypeface(typeFace);
-                directionHeader.setTypeface(typeFace);
-                ingredientHeader.setTypeface(typeFace);
 
                 mRecipeRef.child(key).addValueEventListener(new ValueEventListener() {
                     @Override
