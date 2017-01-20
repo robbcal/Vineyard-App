@@ -3,7 +3,6 @@ package com.example.vineyard_2;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -15,14 +14,14 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseListAdapter;
+import com.github.clans.fab.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -45,10 +44,7 @@ public class SearchFragment extends Fragment {
     DatabaseReference mContentsIngredients = mRootRef.child("contents_Ingredients");
 
     TextView recipeUrl, recipeTitle, recipeDescription, recipeKey;
-    CheckBox breakfast;
-    CheckBox lunch;
-    CheckBox snacks;
-    CheckBox dinner;
+    FloatingActionButton breakfast, lunch, snacks, dinner;
     ListView listView;
     MultiAutoCompleteTextView searchField;
     Button searchButton;
@@ -56,6 +52,11 @@ public class SearchFragment extends Fragment {
     List<Recipes> rowItems;
     ArrayList<String> searchedIngredients;
     FirebaseListAdapter<Recipe> mAdapter;
+
+    boolean bf = false;
+    boolean lu = false;
+    boolean sn = false;
+    boolean di = false;
 
     private static final String TAG = "Vineyard";
 
@@ -71,10 +72,10 @@ public class SearchFragment extends Fragment {
 
         mRecipeRef.keepSynced(true);
 
-        breakfast = (CheckBox) v.findViewById(R.id.Breakfast);
-        lunch = (CheckBox) v.findViewById(R.id.Lunch);
-        snacks = (CheckBox) v.findViewById(R.id.Snacks);
-        dinner = (CheckBox) v.findViewById(R.id.Dinner);
+        breakfast = (FloatingActionButton) v.findViewById(R.id.Breakfast);
+        lunch = (FloatingActionButton) v.findViewById(R.id.Lunch);
+        snacks = (FloatingActionButton) v.findViewById(R.id.Snacks);
+        dinner = (FloatingActionButton) v.findViewById(R.id.Dinner);
 
         searchField =(MultiAutoCompleteTextView)v.findViewById(R.id.search_field);
         searchButton = (Button)v.findViewById(R.id.search_button);
@@ -116,13 +117,17 @@ public class SearchFragment extends Fragment {
             }
         });
 
-        breakfast.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        breakfast.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if(b){
+            public void onClick(View v) {
+                if(bf == false) {
+                    bf = true;
+                    Toast.makeText(v.getContext(), "Breakfast filter enabled.", Toast.LENGTH_SHORT).show();
                     filter();
                 }else{
-                    if(!lunch.isChecked() && !snacks.isChecked() && !dinner.isChecked()) {
+                    bf = false;
+                    Toast.makeText(v.getContext(), "Breakfast filter disabled.", Toast.LENGTH_SHORT).show();
+                    if(lu == false && sn == false && di == false) {
                         listView.setAdapter(null);
                         getData();
                     }else{
@@ -132,13 +137,17 @@ public class SearchFragment extends Fragment {
             }
         });
 
-        lunch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        lunch.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if(b){
+            public void onClick(View v) {
+                if(lu == false) {
+                    lu = true;
+                    Toast.makeText(v.getContext(), "Lunch filter enabled.", Toast.LENGTH_SHORT).show();
                     filter();
                 }else{
-                    if(!breakfast.isChecked() && !snacks.isChecked() && !dinner.isChecked()) {
+                    lu = false;
+                    Toast.makeText(v.getContext(), "Lunch filter disabled.", Toast.LENGTH_SHORT).show();
+                    if(bf == false && sn == false && di == false) {
                         listView.setAdapter(null);
                         getData();
                     }else{
@@ -148,13 +157,17 @@ public class SearchFragment extends Fragment {
             }
         });
 
-        snacks.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        snacks.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if(b){
+            public void onClick(View v) {
+                if(sn == false) {
+                    sn = true;
+                    Toast.makeText(v.getContext(), "Snacks filter enabled.", Toast.LENGTH_SHORT).show();
                     filter();
                 }else{
-                    if(!lunch.isChecked() && !breakfast.isChecked() && !dinner.isChecked()) {
+                    sn = false;
+                    Toast.makeText(v.getContext(), "Snacks filter disabled.", Toast.LENGTH_SHORT).show();
+                    if(lu == false && bf == false && di == false) {
                         listView.setAdapter(null);
                         getData();
                     }else{
@@ -164,13 +177,17 @@ public class SearchFragment extends Fragment {
             }
         });
 
-        dinner.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        dinner.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if(b){
+            public void onClick(View v) {
+                if(di == false) {
+                    di = true;
+                    Toast.makeText(v.getContext(), "Dinner filter enabled.", Toast.LENGTH_SHORT).show();
                     filter();
                 }else{
-                    if(!lunch.isChecked() && !snacks.isChecked() && !breakfast.isChecked()) {
+                    di = false;
+                    Toast.makeText(v.getContext(), "Dinner filter disabled.", Toast.LENGTH_SHORT).show();
+                    if(lu == false && sn == false && bf == false) {
                         listView.setAdapter(null);
                         getData();
                     }else{
@@ -225,123 +242,6 @@ public class SearchFragment extends Fragment {
         listView.setAdapter(null);
         getSearchedIngredient();
 
-        /*mRecipeRef.orderByChild("title").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                rowItems = new ArrayList<Recipes>();
-                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
-                    final String recipeKey = postSnapshot.getKey();
-                    final String title = postSnapshot.child("title").getValue(String.class);
-                    final String url = postSnapshot.child("url").getValue(String.class);
-                    final String image_url = postSnapshot.child("image_url").getValue(String.class);
-                    final String description = postSnapshot.child("description").getValue(String.class);
-                    String descSearch = description.toLowerCase();
-                    final boolean filter[] = new boolean[4];
-
-                    if(breakfast.isChecked()) {
-                        if(descSearch.contains("breakfast")){
-                            filter[0] = true;
-                        }
-                    }
-
-                    if(lunch.isChecked()) {
-                        if(descSearch.contains("lunch")) {
-                            filter[1] = true;
-                        }
-                    }
-
-                    if(snacks.isChecked()) {
-                        if(descSearch.contains("snack")){
-                            filter[2] = true;
-                        }
-                    }
-
-                    if(dinner.isChecked()) {
-                        if(descSearch.contains("dinner") || descSearch.contains("supper")){
-                            filter[3] = true;
-                        }
-                    }
-
-                    DatabaseReference mIngredientRef = mRootRef.child("recipes/"+recipeKey+"/content/ingredients");
-
-                    mIngredientRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            int size = searchedIngredients.size();
-                            int count = 0;
-                            for (DataSnapshot ingSnapshot: dataSnapshot.getChildren()) {
-                                String ingr = ingSnapshot.getValue().toString().toLowerCase();
-                                ingr = ingr.replace("{ingredient=","");
-                                ingr = ingr.replaceAll("\\}", "");
-
-                                for(int a = 0; a <size; a++){
-                                    String search = searchedIngredients.get(a);
-                                    if(ingr.contains(search.toLowerCase())) {
-                                        count++;
-                                    }
-                                }
-                            }
-                            if(count >= size) {
-                                if(breakfast.isChecked() || lunch.isChecked() || snacks.isChecked() || dinner.isChecked()){
-                                    int x;
-                                    for(x = 0; x < 4 && filter[x] != true; x++){}
-                                    if(x < 4){
-                                        Recipes item = new Recipes(title, url, image_url, recipeKey, description);
-                                        rowItems.add(item);
-
-                                        RecipeListAdapter adapter = new RecipeListAdapter(getActivity().getApplicationContext(), rowItems);
-                                        listView.setAdapter(adapter);
-
-                                        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                            @Override
-                                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                                TextView text = (TextView) view.findViewById(R.id.recipe_url);
-                                                String recipe_url = text.getText().toString().trim();
-
-                                                Intent intent = new Intent(getActivity().getApplicationContext(), SpecificRecipe.class);
-                                                intent.putExtra("key", recipeKey);
-                                                intent.putExtra("url", recipe_url);
-                                                startActivity(intent);
-                                            }
-                                        });
-                                    }
-                                }else{
-                                    Recipes item = new Recipes(title, url, image_url, recipeKey, description);
-                                    rowItems.add(item);
-
-                                    RecipeListAdapter adapter = new RecipeListAdapter(getActivity().getApplicationContext(), rowItems);
-                                    listView.setAdapter(adapter);
-
-                                    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                        @Override
-                                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                            TextView text = (TextView) view.findViewById(R.id.recipe_url);
-                                            String recipe_url = text.getText().toString().trim();
-
-                                            Intent intent = new Intent(getActivity().getApplicationContext(), SpecificRecipe.class);
-                                            intent.putExtra("key", recipeKey);
-                                            intent.putExtra("url", recipe_url);
-                                            startActivity(intent);
-                                        }
-                                    });
-                                    //getData();
-                                }
-                            }
-                        }
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                            Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
-                        }
-                    });//End of ingredient chuchu
-
-                }
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
-            }
-        });*/
-
         mContentsIngredients.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -371,31 +271,31 @@ public class SearchFragment extends Fragment {
                                 String descSearch = description.toLowerCase();
                                 final boolean filter[] = new boolean[4];
 
-                                if (breakfast.isChecked()) {
+                                if (bf == true) {
                                     if (descSearch.contains("breakfast")) {
                                         filter[0] = true;
                                     }
                                 }
 
-                                if (lunch.isChecked()) {
+                                if (lu == true) {
                                     if (descSearch.contains("lunch")) {
                                         filter[1] = true;
                                     }
                                 }
 
-                                if (snacks.isChecked()) {
+                                if (sn == true) {
                                     if (descSearch.contains("snack")) {
                                         filter[2] = true;
                                     }
                                 }
 
-                                if (dinner.isChecked()) {
+                                if (di == true) {
                                     if (descSearch.contains("dinner") || descSearch.contains("supper")) {
                                         filter[3] = true;
                                     }
                                 }
 
-                                if (breakfast.isChecked() || lunch.isChecked() || snacks.isChecked() || dinner.isChecked()) {
+                                if (bf == true || lu == true || sn == true || di == true) {
                                     int x;
                                     for (x = 0; x < 4 && filter[x] != true; x++) {
                                     }
@@ -403,7 +303,7 @@ public class SearchFragment extends Fragment {
                                         Recipes item = new Recipes(title, url, image_url, recipeKey, description);
                                         rowItems.add(item);
 
-                                        RecipeListAdapter adapter = new RecipeListAdapter(getActivity().getApplicationContext(), rowItems);
+                                        RecipeListAdapter_Guest adapter = new RecipeListAdapter_Guest(getActivity().getApplicationContext(), rowItems);
                                         listView.setAdapter(adapter);
 
                                         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -425,7 +325,7 @@ public class SearchFragment extends Fragment {
                                     Recipes item = new Recipes(title, url, image_url, recipeKey, description);
                                     rowItems.add(item);
 
-                                    RecipeListAdapter adapter = new RecipeListAdapter(getActivity().getApplicationContext(), rowItems);
+                                    RecipeListAdapter_Guest adapter = new RecipeListAdapter_Guest(getActivity().getApplicationContext(), rowItems);
                                     listView.setAdapter(adapter);
 
                                     listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -478,11 +378,11 @@ public class SearchFragment extends Fragment {
     public void clearSearchText(){
         searchField.setText("");
         listView.setAdapter(null);
+        bf = false;
+        lu = false;
+        sn = false;
+        di = false;
         getData();
-        breakfast.setChecked(false);
-        lunch.setChecked(false);
-        snacks.setChecked(false);
-        dinner.setChecked(false);
     }
 
     public void hideKeypad(){
@@ -508,31 +408,31 @@ public class SearchFragment extends Fragment {
                     String descSearch = description.toLowerCase();
                     final boolean filter[] = new boolean[4];
 
-                    if(breakfast.isChecked()) {
+                    if(bf == true) {
                         if(descSearch.contains("breakfast")){
                             filter[0] = true;
                         }
                     }
 
-                    if(lunch.isChecked()) {
+                    if(lu == true) {
                         if(descSearch.contains("lunch")) {
                             filter[1] = true;
                         }
                     }
 
-                    if(snacks.isChecked()) {
+                    if(sn == true) {
                         if(descSearch.contains("snack")){
                             filter[2] = true;
                         }
                     }
 
-                    if(dinner.isChecked()) {
+                    if(di == true) {
                         if(descSearch.contains("dinner") || descSearch.contains("supper")){
                             filter[3] = true;
                         }
                     }
 
-                    if(breakfast.isChecked() || lunch.isChecked() || snacks.isChecked() || dinner.isChecked()){
+                    if(bf == true || lu == true || sn == true || di == true){
                         int x;
                         for(x = 0; x < 4 && filter[x] != true; x++){}
                         if(x < 4) {
