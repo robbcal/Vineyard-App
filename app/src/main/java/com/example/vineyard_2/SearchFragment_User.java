@@ -4,10 +4,10 @@ package com.example.vineyard_2;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import com.github.clans.fab.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -52,10 +52,7 @@ public class SearchFragment_User extends Fragment {
 
     TextView recipeUrl, recipeTitle, recipeDescription, recipeKey;
     Button addRecipe;
-    CheckBox breakfast;
-    CheckBox lunch;
-    CheckBox snacks;
-    CheckBox dinner;
+    FloatingActionButton breakfast, lunch, snacks, dinner;
     ListView listView;
     MultiAutoCompleteTextView searchField;
     Button searchButton;
@@ -77,10 +74,10 @@ public class SearchFragment_User extends Fragment {
 
         mRecipeRef.keepSynced(true);
 
-        breakfast = (CheckBox) v.findViewById(R.id.Breakfast);
-        lunch = (CheckBox) v.findViewById(R.id.Lunch);
-        snacks = (CheckBox) v.findViewById(R.id.Snacks);
-        dinner = (CheckBox) v.findViewById(R.id.Dinner);
+        breakfast = (FloatingActionButton) v.findViewById(R.id.Breakfast);
+        lunch = (FloatingActionButton) v.findViewById(R.id.Lunch);
+        snacks = (FloatingActionButton) v.findViewById(R.id.Snacks);
+        dinner = (FloatingActionButton) v.findViewById(R.id.Dinner);
 
         searchField =(MultiAutoCompleteTextView) v.findViewById(R.id.search_field);
         searchButton = (Button) v.findViewById(R.id.search_button);
@@ -561,10 +558,6 @@ public class SearchFragment_User extends Fragment {
         searchField.setText("");
         listView.setAdapter(null);
         getData();
-        breakfast.setChecked(false);
-        lunch.setChecked(false);
-        snacks.setChecked(false);
-        dinner.setChecked(false);
     }
 
     public void hideKeypad(){
