@@ -73,6 +73,7 @@
             fab:menu_colorNormal="#68228b"
             fab:menu_colorPressed="#f5f5f5"
             fab:menu_colorRipple="#4f666a"
+            android:src="@drawable/breakfast"
             fab:fab_size="mini"
             fab:fab_label="Breakfast" />
 
