@@ -70,10 +70,10 @@
             android:id="@+id/Breakfast"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            fab:menu_colorNormal="#68228b"
-            fab:menu_colorPressed="#f5f5f5"
-            fab:menu_colorRipple="#4f666a"
-            android:src="@drawable/breakfast"
+            android:src="@mipmap/ic_free_breakfast_white_24dp"
+            fab:fab_colorNormal="#68228b"
+            fab:fab_colorPressed="#f5f5f5"
+            fab:fab_colorRipple="#4f666a"
             fab:fab_size="mini"
             fab:fab_label="Breakfast" />
 
@@ -81,10 +81,10 @@
             android:id="@+id/Lunch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/lunch"
-            fab:menu_colorNormal="#68228b"
-            fab:menu_colorPressed="#f5f5f5"
-            fab:menu_colorRipple="#4f666a"
+            android:src="@mipmap/ic_restaurant_white_24dp"
+            fab:fab_colorNormal="#68228b"
+            fab:fab_colorPressed="#f5f5f5"
+            fab:fab_colorRipple="#4f666a"
             fab:fab_size="mini"
             fab:fab_label="Lunch" />
 
@@ -92,10 +92,10 @@
             android:id="@+id/Snacks"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            fab:menu_colorNormal="#68228b"
-            fab:menu_colorPressed="#f5f5f5"
-            fab:menu_colorRipple="#4f666a"
-            android:src="@drawable/snack"
+            android:src="@mipmap/ic_cake_white_24dp"
+            fab:fab_colorNormal="#68228b"
+            fab:fab_colorPressed="#f5f5f5"
+            fab:fab_colorRipple="#4f666a"
             fab:fab_size="mini"
             fab:fab_label="Snacks" />
 
@@ -103,10 +103,10 @@
             android:id="@+id/Dinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/dinner"
-            fab:menu_colorNormal="#68228b"
-            fab:menu_colorPressed="#f5f5f5"
-            fab:menu_colorRipple="#4f666a"
+            android:src="@mipmap/ic_room_service_white_24dp"
+            fab:fab_colorNormal="#68228b"
+            fab:fab_colorPressed="#f5f5f5"
+            fab:fab_colorRipple="#4f666a"
             fab:fab_size="mini"
             fab:fab_label="Dinner" />
 
