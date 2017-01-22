@@ -44,7 +44,6 @@ public class SearchFragment extends Fragment {
     DatabaseReference mContentsIngredients = mRootRef.child("contents_Ingredients");
 
     TextView recipeUrl, recipeTitle, recipeDescription, recipeKey;
-    FloatingActionButton breakfast, lunch, snacks, dinner;
     ListView listView;
     MultiAutoCompleteTextView searchField;
     Button searchButton;
@@ -52,11 +51,6 @@ public class SearchFragment extends Fragment {
     List<Recipes> rowItems;
     ArrayList<String> searchedIngredients;
     FirebaseListAdapter<Recipe> mAdapter;
-
-    boolean bf = false;
-    boolean lu = false;
-    boolean sn = false;
-    boolean di = false;
 
     private static final String TAG = "Vineyard";
 
@@ -71,11 +65,6 @@ public class SearchFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_search, container, false);
 
         mRecipeRef.keepSynced(true);
-
-        breakfast = (FloatingActionButton) v.findViewById(R.id.Breakfast);
-        lunch = (FloatingActionButton) v.findViewById(R.id.Lunch);
-        snacks = (FloatingActionButton) v.findViewById(R.id.Snacks);
-        dinner = (FloatingActionButton) v.findViewById(R.id.Dinner);
 
         searchField =(MultiAutoCompleteTextView)v.findViewById(R.id.search_field);
         searchButton = (Button)v.findViewById(R.id.search_button);
@@ -114,86 +103,6 @@ public class SearchFragment extends Fragment {
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
-            }
-        });
-
-        breakfast.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(bf == false) {
-                    bf = true;
-                    Toast.makeText(v.getContext(), "Breakfast filter enabled.", Toast.LENGTH_SHORT).show();
-                    filter();
-                }else{
-                    bf = false;
-                    Toast.makeText(v.getContext(), "Breakfast filter disabled.", Toast.LENGTH_SHORT).show();
-                    if(lu == false && sn == false && di == false) {
-                        listView.setAdapter(null);
-                        getData();
-                    }else{
-                        filter();
-                    }
-                }
-            }
-        });
-
-        lunch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(lu == false) {
-                    lu = true;
-                    Toast.makeText(v.getContext(), "Lunch filter enabled.", Toast.LENGTH_SHORT).show();
-                    filter();
-                }else{
-                    lu = false;
-                    Toast.makeText(v.getContext(), "Lunch filter disabled.", Toast.LENGTH_SHORT).show();
-                    if(bf == false && sn == false && di == false) {
-                        listView.setAdapter(null);
-                        getData();
-                    }else{
-                        filter();
-                    }
-                }
-            }
-        });
-
-        snacks.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(sn == false) {
-                    sn = true;
-                    Toast.makeText(v.getContext(), "Snacks filter enabled.", Toast.LENGTH_SHORT).show();
-                    filter();
-                }else{
-                    sn = false;
-                    Toast.makeText(v.getContext(), "Snacks filter disabled.", Toast.LENGTH_SHORT).show();
-                    if(lu == false && bf == false && di == false) {
-                        listView.setAdapter(null);
-                        getData();
-                    }else{
-                        filter();
-                    }
-                }
-            }
-        });
-
-        dinner.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(di == false) {
-                    di = true;
-                    Toast.makeText(v.getContext(), "Dinner filter enabled.", Toast.LENGTH_SHORT).show();
-                    filter();
-                }else{
-                    di = false;
-                    Toast.makeText(v.getContext(), "Dinner filter disabled.", Toast.LENGTH_SHORT).show();
-                    if(lu == false && sn == false && bf == false) {
-                        listView.setAdapter(null);
-                        getData();
-                    }else{
-                        filter();
-                    }
-                }
             }
         });
 
@@ -268,58 +177,8 @@ public class SearchFragment extends Fragment {
                                 final String url = dataSnapshot.child("url").getValue(String.class);
                                 final String image_url = dataSnapshot.child("image_url").getValue(String.class);
                                 final String description = dataSnapshot.child("description").getValue(String.class);
-                                String descSearch = description.toLowerCase();
-                                final boolean filter[] = new boolean[4];
 
-                                if (bf == true) {
-                                    if (descSearch.contains("breakfast")) {
-                                        filter[0] = true;
-                                    }
-                                }
-
-                                if (lu == true) {
-                                    if (descSearch.contains("lunch")) {
-                                        filter[1] = true;
-                                    }
-                                }
-
-                                if (sn == true) {
-                                    if (descSearch.contains("snack")) {
-                                        filter[2] = true;
-                                    }
-                                }
-
-                                if (di == true) {
-                                    if (descSearch.contains("dinner") || descSearch.contains("supper")) {
-                                        filter[3] = true;
-                                    }
-                                }
-
-                                if (bf == true || lu == true || sn == true || di == true) {
-                                    int x;
-                                    for (x = 0; x < 4 && filter[x] != true; x++) {
-                                    }
-                                    if (x < 4) {
-                                        Recipes item = new Recipes(title, url, image_url, recipeKey, description);
-                                        rowItems.add(item);
-
-                                        RecipeListAdapter_Guest adapter = new RecipeListAdapter_Guest(getActivity().getApplicationContext(), rowItems);
-                                        listView.setAdapter(adapter);
-
-                                        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                            @Override
-                                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                                TextView text = (TextView) view.findViewById(R.id.recipe_url);
-                                                String recipe_url = text.getText().toString().trim();
-
-                                                Intent intent = new Intent(getActivity().getApplicationContext(), SpecificRecipe.class);
-                                                intent.putExtra("key", recipeKey);
-                                                intent.putExtra("url", recipe_url);
-                                                startActivity(intent);
-                                            }
-                                        });
-                                    }
-                                }else if(searchField.getText().toString().trim().length() == 0){
+                                if(searchField.getText().toString().trim().length() == 0){
                                     getData();
                                 }else{
                                     Recipes item = new Recipes(title, url, image_url, recipeKey, description);
@@ -378,10 +237,6 @@ public class SearchFragment extends Fragment {
     public void clearSearchText(){
         searchField.setText("");
         listView.setAdapter(null);
-        bf = false;
-        lu = false;
-        sn = false;
-        di = false;
         getData();
     }
 
@@ -407,55 +262,6 @@ public class SearchFragment extends Fragment {
                     final String description = postSnapshot.child("description").getValue(String.class);
                     String descSearch = description.toLowerCase();
                     final boolean filter[] = new boolean[4];
-
-                    if(bf == true) {
-                        if(descSearch.contains("breakfast")){
-                            filter[0] = true;
-                        }
-                    }
-
-                    if(lu == true) {
-                        if(descSearch.contains("lunch")) {
-                            filter[1] = true;
-                        }
-                    }
-
-                    if(sn == true) {
-                        if(descSearch.contains("snack")){
-                            filter[2] = true;
-                        }
-                    }
-
-                    if(di == true) {
-                        if(descSearch.contains("dinner") || descSearch.contains("supper")){
-                            filter[3] = true;
-                        }
-                    }
-
-                    if(bf == true || lu == true || sn == true || di == true){
-                        int x;
-                        for(x = 0; x < 4 && filter[x] != true; x++){}
-                        if(x < 4) {
-                            Recipes item = new Recipes(title, url, image_url, recipeKey, description);
-                            rowItems.add(item);
-
-                            RecipeListAdapter_Guest adapter = new RecipeListAdapter_Guest(getActivity().getApplicationContext(), rowItems);
-                            listView.setAdapter(adapter);
-
-                            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                @Override
-                                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                    TextView text = (TextView) view.findViewById(R.id.recipe_url);
-                                    String recipe_url = text.getText().toString().trim();
-
-                                    Intent intent = new Intent(getActivity().getApplicationContext(), SpecificRecipe.class);
-                                    intent.putExtra("key", recipeKey);
-                                    intent.putExtra("url", recipe_url);
-                                    startActivity(intent);
-                                }
-                            });
-                        }
-                    }
                 }
             }
             @Override

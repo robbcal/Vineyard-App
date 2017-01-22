@@ -42,7 +42,9 @@
         android:onClick="searchRecipe"
         android:background="@color/mainColor"
         android:textColor="@color/secondaryColor"
-        android:layout_margin="10dp" />
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"/>
 
     <ListView
         android:id="@+id/recipe_list"
