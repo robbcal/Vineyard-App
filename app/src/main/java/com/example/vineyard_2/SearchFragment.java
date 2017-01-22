@@ -40,6 +40,7 @@ public class SearchFragment extends Fragment {
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
     DatabaseReference mRecipeRef = mRootRef.child("recipes");
+    //DatabaseReference mLoadRecipeRef = mRootRef.child("load_recipes");
     DatabaseReference mIngredients = mRootRef.child("ingredients");
     DatabaseReference mContentsIngredients = mRootRef.child("contents_Ingredients");
 

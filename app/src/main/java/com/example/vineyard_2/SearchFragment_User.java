@@ -4,6 +4,7 @@ package com.example.vineyard_2;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -44,6 +45,7 @@ public class SearchFragment_User extends Fragment {
     DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
     DatabaseReference mUserRef = mRootRef.child("users");
     DatabaseReference mRecipeRef = mRootRef.child("recipes");
+    //DatabaseReference mLoadRecipeRef = mRootRef.child("load_recipes");
     DatabaseReference mIngredients = mRootRef.child("ingredients");
     DatabaseReference mContentsIngredients = mRootRef.child("contents_Ingredients");
     DatabaseReference mContentsDirections = mRootRef.child("contents_Directions");
@@ -53,8 +55,7 @@ public class SearchFragment_User extends Fragment {
     FloatingActionButton breakfast, lunch, snacks, dinner;
     ListView listView;
     MultiAutoCompleteTextView searchField;
-    Button searchButton;
-    Button clearButton;
+    Button searchButton, clearButton;
     List<Recipes> rowItems;
     ArrayList<String> searchedIngredients;
     FirebaseListAdapter<Recipe> mAdapter;
