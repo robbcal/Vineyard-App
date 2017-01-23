@@ -4,7 +4,6 @@ package com.example.vineyard_2;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -45,7 +44,6 @@ public class SearchFragment_User extends Fragment {
     DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
     DatabaseReference mUserRef = mRootRef.child("users");
     DatabaseReference mRecipeRef = mRootRef.child("recipes");
-    //DatabaseReference mLoadRecipeRef = mRootRef.child("load_recipes");
     DatabaseReference mIngredients = mRootRef.child("ingredients");
     DatabaseReference mContentsIngredients = mRootRef.child("contents_Ingredients");
     DatabaseReference mContentsDirections = mRootRef.child("contents_Directions");
@@ -55,7 +53,8 @@ public class SearchFragment_User extends Fragment {
     FloatingActionButton breakfast, lunch, snacks, dinner;
     ListView listView;
     MultiAutoCompleteTextView searchField;
-    Button searchButton, clearButton;
+    Button searchButton;
+    Button clearButton;
     List<Recipes> rowItems;
     ArrayList<String> searchedIngredients;
     FirebaseListAdapter<Recipe> mAdapter;
@@ -378,10 +377,7 @@ public class SearchFragment_User extends Fragment {
                                 }
 
                                 if (bf == true || lu == true || sn == true || di == true) {
-                                    int x;
-                                    for (x = 0; x < 4 && filter[x] != true; x++) {
-                                    }
-                                    if (x < 4) {
+                                    if(filter[0] == true || filter[1] == true || filter[2] == true ||filter[3] == true) {
                                         Recipes item = new Recipes(title, url, image_url, recipeKey, description);
                                         rowItems.add(item);
 
@@ -403,7 +399,7 @@ public class SearchFragment_User extends Fragment {
                                     }
                                 }else if(searchField.getText().toString().trim().length() == 0){
                                     getData();
-                                }else{
+                                }else if(bf == false && lu == false && sn == false && di == false){
                                     Recipes item = new Recipes(title, url, image_url, recipeKey, description);
                                     rowItems.add(item);
 
@@ -515,9 +511,7 @@ public class SearchFragment_User extends Fragment {
                     }
 
                     if(bf == true || lu == true || sn == true || di == true){
-                        int x;
-                        for(x = 0; x < 4 && filter[x] != true; x++){}
-                        if(x < 4) {
+                        if(filter[0] == true || filter[1] == true || filter[2] == true ||filter[3] == true) {
                             Recipes item = new Recipes(title, url, image_url, recipeKey, description);
                             rowItems.add(item);
 

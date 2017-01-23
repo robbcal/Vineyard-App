@@ -18,10 +18,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseListAdapter;
-import com.github.clans.fab.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -40,7 +38,6 @@ public class SearchFragment extends Fragment {
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
     DatabaseReference mRecipeRef = mRootRef.child("recipes");
-    //DatabaseReference mLoadRecipeRef = mRootRef.child("load_recipes");
     DatabaseReference mIngredients = mRootRef.child("ingredients");
     DatabaseReference mContentsIngredients = mRootRef.child("contents_Ingredients");
 
@@ -179,28 +176,25 @@ public class SearchFragment extends Fragment {
                                 final String image_url = dataSnapshot.child("image_url").getValue(String.class);
                                 final String description = dataSnapshot.child("description").getValue(String.class);
 
-                                if(searchField.getText().toString().trim().length() == 0){
-                                    getData();
-                                }else{
-                                    Recipes item = new Recipes(title, url, image_url, recipeKey, description);
-                                    rowItems.add(item);
 
-                                    RecipeListAdapter_Guest adapter = new RecipeListAdapter_Guest(getActivity().getApplicationContext(), rowItems);
-                                    listView.setAdapter(adapter);
+                                Recipes item = new Recipes(title, url, image_url, recipeKey, description);
+                                rowItems.add(item);
 
-                                    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                        @Override
-                                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                            TextView text = (TextView) view.findViewById(R.id.recipe_url);
-                                            String recipe_url = text.getText().toString().trim();
+                                RecipeListAdapter_Guest adapter = new RecipeListAdapter_Guest(getActivity().getApplicationContext(), rowItems);
+                                listView.setAdapter(adapter);
 
-                                            Intent intent = new Intent(getActivity().getApplicationContext(), SpecificRecipe.class);
-                                            intent.putExtra("key", recipeKey);
-                                            intent.putExtra("url", recipe_url);
-                                            startActivity(intent);
-                                        }
-                                    });
-                                }
+                                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                    @Override
+                                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                        TextView text = (TextView) view.findViewById(R.id.recipe_url);
+                                        String recipe_url = text.getText().toString().trim();
+
+                                        Intent intent = new Intent(getActivity().getApplicationContext(), SpecificRecipe.class);
+                                        intent.putExtra("key", recipeKey);
+                                        intent.putExtra("url", recipe_url);
+                                        startActivity(intent);
+                                    }
+                                });
                             }
                             @Override
                             public void onCancelled(DatabaseError databaseError) {
@@ -249,27 +243,4 @@ public class SearchFragment extends Fragment {
             e.printStackTrace();
         }
     }
-
-    public void filter(){
-        mRecipeRef.orderByChild("title").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                rowItems = new ArrayList<Recipes>();
-                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
-                    final String recipeKey = postSnapshot.getKey();
-                    final String title = postSnapshot.child("title").getValue(String.class);
-                    final String url = postSnapshot.child("url").getValue(String.class);
-                    final String image_url = postSnapshot.child("image_url").getValue(String.class);
-                    final String description = postSnapshot.child("description").getValue(String.class);
-                    String descSearch = description.toLowerCase();
-                    final boolean filter[] = new boolean[4];
-                }
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
-            }
-        });
-    }
-
 }
