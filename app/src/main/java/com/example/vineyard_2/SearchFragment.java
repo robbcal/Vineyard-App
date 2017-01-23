@@ -2,6 +2,7 @@ package com.example.vineyard_2;
 
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -108,6 +109,11 @@ public class SearchFragment extends Fragment {
     }
 
     public void getData(){
+        final AlertDialog loadingDialog = new AlertDialog.Builder(getActivity()).create();
+        loadingDialog.setTitle("Loading...");
+        loadingDialog.setMessage("Please wait while recipes are loaded...");
+        loadingDialog.show();
+
         mAdapter = new FirebaseListAdapter<Recipe>(getActivity(), Recipe.class, R.layout.custom_list_guest, mRecipeRef.orderByChild("title")) {
             @Override
             protected void populateView(View view, Recipe r, int position) {
@@ -138,10 +144,22 @@ public class SearchFragment extends Fragment {
                         startActivity(intent);
                     }
                 });
-
+                loadingDialog.dismiss();
             }
         };
         listView.setAdapter(mAdapter);
+
+        mRecipeRef.orderByChild("title").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                loadingDialog.dismiss();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w(TAG, "onCancelled", databaseError.toException());
+            }
+        });
     }
 
     public void searchIngredient(){
