@@ -56,9 +56,11 @@ public class SearchFragment_User extends Fragment {
     MultiAutoCompleteTextView searchField;
     Button searchButton;
     Button clearButton;
+    Button moreButton;
     List<Recipes> rowItems;
     ArrayList<String> searchedIngredients;
     FirebaseListAdapter<Recipe> mAdapter;
+    int limit;
 
     boolean bf = false;
     boolean lu = false;
@@ -87,6 +89,8 @@ public class SearchFragment_User extends Fragment {
         searchButton = (Button) v.findViewById(R.id.search_button);
         clearButton = (Button) v.findViewById(R.id.clearSearch);
         listView = (ListView) v.findViewById(R.id.recipe_list);
+
+        limit = 20;
 
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
@@ -226,9 +230,22 @@ public class SearchFragment_User extends Fragment {
     public void getData(){
         final AlertDialog loadingDialog = new AlertDialog.Builder(getActivity()).create();
         loadingDialog.setMessage("Recipe data currently loading. This may take a while...");
-        loadingDialog.show();
+        //loadingDialog.show();
 
-        mAdapter = new FirebaseListAdapter<Recipe>(getActivity(), Recipe.class, R.layout.custom_list, mRecipeRef.orderByChild("title")) {
+        View footerView = ((LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.footer_list, null, false);
+        listView.addFooterView(footerView);
+
+        moreButton = (Button) footerView.findViewById(R.id.more_button);
+        moreButton.setVisibility(footerView.VISIBLE);
+
+        moreButton.setOnClickListener((new View.OnClickListener() {
+            public void onClick(View v) {
+                moreButton.setVisibility(v.GONE);
+                onClickMoreRecipes();
+            }
+        }));
+
+        mAdapter = new FirebaseListAdapter<Recipe>(getActivity(), Recipe.class, R.layout.custom_list, mRecipeRef.orderByChild("title").limitToFirst(20)) {
             @Override
             protected void populateView(View view, Recipe r, int position) {
                 DatabaseReference recipeRef = getRef(position);
@@ -322,7 +339,7 @@ public class SearchFragment_User extends Fragment {
         };
         listView.setAdapter(mAdapter);
 
-        mRecipeRef.orderByChild("title").addListenerForSingleValueEvent(new ValueEventListener() {
+        mRecipeRef.orderByChild("title").limitToFirst(20).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 loadingDialog.dismiss();
@@ -337,6 +354,7 @@ public class SearchFragment_User extends Fragment {
 
     public void searchIngredient(){
         hideKeypad();
+        moreButton.setVisibility(listView.GONE);
         listView.setAdapter(null);
         getSearchedIngredient();
 
@@ -554,6 +572,120 @@ public class SearchFragment_User extends Fragment {
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+            }
+        });
+    }
+
+    public void onClickMoreRecipes() {
+        final AlertDialog loadingDialog = new AlertDialog.Builder(getActivity()).create();
+        loadingDialog.setMessage("Recipe data currently loading. This may take a while...");
+        limit += 20;
+
+        mAdapter = new FirebaseListAdapter<Recipe>(getActivity(), Recipe.class, R.layout.custom_list, mRecipeRef.orderByChild("title").limitToFirst(limit)) {
+            @Override
+            protected void populateView(View view, Recipe r, int position) {
+                DatabaseReference recipeRef = getRef(position);
+                final String recipe_key = recipeRef.getKey();
+
+                moreButton.setVisibility(view.VISIBLE);
+
+                final String url = r.getUrl();
+                final String title = r.getTitle();
+                final String imgUrl = r.getImage_url();
+                final String description = r.getDescription();
+
+                recipeTitle = (TextView) view.findViewById(R.id.recipe_title);
+                recipeKey = (TextView) view.findViewById(R.id.recipe_key);
+                recipeUrl = (TextView) view.findViewById(R.id.recipe_url);
+                recipeDescription = (TextView) view.findViewById(R.id.recipe_description);
+                addRecipe = (Button) view.findViewById(R.id.add);
+
+                Picasso.with(getActivity().getApplicationContext()).load(imgUrl).error(R.drawable.placeholder_error).into((ImageView) view.findViewById(R.id.icon));
+                recipeTitle.setText(title);
+                recipeUrl.setText(url);
+                recipeKey.setText(recipe_key);
+                recipeDescription.setText(description);
+
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getActivity().getApplicationContext(), SpecificRecipe.class);
+                        intent.putExtra("key", recipe_key);
+                        intent.putExtra("url", url);
+                        startActivity(intent);
+                    }
+                });
+
+                addRecipe.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        if (user != null) {
+                            if(haveNetworkConnection() == true) {
+                                String uid = user.getUid();
+                                final DatabaseReference mspecificUser = mUserRef.child(uid + "/recipes/" + recipe_key);
+
+                                mRecipeRef.child(recipe_key).addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot snapshot) {
+                                        mspecificUser.setValue(snapshot.getValue());
+
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+                                        Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                                    }
+                                });
+                                //new
+                                mContentsIngredients.child(recipe_key).addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot snapshot) {
+                                        mspecificUser.child("ingredients").setValue(snapshot.child("ingredients").getValue());
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+                                        Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                                    }
+                                });
+                                //new
+                                mContentsDirections.child(recipe_key).addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot snapshot) {
+                                        mspecificUser.child("directions").setValue(snapshot.child("directions").getValue());
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+                                        Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                                    }
+                                });
+
+                                Toast.makeText(v.getContext(), title + " has been added.", Toast.LENGTH_SHORT).show();
+                            }else{
+                                Toast.makeText(v.getContext(), "Cannot add. Network connection is unavailable", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(v.getContext(), "Enjoy the full Vineyard experience through signing up/signing in.", Toast.LENGTH_LONG).show();
+                        }
+
+                    }
+                });
+                loadingDialog.dismiss();
+            }
+        };
+        listView.setAdapter(mAdapter);
+
+        mRecipeRef.orderByChild("title").limitToFirst(20).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                loadingDialog.dismiss();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w(TAG, "onCancelled", databaseError.toException());
             }
         });
     }
