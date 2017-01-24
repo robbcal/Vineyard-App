@@ -1,11 +1,12 @@
 package com.example.vineyard_2;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
+import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -43,13 +44,15 @@ public class AccountLoginActivity extends AppCompatActivity {
     private FirebaseAuth.AuthStateListener mAuthListener;
 
     private DatabaseReference database;
-    private String uid;
 
     private static final int RC_SIGN_IN = 1;
     private GoogleApiClient mGoogleApiClient;
 
     private static final String TAG = "SIGNUP_ACTIVITY";
     private ProgressDialog progress;
+
+    SharedPreferences sharedpreferences;
+    public static final String MyPREFERENCES = "MyPrefs" ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,10 +64,11 @@ public class AccountLoginActivity extends AppCompatActivity {
         //Get Firebase auth instance
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
+
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                if (user != null) {
+                if (user != null && sharedpreferences.getString("userID", null) != null) {
                     for (UserInfo user: FirebaseAuth.getInstance().getCurrentUser().getProviderData()) {
                         if (user.getProviderId().equals("google.com")) {
                             Intent loginIntent = new Intent(AccountLoginActivity.this, LandingpageActivity_Google.class);
@@ -86,6 +90,8 @@ public class AccountLoginActivity extends AppCompatActivity {
         inputEmail = (EditText) findViewById(R.id.email);
         inputPassword = (EditText) findViewById(R.id.password);
         signinText = (TextView) findViewById(R.id.signin_text);
+
+        sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
 
         progress = new ProgressDialog(this);
 
@@ -199,6 +205,11 @@ public class AccountLoginActivity extends AppCompatActivity {
                                 Toast.makeText(AccountLoginActivity.this, getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
                             }
                         } else {
+                            String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                            SharedPreferences.Editor editor = sharedpreferences.edit();
+                            editor.putString("userID", uid);
+                            editor.apply();
+
                             Intent intent = new Intent(AccountLoginActivity.this, LandingpageActivity_User.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(intent);
@@ -247,6 +258,11 @@ public class AccountLoginActivity extends AppCompatActivity {
                             Log.w(TAG, "signInWithCredential", task.getException());
                             Toast.makeText(AccountLoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
+                        }else{
+                            String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                            SharedPreferences.Editor editor = sharedpreferences.edit();
+                            editor.putString("userID", uid);
+                            editor.apply();
                         }
                     }
                 });

@@ -3,6 +3,7 @@ package com.example.vineyard_2;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -47,9 +48,11 @@ public class SearchFragment extends Fragment {
     MultiAutoCompleteTextView searchField;
     Button searchButton;
     Button clearButton;
+    Button moreButton;
     List<Recipes> rowItems;
     ArrayList<String> searchedIngredients;
     FirebaseListAdapter<Recipe> mAdapter;
+    int limit;
 
     private static final String TAG = "Vineyard";
 
@@ -70,6 +73,8 @@ public class SearchFragment extends Fragment {
         clearButton = (Button)v.findViewById(R.id.clearSearch);
         listView = (ListView)v.findViewById(R.id.recipe_list);
 
+        limit = 20;
+
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         getData();
@@ -85,6 +90,19 @@ public class SearchFragment extends Fragment {
                 clearSearchText();
             }
         });
+
+        View footerView = ((LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.footer_list, null, false);
+        listView.addFooterView(footerView);
+
+        moreButton = (Button) footerView.findViewById(R.id.more_button);
+        moreButton.setVisibility(footerView.VISIBLE);
+
+        moreButton.setOnClickListener((new View.OnClickListener() {
+            public void onClick(View v) {
+                moreButton.setVisibility(v.GONE);
+                onClickMoreRecipes();
+            }
+        }));
 
         mIngredients.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -111,13 +129,13 @@ public class SearchFragment extends Fragment {
     public void getData(){
         final AlertDialog loadingDialog = new AlertDialog.Builder(getActivity()).create();
         loadingDialog.setMessage("Recipe data currently loading. This may take a while...");
-        loadingDialog.show();
+        //loadingDialog.show();
 
-        mAdapter = new FirebaseListAdapter<Recipe>(getActivity(), Recipe.class, R.layout.custom_list_guest, mRecipeRef.orderByChild("title")) {
+        mAdapter = new FirebaseListAdapter<Recipe>(getActivity(), Recipe.class, R.layout.custom_list_guest, mRecipeRef.orderByChild("title").limitToFirst(20)) {
             @Override
             protected void populateView(View view, Recipe r, int position) {
                 DatabaseReference recipeRef = getRef(position);
-                final String recipekey = recipeRef.getKey();
+                final String recipe_key = recipeRef.getKey();
 
                 final String url = r.getUrl();
                 final String title = r.getTitle();
@@ -132,7 +150,7 @@ public class SearchFragment extends Fragment {
                 Picasso.with(getActivity().getApplicationContext()).load(imgUrl).error(R.drawable.placeholder_error).into((ImageView) view.findViewById(R.id.icon));
                 recipeTitle.setText(title);
                 recipeUrl.setText(url);
-                recipeKey.setText(recipekey);
+                recipeKey.setText(recipe_key);
                 recipeDescription.setText(description);
 
                 view.setOnClickListener(new View.OnClickListener() {
@@ -148,7 +166,7 @@ public class SearchFragment extends Fragment {
         };
         listView.setAdapter(mAdapter);
 
-        mRecipeRef.orderByChild("title").addListenerForSingleValueEvent(new ValueEventListener() {
+        mRecipeRef.orderByChild("title").limitToFirst(20).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 loadingDialog.dismiss();
@@ -163,6 +181,7 @@ public class SearchFragment extends Fragment {
 
     public void searchIngredient(){
         hideKeypad();
+        moreButton.setVisibility(listView.GONE);
         listView.setAdapter(null);
         getSearchedIngredient();
 
@@ -259,5 +278,60 @@ public class SearchFragment extends Fragment {
         }catch(Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void onClickMoreRecipes() {
+        final AlertDialog loadingDialog = new AlertDialog.Builder(getActivity()).create();
+        loadingDialog.setMessage("Recipe data currently loading. This may take a while...");
+        limit += 20;
+
+        mAdapter = new FirebaseListAdapter<Recipe>(getActivity(), Recipe.class, R.layout.custom_list, mRecipeRef.orderByChild("title").limitToFirst(limit)) {
+            @Override
+            protected void populateView(View view, Recipe r, int position) {
+                DatabaseReference recipeRef = getRef(position);
+                final String recipe_key = recipeRef.getKey();
+
+                moreButton.setVisibility(view.VISIBLE);
+
+                final String url = r.getUrl();
+                final String title = r.getTitle();
+                final String imgUrl = r.getImage_url();
+                final String description = r.getDescription();
+
+                recipeTitle = (TextView) view.findViewById(R.id.recipe_title);
+                recipeKey = (TextView) view.findViewById(R.id.recipe_key);
+                recipeUrl = (TextView) view.findViewById(R.id.recipe_url);
+                recipeDescription = (TextView) view.findViewById(R.id.recipe_description);
+
+                Picasso.with(getActivity().getApplicationContext()).load(imgUrl).error(R.drawable.placeholder_error).into((ImageView) view.findViewById(R.id.icon));
+                recipeTitle.setText(title);
+                recipeUrl.setText(url);
+                recipeKey.setText(recipe_key);
+                recipeDescription.setText(description);
+
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getActivity().getApplicationContext(), SpecificRecipe.class);
+                        intent.putExtra("url", url);
+                        startActivity(intent);
+                    }
+                });
+                loadingDialog.dismiss();
+            }
+        };
+        listView.setAdapter(mAdapter);
+
+        mRecipeRef.orderByChild("title").limitToFirst(limit).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                loadingDialog.dismiss();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w(TAG, "onCancelled", databaseError.toException());
+            }
+        });
     }
 }

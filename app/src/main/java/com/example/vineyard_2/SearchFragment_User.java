@@ -108,6 +108,19 @@ public class SearchFragment_User extends Fragment {
             }
         });
 
+        View footerView = ((LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.footer_list, null, false);
+        listView.addFooterView(footerView);
+
+        moreButton = (Button) footerView.findViewById(R.id.more_button);
+        moreButton.setVisibility(footerView.VISIBLE);
+
+        moreButton.setOnClickListener((new View.OnClickListener() {
+            public void onClick(View v) {
+                moreButton.setVisibility(v.GONE);
+                onClickMoreRecipes();
+            }
+        }));
+
         mIngredients.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -231,19 +244,6 @@ public class SearchFragment_User extends Fragment {
         final AlertDialog loadingDialog = new AlertDialog.Builder(getActivity()).create();
         loadingDialog.setMessage("Recipe data currently loading. This may take a while...");
         //loadingDialog.show();
-
-        View footerView = ((LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.footer_list, null, false);
-        listView.addFooterView(footerView);
-
-        moreButton = (Button) footerView.findViewById(R.id.more_button);
-        moreButton.setVisibility(footerView.VISIBLE);
-
-        moreButton.setOnClickListener((new View.OnClickListener() {
-            public void onClick(View v) {
-                moreButton.setVisibility(v.GONE);
-                onClickMoreRecipes();
-            }
-        }));
 
         mAdapter = new FirebaseListAdapter<Recipe>(getActivity(), Recipe.class, R.layout.custom_list, mRecipeRef.orderByChild("title").limitToFirst(20)) {
             @Override
@@ -677,7 +677,7 @@ public class SearchFragment_User extends Fragment {
         };
         listView.setAdapter(mAdapter);
 
-        mRecipeRef.orderByChild("title").limitToFirst(20).addListenerForSingleValueEvent(new ValueEventListener() {
+        mRecipeRef.orderByChild("title").limitToFirst(limit).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 loadingDialog.dismiss();
