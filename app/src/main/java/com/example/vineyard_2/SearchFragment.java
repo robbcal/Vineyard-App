@@ -18,7 +18,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.MultiAutoCompleteTextView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseListAdapter;
@@ -43,7 +42,7 @@ public class SearchFragment extends Fragment {
     DatabaseReference mIngredients = mRootRef.child("ingredients");
     DatabaseReference mContentsIngredients = mRootRef.child("contents_Ingredients");
 
-    TextView recipeUrl, recipeTitle, recipeDescription, recipeKey, loadTextData;
+    TextView recipeUrl, recipeTitle, recipeDescription, recipeKey;
     ListView listView;
     MultiAutoCompleteTextView searchField;
     Button searchButton;
@@ -51,8 +50,6 @@ public class SearchFragment extends Fragment {
     List<Recipes> rowItems;
     ArrayList<String> searchedIngredients;
     FirebaseListAdapter<Recipe> mAdapter;
-
-    ProgressBar progress;
 
     private static final String TAG = "Vineyard";
 
@@ -73,12 +70,8 @@ public class SearchFragment extends Fragment {
         clearButton = (Button)v.findViewById(R.id.clearSearch);
         listView = (ListView)v.findViewById(R.id.recipe_list);
 
-        loadTextData = (TextView) v.findViewById(R.id.loadText);
-        progress = (ProgressBar) v.findViewById(R.id.progressBar);
-
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-        progress.setVisibility(View.VISIBLE);
         getData();
 
         searchButton.setOnClickListener(new View.OnClickListener() {
@@ -116,6 +109,10 @@ public class SearchFragment extends Fragment {
     }
 
     public void getData(){
+        final AlertDialog loadingDialog = new AlertDialog.Builder(getActivity()).create();
+        loadingDialog.setMessage("Recipe data currently loading. This may take a while...");
+        loadingDialog.show();
+
         mAdapter = new FirebaseListAdapter<Recipe>(getActivity(), Recipe.class, R.layout.custom_list_guest, mRecipeRef.orderByChild("title")) {
             @Override
             protected void populateView(View view, Recipe r, int position) {
@@ -146,8 +143,7 @@ public class SearchFragment extends Fragment {
                         startActivity(intent);
                     }
                 });
-                progress.setVisibility(View.GONE);
-                loadTextData.setVisibility(View.GONE);
+                loadingDialog.dismiss();
             }
         };
         listView.setAdapter(mAdapter);
@@ -155,8 +151,7 @@ public class SearchFragment extends Fragment {
         mRecipeRef.orderByChild("title").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                progress.setVisibility(View.GONE);
-                loadTextData.setVisibility(View.GONE);;
+                loadingDialog.dismiss();
             }
 
             @Override
