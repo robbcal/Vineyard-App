@@ -3,6 +3,7 @@ package com.example.vineyard_2;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -21,6 +22,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.MultiAutoCompleteTextView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,7 +51,7 @@ public class SearchFragment_User extends Fragment {
     DatabaseReference mContentsIngredients = mRootRef.child("contents_Ingredients");
     DatabaseReference mContentsDirections = mRootRef.child("contents_Directions");
 
-    TextView recipeUrl, recipeTitle, recipeDescription, recipeKey;
+    TextView recipeUrl, recipeTitle, recipeDescription, recipeKey, loadTextData;
     Button addRecipe;
     FloatingActionButton breakfast, lunch, snacks, dinner;
     ListView listView;
@@ -59,6 +61,8 @@ public class SearchFragment_User extends Fragment {
     List<Recipes> rowItems;
     ArrayList<String> searchedIngredients;
     FirebaseListAdapter<Recipe> mAdapter;
+
+    ProgressBar progress;
 
     boolean bf = false;
     boolean lu = false;
@@ -88,8 +92,12 @@ public class SearchFragment_User extends Fragment {
         clearButton = (Button) v.findViewById(R.id.clearSearch);
         listView = (ListView) v.findViewById(R.id.recipe_list);
 
+        loadTextData = (TextView) v.findViewById(R.id.loadText);
+        progress = (ProgressBar) v.findViewById(R.id.progressBar);
+
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
+        progress.setVisibility(View.VISIBLE);
         getData();
 
         searchButton.setOnClickListener(new View.OnClickListener() {
@@ -224,11 +232,6 @@ public class SearchFragment_User extends Fragment {
     }
 
     public void getData(){
-        final AlertDialog loadingDialog = new AlertDialog.Builder(getActivity()).create();
-        loadingDialog.setTitle("Loading...");
-        loadingDialog.setMessage("Please wait while recipes are loaded...");
-        loadingDialog.show();
-
         mAdapter = new FirebaseListAdapter<Recipe>(getActivity(), Recipe.class, R.layout.custom_list, mRecipeRef.orderByChild("title")) {
             @Override
             protected void populateView(View view, Recipe r, int position) {
@@ -318,7 +321,8 @@ public class SearchFragment_User extends Fragment {
 
                     }
                 });
-                loadingDialog.dismiss();
+                progress.setVisibility(View.GONE);
+                loadTextData.setVisibility(View.GONE);
             }
         };
         listView.setAdapter(mAdapter);
@@ -326,7 +330,8 @@ public class SearchFragment_User extends Fragment {
         mRecipeRef.orderByChild("title").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                loadingDialog.dismiss();
+                progress.setVisibility(View.GONE);
+                loadTextData.setVisibility(View.GONE);
             }
 
             @Override
