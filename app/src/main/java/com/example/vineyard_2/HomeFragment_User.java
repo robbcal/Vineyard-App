@@ -45,7 +45,7 @@ public class HomeFragment_User extends Fragment{
     Button removeRecipe;
     ListView listView;
     EditText searchField;
-    Button searchButton, clearButton, moreButton;
+    Button searchButton, clearButton;
     List<Recipes> rowItems;
     RecipeListAdapter_Home adapter;
     FirebaseListAdapter<Recipe> mAdapter = null;
@@ -85,20 +85,6 @@ public class HomeFragment_User extends Fragment{
                 clearSearchText();
             }
         });
-
-        View footerView = ((LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.footer_list, null, false);
-        listView.addFooterView(footerView);
-
-        moreButton = (Button) footerView.findViewById(R.id.more_button);
-        moreButton.setVisibility(footerView.VISIBLE);
-
-        moreButton.setOnClickListener((new View.OnClickListener() {
-            public void onClick(View v) {
-                moreButton.setVisibility(v.GONE);
-                onClickMoreRecipes();
-            }
-        }));
-
 
         return v;
     }
@@ -144,8 +130,7 @@ public class HomeFragment_User extends Fragment{
                         new AlertDialog.Builder(getActivity())
                                 .setTitle("Delete Saved Recipe")
                                 .setMessage("Are you sure you want to delete this recipe?")
-                                .setNegativeButton("No", null)
-                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                .setNegativeButton("Yes", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
 
@@ -153,7 +138,8 @@ public class HomeFragment_User extends Fragment{
                                         Toast.makeText(getActivity().getApplicationContext(), title+" removed.",Toast.LENGTH_SHORT).show();
 
                                     }
-                                }).create().show();
+                                })
+                                .setPositiveButton("No", null).create().show();
                     }
                 });
 
@@ -224,68 +210,4 @@ public class HomeFragment_User extends Fragment{
             e.printStackTrace();
         }
     }
-
-    public void onClickMoreRecipes() {
-
-        limit += 20;
-
-        mAdapter = new FirebaseListAdapter<Recipe>(getActivity(), Recipe.class, R.layout.custom_list_home, mRecipeRef.orderByChild("title").limitToFirst(limit)) {
-            @Override
-            protected void populateView(View view, Recipe r, int position) {
-                DatabaseReference recipeRef = getRef(position);
-                final String recipeKey = recipeRef.getKey();
-
-                moreButton.setVisibility(view.VISIBLE);
-
-                final String url = r.getUrl();
-                final String title = r.getTitle();
-                final String imgUrl = r.getImage_url();
-                final String description = r.getDescription();
-
-                recipeTitle = (TextView) view.findViewById(R.id.recipe_title);
-                recipekey = (TextView) view.findViewById(R.id.recipe_key);
-                recipeUrl = (TextView) view.findViewById(R.id.recipe_url);
-                recipeDescription = (TextView) view.findViewById(R.id.recipe_description);
-                removeRecipe = (Button) view.findViewById(R.id.remove);
-
-                Picasso.with(getActivity().getApplicationContext()).load(imgUrl).error(R.drawable.placeholder_error).into((ImageView) view.findViewById(R.id.icon));
-                recipeTitle.setText(title);
-                recipeUrl.setText(url);
-                recipekey.setText(recipeKey);
-                recipeDescription.setText(description);
-
-                view.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(getActivity().getApplicationContext(), SpecificRecipe_User.class);
-                        intent.putExtra("key", recipeKey);
-                        intent.putExtra("url", url);
-                        startActivity(intent);
-                    }
-                });
-
-                removeRecipe.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        new AlertDialog.Builder(getActivity())
-                                .setTitle("Delete Saved Recipe")
-                                .setMessage("Are you sure you want to delete this recipe?")
-                                .setNegativeButton("No", null)
-                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                                        mRecipeRef.child(recipeKey).removeValue();
-                                        Toast.makeText(getActivity().getApplicationContext(), title+" removed.",Toast.LENGTH_SHORT).show();
-
-                                    }
-                                }).create().show();
-                    }
-                });
-
-            }
-        };
-        listView.setAdapter(mAdapter);
-    }
-
 }

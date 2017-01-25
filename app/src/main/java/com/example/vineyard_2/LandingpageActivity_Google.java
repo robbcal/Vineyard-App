@@ -86,6 +86,7 @@ public class LandingpageActivity_Google extends AppCompatActivity {
             viewPagerAdapter.addFragments(new ProfileFragment_Google());
             viewPager.setAdapter(viewPagerAdapter);
             tabLayout.setupWithViewPager(viewPager);
+            viewPager.setCurrentItem(1, false);
             tabLayout.getTabAt(0).setIcon(R.drawable.home);
             tabLayout.getTabAt(1).setIcon(R.drawable.search);
             tabLayout.getTabAt(2).setIcon(R.drawable.menu);
@@ -104,8 +105,7 @@ public class LandingpageActivity_Google extends AppCompatActivity {
         new AlertDialog.Builder(LandingpageActivity_Google.this)
                 .setTitle("Sign Out")
                 .setMessage("Are you sure you want to sign out from your account?")
-                .setNegativeButton("No", null)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                .setNegativeButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
@@ -121,7 +121,8 @@ public class LandingpageActivity_Google extends AppCompatActivity {
                         startActivity(intent);
 
                     }
-                }).create().show();
+                })
+                .setPositiveButton("No", null).create().show();
     }
 
     public void onClickGoogleSettings(View view) {

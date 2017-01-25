@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -51,6 +52,7 @@ public class SearchFragment_User extends Fragment {
 
     TextView recipeUrl, recipeTitle, recipeDescription, recipeKey;
     Button addRecipe;
+    FloatingActionMenu meal;
     FloatingActionButton breakfast, lunch, snacks, dinner;
     ListView listView;
     MultiAutoCompleteTextView searchField;
@@ -59,6 +61,7 @@ public class SearchFragment_User extends Fragment {
     ArrayList<String> searchedIngredients;
     FirebaseListAdapter<Recipe> mAdapter;
     int limit;
+    AlertDialog loadingDialog;
 
     boolean bf = false;
     boolean lu = false;
@@ -78,6 +81,7 @@ public class SearchFragment_User extends Fragment {
 
         mRecipeRef.keepSynced(true);
 
+        meal = (FloatingActionMenu) v.findViewById(R.id.fab);
         breakfast = (FloatingActionButton) v.findViewById(R.id.Breakfast);
         lunch = (FloatingActionButton) v.findViewById(R.id.Lunch);
         snacks = (FloatingActionButton) v.findViewById(R.id.Snacks);
@@ -89,6 +93,14 @@ public class SearchFragment_User extends Fragment {
         listView = (ListView) v.findViewById(R.id.recipe_list);
 
         limit = 20;
+
+        loadingDialog = new AlertDialog.Builder(getActivity()).create();
+        loadingDialog.setMessage("Recipe data currently loading...");
+
+        View footerView = ((LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.footer_list, null, false);
+        listView.addFooterView(footerView);
+
+        moreButton = (Button) footerView.findViewById(R.id.more_button);
 
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
@@ -105,12 +117,6 @@ public class SearchFragment_User extends Fragment {
                 clearSearchText();
             }
         });
-
-        View footerView = ((LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.footer_list, null, false);
-        listView.addFooterView(footerView);
-
-        moreButton = (Button) footerView.findViewById(R.id.more_button);
-        moreButton.setVisibility(footerView.VISIBLE);
 
         moreButton.setOnClickListener((new View.OnClickListener() {
             public void onClick(View v) {
@@ -143,7 +149,8 @@ public class SearchFragment_User extends Fragment {
             public void onClick(View v) {
                 if(bf == false) {
                     bf = true;
-                    Toast.makeText(v.getContext(), "Breakfast filter enabled.", Toast.LENGTH_SHORT).show();
+                    meal.close(true);
+                    loadingDialog.show();
                     filter();
                 }else{
                     bf = false;
@@ -163,7 +170,8 @@ public class SearchFragment_User extends Fragment {
             public void onClick(View v) {
                 if(lu == false) {
                     lu = true;
-                    Toast.makeText(v.getContext(), "Lunch filter enabled.", Toast.LENGTH_SHORT).show();
+                    meal.close(true);
+                    loadingDialog.show();
                     filter();
                 }else{
                     lu = false;
@@ -183,7 +191,8 @@ public class SearchFragment_User extends Fragment {
             public void onClick(View v) {
                 if(sn == false) {
                     sn = true;
-                    Toast.makeText(v.getContext(), "Snacks filter enabled.", Toast.LENGTH_SHORT).show();
+                    meal.close(true);
+                    loadingDialog.show();
                     filter();
                 }else{
                     sn = false;
@@ -203,7 +212,8 @@ public class SearchFragment_User extends Fragment {
             public void onClick(View v) {
                 if(di == false) {
                     di = true;
-                    Toast.makeText(v.getContext(), "Dinner filter enabled.", Toast.LENGTH_SHORT).show();
+                    meal.close(true);
+                    loadingDialog.show();
                     filter();
                 }else{
                     di = false;
@@ -218,7 +228,9 @@ public class SearchFragment_User extends Fragment {
             }
         });
 
+        moreButton.setVisibility(footerView.VISIBLE);
         return v;
+
     }
 
     private boolean haveNetworkConnection() {
@@ -239,10 +251,6 @@ public class SearchFragment_User extends Fragment {
     }
 
     public void getData(){
-        final AlertDialog loadingDialog = new AlertDialog.Builder(getActivity()).create();
-        loadingDialog.setMessage("Recipe data currently loading. This may take a while...");
-        //loadingDialog.show();
-
         mAdapter = new FirebaseListAdapter<Recipe>(getActivity(), Recipe.class, R.layout.custom_list, mRecipeRef.orderByChild("title").limitToFirst(20)) {
             @Override
             protected void populateView(View view, Recipe r, int position) {
@@ -332,22 +340,9 @@ public class SearchFragment_User extends Fragment {
 
                     }
                 });
-                loadingDialog.dismiss();
             }
         };
         listView.setAdapter(mAdapter);
-
-        mRecipeRef.orderByChild("title").limitToFirst(20).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                loadingDialog.dismiss();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.w(TAG, "onCancelled", databaseError.toException());
-            }
-        });
     }
 
     public void searchIngredient(){
@@ -355,6 +350,7 @@ public class SearchFragment_User extends Fragment {
         moreButton.setVisibility(listView.GONE);
         listView.setAdapter(null);
         getSearchedIngredient();
+        loadingDialog.show();
 
         mContentsIngredients.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -460,6 +456,7 @@ public class SearchFragment_User extends Fragment {
                         });
                     }
                 }
+                loadingDialog.dismiss();
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -566,6 +563,7 @@ public class SearchFragment_User extends Fragment {
                         }
                     }
                 }
+                loadingDialog.dismiss();
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {

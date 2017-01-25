@@ -30,7 +30,6 @@ public class AccountSettingsActivity extends AppCompatActivity {
     private Button btnEdit;
     private Button btnDelete;
     private EditText inputEmail, inputPassword, inputName;
-    private ProgressBar progressBar;
     private TextView editText;
 
     private FirebaseAuth auth;

@@ -5,6 +5,8 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -53,6 +55,7 @@ public class SearchFragment extends Fragment {
     ArrayList<String> searchedIngredients;
     FirebaseListAdapter<Recipe> mAdapter;
     int limit;
+    AlertDialog loadingDialog;
 
     private static final String TAG = "Vineyard";
 
@@ -74,6 +77,8 @@ public class SearchFragment extends Fragment {
         listView = (ListView)v.findViewById(R.id.recipe_list);
 
         limit = 20;
+        loadingDialog = new AlertDialog.Builder(getActivity()).create();
+        loadingDialog.setMessage("Recipe data currently loading...");
 
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
@@ -175,11 +180,34 @@ public class SearchFragment extends Fragment {
         });
     }
 
+    private boolean haveNetworkConnection() {
+        boolean haveConnectedWifi = false;
+        boolean haveConnectedMobile = false;
+
+        ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo[] netInfo = cm.getAllNetworkInfo();
+        for (NetworkInfo ni : netInfo) {
+            if (ni.getTypeName().equalsIgnoreCase("WIFI"))
+                if (ni.isConnected())
+                    haveConnectedWifi = true;
+            if (ni.getTypeName().equalsIgnoreCase("MOBILE"))
+                if (ni.isConnected())
+                    haveConnectedMobile = true;
+        }
+        return haveConnectedWifi || haveConnectedMobile;
+    }
+
     public void searchIngredient(){
         hideKeypad();
         moreButton.setVisibility(listView.GONE);
         listView.setAdapter(null);
         getSearchedIngredient();
+
+        if(haveNetworkConnection()) {
+            loadingDialog.show();
+        } else {
+            moreButton.setVisibility(listView.GONE);
+        }
 
         mContentsIngredients.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -235,6 +263,7 @@ public class SearchFragment extends Fragment {
                         });
                     }
                 }
+                loadingDialog.dismiss();
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -314,17 +343,5 @@ public class SearchFragment extends Fragment {
             }
         };
         listView.setAdapter(mAdapter);
-
-        mRecipeRef.orderByChild("title").limitToFirst(limit).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.w(TAG, "onCancelled", databaseError.toException());
-            }
-        });
     }
 }
