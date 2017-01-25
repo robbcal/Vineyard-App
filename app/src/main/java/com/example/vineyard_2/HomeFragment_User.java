@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -235,6 +234,8 @@ public class HomeFragment_User extends Fragment{
             protected void populateView(View view, Recipe r, int position) {
                 DatabaseReference recipeRef = getRef(position);
                 final String recipeKey = recipeRef.getKey();
+
+                moreButton.setVisibility(view.VISIBLE);
 
                 final String url = r.getUrl();
                 final String title = r.getTitle();
