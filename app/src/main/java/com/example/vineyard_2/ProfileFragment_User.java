@@ -1,12 +1,8 @@
 package com.example.vineyard_2;
 
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,8 +15,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
-import java.io.InputStream;
+import com.squareup.picasso.Picasso;
 
 
 public class ProfileFragment_User extends Fragment {
@@ -67,12 +62,8 @@ public class ProfileFragment_User extends Fragment {
                 userProfileName.setText(userName);
                 userProfileEmail.setText(userEmail);
 
-                new DownloadImageTask(userProfilePhoto).execute(userPhoto);
+                Picasso.with(getContext()).load(userPhoto).into(userProfilePhoto);
 
-                /*Glide.with(getActivity().getApplicationContext()).load(userPhoto)
-                        .thumbnail(0.5f)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .into(userProfilePhoto);*/
             }
 
             @Override
@@ -82,31 +73,6 @@ public class ProfileFragment_User extends Fragment {
         });
 
         return v;
-    }
-
-    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-        ImageView bmImage;
-
-        public DownloadImageTask(ImageView bmImage) {
-            this.bmImage = bmImage;
-        }
-
-        protected Bitmap doInBackground(String... urls) {
-            String urldisplay = urls[0];
-            Bitmap mIcon11 = null;
-            try {
-                InputStream in = new java.net.URL(urldisplay).openStream();
-                mIcon11 = BitmapFactory.decodeStream(in);
-            } catch (Exception e) {
-                Log.e("Error", e.getMessage());
-                e.printStackTrace();
-            }
-            return mIcon11;
-        }
-
-        protected void onPostExecute(Bitmap result) {
-            bmImage.setImageBitmap(result);
-        }
     }
 
 }
