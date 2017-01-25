@@ -20,6 +20,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import static android.graphics.Typeface.BOLD;
+
 public class RecipeListAdapter_Home extends BaseAdapter {
     Context context;
     List<Recipes> rowItems;
@@ -76,6 +78,7 @@ public class RecipeListAdapter_Home extends BaseAdapter {
         holder.txtID.setText(id);
         holder.txtDescription.setText(description);
         holder.removeRecipe.setTextSize(14);
+        holder.removeRecipe.setTypeface(null, BOLD);
 
         holder.removeRecipe.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {

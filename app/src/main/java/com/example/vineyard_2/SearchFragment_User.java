@@ -54,9 +54,7 @@ public class SearchFragment_User extends Fragment {
     FloatingActionButton breakfast, lunch, snacks, dinner;
     ListView listView;
     MultiAutoCompleteTextView searchField;
-    Button searchButton;
-    Button clearButton;
-    Button moreButton;
+    Button searchButton, clearButton, moreButton;
     List<Recipes> rowItems;
     ArrayList<String> searchedIngredients;
     FirebaseListAdapter<Recipe> mAdapter;
@@ -577,8 +575,7 @@ public class SearchFragment_User extends Fragment {
     }
 
     public void onClickMoreRecipes() {
-        final AlertDialog loadingDialog = new AlertDialog.Builder(getActivity()).create();
-        loadingDialog.setMessage("Recipe data currently loading. This may take a while...");
+
         limit += 20;
 
         mAdapter = new FirebaseListAdapter<Recipe>(getActivity(), Recipe.class, R.layout.custom_list, mRecipeRef.orderByChild("title").limitToFirst(limit)) {
@@ -672,7 +669,6 @@ public class SearchFragment_User extends Fragment {
 
                     }
                 });
-                loadingDialog.dismiss();
             }
         };
         listView.setAdapter(mAdapter);
@@ -680,7 +676,7 @@ public class SearchFragment_User extends Fragment {
         mRecipeRef.orderByChild("title").limitToFirst(limit).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                loadingDialog.dismiss();
+
             }
 
             @Override

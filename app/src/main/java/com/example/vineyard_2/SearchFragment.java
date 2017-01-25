@@ -127,9 +127,6 @@ public class SearchFragment extends Fragment {
     }
 
     public void getData(){
-        final AlertDialog loadingDialog = new AlertDialog.Builder(getActivity()).create();
-        loadingDialog.setMessage("Recipe data currently loading. This may take a while...");
-        //loadingDialog.show();
 
         mAdapter = new FirebaseListAdapter<Recipe>(getActivity(), Recipe.class, R.layout.custom_list_guest, mRecipeRef.orderByChild("title").limitToFirst(20)) {
             @Override
@@ -161,7 +158,6 @@ public class SearchFragment extends Fragment {
                         startActivity(intent);
                     }
                 });
-                loadingDialog.dismiss();
             }
         };
         listView.setAdapter(mAdapter);
@@ -169,7 +165,7 @@ public class SearchFragment extends Fragment {
         mRecipeRef.orderByChild("title").limitToFirst(20).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                loadingDialog.dismiss();
+
             }
 
             @Override
@@ -281,11 +277,9 @@ public class SearchFragment extends Fragment {
     }
 
     public void onClickMoreRecipes() {
-        final AlertDialog loadingDialog = new AlertDialog.Builder(getActivity()).create();
-        loadingDialog.setMessage("Recipe data currently loading. This may take a while...");
         limit += 20;
 
-        mAdapter = new FirebaseListAdapter<Recipe>(getActivity(), Recipe.class, R.layout.custom_list, mRecipeRef.orderByChild("title").limitToFirst(limit)) {
+        mAdapter = new FirebaseListAdapter<Recipe>(getActivity(), Recipe.class, R.layout.custom_list_guest, mRecipeRef.orderByChild("title").limitToFirst(limit)) {
             @Override
             protected void populateView(View view, Recipe r, int position) {
                 DatabaseReference recipeRef = getRef(position);
@@ -317,7 +311,6 @@ public class SearchFragment extends Fragment {
                         startActivity(intent);
                     }
                 });
-                loadingDialog.dismiss();
             }
         };
         listView.setAdapter(mAdapter);
@@ -325,7 +318,7 @@ public class SearchFragment extends Fragment {
         mRecipeRef.orderByChild("title").limitToFirst(limit).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                loadingDialog.dismiss();
+
             }
 
             @Override

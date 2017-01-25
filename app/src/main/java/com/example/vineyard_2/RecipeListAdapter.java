@@ -26,6 +26,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import static android.graphics.Typeface.BOLD;
+
 public class RecipeListAdapter extends BaseAdapter {
     Context context;
     List<Recipes> rowItems;
@@ -87,6 +89,7 @@ public class RecipeListAdapter extends BaseAdapter {
         holder.txtID.setText(id);
         holder.txtDescription.setText(description);
         holder.addRecipe.setTextSize(14);
+        holder.addRecipe.setTypeface(null, BOLD);
 
         holder.addRecipe.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
