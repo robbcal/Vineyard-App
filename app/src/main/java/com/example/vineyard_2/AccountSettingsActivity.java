@@ -3,7 +3,6 @@ package com.example.vineyard_2;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
@@ -12,7 +11,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,7 +43,6 @@ public class AccountSettingsActivity extends AppCompatActivity {
 
         progress = new ProgressDialog(this);
 
-        inputEmail = (EditText) findViewById(R.id.email);
         inputPassword = (EditText) findViewById(R.id.password);
         inputName = (EditText) findViewById(R.id.name);
         btnEdit = (Button) findViewById(R.id.btn_edit);
@@ -63,10 +60,8 @@ public class AccountSettingsActivity extends AppCompatActivity {
 
                 //assigning values
                 String name = dataSnapshot.child("name").getValue(String.class);
-                String email = dataSnapshot.child("email").getValue(String.class);
                 String password = dataSnapshot.child("password").getValue(String.class);
 
-                inputEmail.setText(email);
                 inputPassword.setText(password);
                 inputName.setText(name);
             }
@@ -82,16 +77,10 @@ public class AccountSettingsActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 final String name = inputName.getText().toString().trim();
-                final String email = inputEmail.getText().toString().trim();
                 final String password = inputPassword.getText().toString().trim();
 
                 if (TextUtils.isEmpty(name)) {
                     Toast.makeText(getApplicationContext(), "Enter name.", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                if (TextUtils.isEmpty(email)) {
-                    Toast.makeText(getApplicationContext(), "Enter email address.", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -114,15 +103,7 @@ public class AccountSettingsActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialogInterface, int i) {
 
                                 databaseUser.child("name").setValue(name);
-                                databaseUser.child("email").setValue(email);
                                 databaseUser.child("password").setValue(password);
-
-                                user.updateEmail(email)
-                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                            }
-                                        });
 
                                 user.updatePassword(password)
                                         .addOnCompleteListener(new OnCompleteListener<Void>() {

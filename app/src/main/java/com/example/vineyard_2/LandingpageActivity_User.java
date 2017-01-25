@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -56,25 +57,39 @@ public class LandingpageActivity_User extends AppCompatActivity {
             }
         };
 
-        if (user != null) {
-            uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        if (user != null) {//user is signed in
+            if(user.isEmailVerified() == true) {//email is verified
+                uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-            toolbar = (Toolbar)findViewById(R.id.toolBar);
-            setSupportActionBar(toolbar);
-            tabLayout = (TabLayout) findViewById(R.id.tabLayout);
-            viewPager = (ViewPager) findViewById(R.id.viewPager);
-            viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
-            viewPagerAdapter.addFragments(new HomeFragment_User());
-            viewPagerAdapter.addFragments(new SearchFragment_User());
-            viewPagerAdapter.addFragments(new ProfileFragment_User());
-            viewPager.setAdapter(viewPagerAdapter);
-            tabLayout.setupWithViewPager(viewPager);
-            viewPager.setCurrentItem(1, false);
-            tabLayout.getTabAt(0).setIcon(R.drawable.home);
-            tabLayout.getTabAt(1).setIcon(R.drawable.search);
-            tabLayout.getTabAt(2).setIcon(R.drawable.menu);
+                toolbar = (Toolbar) findViewById(R.id.toolBar);
+                setSupportActionBar(toolbar);
+                tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+                viewPager = (ViewPager) findViewById(R.id.viewPager);
+                viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+                viewPagerAdapter.addFragments(new HomeFragment_User());
+                viewPagerAdapter.addFragments(new SearchFragment_User());
+                viewPagerAdapter.addFragments(new ProfileFragment_User());
+                viewPager.setAdapter(viewPagerAdapter);
+                tabLayout.setupWithViewPager(viewPager);
+                viewPager.setCurrentItem(1, false);
+                tabLayout.getTabAt(0).setIcon(R.drawable.home);
+                tabLayout.getTabAt(1).setIcon(R.drawable.search);
+                tabLayout.getTabAt(2).setIcon(R.drawable.menu);
+            }else if(user.isEmailVerified() == false){//email is not verified
+                auth.signOut();
+
+                SharedPreferences sharedpreferences = getSharedPreferences(AccountLoginActivity.MyPREFERENCES, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedpreferences.edit();
+                editor.clear();
+                editor.commit();
+
+                Toast.makeText(LandingpageActivity_User.this, "Verify email first.", Toast.LENGTH_LONG).show();
+
+                Intent intent  = new Intent(LandingpageActivity_User.this, LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            }
         }
-
     }
 
     @Override

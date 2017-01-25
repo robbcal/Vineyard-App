@@ -76,8 +76,19 @@ public class AccountLoginActivity extends AppCompatActivity {
                             Intent loginIntent = new Intent(AccountLoginActivity.this, LandingpageActivity_Google.class);
                             startActivity(loginIntent);
                         } else {
-                            Intent loginIntent = new Intent(AccountLoginActivity.this, LandingpageActivity_User.class);
-                            startActivity(loginIntent);
+                            if(user.isEmailVerified() == true) {
+                                Intent loginIntent = new Intent(AccountLoginActivity.this, LandingpageActivity_User.class);
+                                startActivity(loginIntent);
+                            }else{
+                                auth.signOut();
+
+                                SharedPreferences sharedpreferences = getSharedPreferences(AccountLoginActivity.MyPREFERENCES, Context.MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedpreferences.edit();
+                                editor.clear();
+                                editor.commit();
+
+                                Toast.makeText(getApplicationContext(), "Verify email first.",Toast.LENGTH_LONG).show();
+                            }
                         }
                     }
                 }

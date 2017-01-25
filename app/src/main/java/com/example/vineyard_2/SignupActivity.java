@@ -76,8 +76,23 @@ public class SignupActivity extends AppCompatActivity {
                             Intent loginIntent = new Intent(SignupActivity.this, LandingpageActivity_Google.class);
                             startActivity(loginIntent);
                         } else {
-                            Intent loginIntent = new Intent(SignupActivity.this, LandingpageActivity_User.class);
-                            startActivity(loginIntent);
+                            if(user.isEmailVerified() == true) {
+                                Intent loginIntent = new Intent(SignupActivity.this, LandingpageActivity_User.class);
+                                startActivity(loginIntent);
+                            }else{
+                                auth.signOut();
+
+                                SharedPreferences sharedpreferences = getSharedPreferences(AccountLoginActivity.MyPREFERENCES, Context.MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedpreferences.edit();
+                                editor.clear();
+                                editor.commit();
+
+                                Toast.makeText(getApplicationContext(), "Verify email first.",Toast.LENGTH_LONG).show();
+
+                                Intent intent = new Intent(SignupActivity.this, LandingpageActivity_User.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(intent);
+                            }
                         }
                     }
                 }
@@ -220,9 +235,27 @@ public class SignupActivity extends AppCompatActivity {
                             editor.putString("userID", userid);
                             editor.apply();
 
-                            Intent mainIntent = new Intent(SignupActivity.this, LandingpageActivity_User.class);
-                            mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            startActivity(mainIntent);
+                            //verification
+                            FirebaseAuth.getInstance().getCurrentUser().sendEmailVerification()
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                Toast.makeText(getApplicationContext(), "Verification email sent.",Toast.LENGTH_LONG).show();
+                                            }
+                                        }
+                                    });
+
+                            inputPassword.setText("");
+                            inputName.setText("");
+                            inputEmail.setText("");
+
+                            auth.signOut();
+
+                            SharedPreferences sharedpreferences = getSharedPreferences(AccountLoginActivity.MyPREFERENCES, Context.MODE_PRIVATE);
+                            editor = sharedpreferences.edit();
+                            editor.clear();
+                            editor.commit();
                         }
                     }
                 });

@@ -35,20 +35,6 @@
         android:textColorLink="@color/mainColor" />
 
     <EditText
-        android:id="@+id/email"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textEmailAddress"
-        android:textSize="17sp"
-        android:textColor="@color/secondaryColor"
-        android:textColorHint="@color/input_login_hint"
-        android:hint="Email"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="10dp"
-        android:textColorLink="@color/mainColor" />
-
-    <EditText
         android:id="@+id/password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
