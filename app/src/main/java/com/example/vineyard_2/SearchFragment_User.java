@@ -80,6 +80,8 @@ public class SearchFragment_User extends Fragment {
         View v = inflater.inflate(R.layout.fragment_search_user, container, false);
 
         mRecipeRef.keepSynced(true);
+        mContentsIngredients.keepSynced(true);
+        mContentsDirections.keepSynced(true);
 
         meal = (FloatingActionMenu) v.findViewById(R.id.fab);
         breakfast = (FloatingActionButton) v.findViewById(R.id.Breakfast);

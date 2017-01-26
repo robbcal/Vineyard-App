@@ -70,6 +70,7 @@ public class SearchFragment extends Fragment {
         final View v = inflater.inflate(R.layout.fragment_search, container, false);
 
         mRecipeRef.keepSynced(true);
+        mContentsIngredients.keepSynced(true);
 
         searchField =(MultiAutoCompleteTextView)v.findViewById(R.id.search_field);
         searchButton = (Button)v.findViewById(R.id.search_button);
