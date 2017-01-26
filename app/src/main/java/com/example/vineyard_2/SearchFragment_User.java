@@ -253,6 +253,10 @@ public class SearchFragment_User extends Fragment {
     }
 
     public void getData(){
+        final AlertDialog loadDialog = new AlertDialog.Builder(getActivity()).create();
+        loadDialog.setMessage("Recipe data currently loading...");
+        loadDialog.show();
+
         mAdapter = new FirebaseListAdapter<Recipe>(getActivity(), Recipe.class, R.layout.custom_list, mRecipeRef.orderByChild("title").limitToFirst(20)) {
             @Override
             protected void populateView(View view, Recipe r, int position) {
@@ -342,6 +346,7 @@ public class SearchFragment_User extends Fragment {
 
                     }
                 });
+                loadDialog.dismiss();
             }
         };
         listView.setAdapter(mAdapter);
