@@ -135,13 +135,16 @@ public class AccountSettingsActivity extends AppCompatActivity {
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
+                                progress.setMessage("This may take a while...");
+                                progress.setCancelable(false);
+                                progress.show();
+
                                 databaseUser.removeValue();
                                 user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if (task.isSuccessful()) {
-                                            progress.setMessage("This may take a while...");
-                                            progress.show();
+
 
                                             Intent intent  = new Intent(AccountSettingsActivity.this, LoginActivity.class);
                                             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
