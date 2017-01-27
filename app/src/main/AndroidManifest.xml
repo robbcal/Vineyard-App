@@ -17,23 +17,34 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="lamdag.app.vineyard_2.LoginActivity">
+        <activity android:name="lamdag.app.vineyard_2.LoginActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="lamdag.app.vineyard_2.AccountLoginActivity" />
-        <activity android:name="lamdag.app.vineyard_2.SignupActivity" />
-        <activity android:name="lamdag.app.vineyard_2.ResetPasswordActivity" />
-        <activity android:name="lamdag.app.vineyard_2.AccountSettingsActivity" />
-        <activity android:name="lamdag.app.vineyard_2.AccountSettingsActivity_Google" />
-        <activity android:name="lamdag.app.vineyard_2.LandingpageActivity" />
-        <activity android:name="lamdag.app.vineyard_2.LandingpageActivity_User" />
-        <activity android:name="lamdag.app.vineyard_2.LandingpageActivity_Google" />
-        <activity android:name="lamdag.app.vineyard_2.SpecificRecipe_User" />
-        <activity android:name="lamdag.app.vineyard_2.SpecificRecipe"></activity>
+        <activity android:name="lamdag.app.vineyard_2.AccountLoginActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name="lamdag.app.vineyard_2.SignupActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name="lamdag.app.vineyard_2.ResetPasswordActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name="lamdag.app.vineyard_2.AccountSettingsActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name="lamdag.app.vineyard_2.AccountSettingsActivity_Google"
+            android:screenOrientation="portrait"/>
+        <activity android:name="lamdag.app.vineyard_2.LandingpageActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name="lamdag.app.vineyard_2.LandingpageActivity_User"
+            android:screenOrientation="portrait"/>
+        <activity android:name="lamdag.app.vineyard_2.LandingpageActivity_Google"
+            android:screenOrientation="portrait"/>
+        <activity android:name="lamdag.app.vineyard_2.SpecificRecipe_User"
+            android:screenOrientation="portrait"/>
+        <activity android:name="lamdag.app.vineyard_2.SpecificRecipe"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>
