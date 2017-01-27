@@ -8,26 +8,26 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:558097717869:android:bf47fadc31b653c7",
+        "mobilesdk_app_id": "1:558097717869:android:614f5bc31e16b866",
         "android_client_info": {
-          "package_name": "com.example.vineyard_2"
+          "package_name": "lamdag.app.vineyard_2"
         }
       },
       "oauth_client": [
         {
-          "client_id": "558097717869-vga9blshmj8v5kkv4cd0fra8d2kh21q4.apps.googleusercontent.com",
+          "client_id": "558097717869-i89k1ljd3v38d2dfrjbqaaiijm7runq6.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.vineyard_2",
-            "certificate_hash": "97A5AB1A74E0153A1EC1C97E2A1C4C72B234A401"
+            "package_name": "lamdag.app.vineyard_2",
+            "certificate_hash": "97439E78FC41CA086881DD9CD937933D0F195B95"
           }
         },
         {
-          "client_id": "558097717869-qh8gge0n4kdtakte6anv2aqcd8gi0bhm.apps.googleusercontent.com",
+          "client_id": "558097717869-nt2g8g8piob0kpp3vl0lrlha3jf405jq.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.vineyard_2",
-            "certificate_hash": "3F6DB1953F17D2EDEC6BC33D9050F39E489C4344"
+            "package_name": "lamdag.app.vineyard_2",
+            "certificate_hash": "97A5AB1A74E0153A1EC1C97E2A1C4C72B234A401"
           }
         },
         {

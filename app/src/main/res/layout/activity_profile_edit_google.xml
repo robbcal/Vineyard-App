@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.example.vineyard_2.AccountSettingsActivity_Google"
+    tools:context="lamdag.app.vineyard_2.AccountSettingsActivity_Google"
     android:background="@drawable/photo2"
     android:gravity="center">
 

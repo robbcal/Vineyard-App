@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.vineyard_2.HomeFragment_User"
+    tools:context="lamdag.app.vineyard_2.HomeFragment_User"
     android:background="@color/white">
 
     <AutoCompleteTextView
