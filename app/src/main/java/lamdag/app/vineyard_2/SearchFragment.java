@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.firebase.auth.FirebaseAuth;
@@ -215,9 +216,11 @@ public class SearchFragment extends Fragment {
             getData();
         }else {
             loadingDialog.show();
+
             mContentsIngredients.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
+                    int flag = 0;
                     rowItems = new ArrayList<Recipes>();
                     for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                         final String recipeKey = postSnapshot.getKey();
@@ -268,9 +271,14 @@ public class SearchFragment extends Fragment {
                                     Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
                                 }
                             });
+                            flag++;
                         }
                     }
                     loadingDialog.dismiss();
+                    Log.d(TAG, "FLAG: "+flag);
+                    if(flag == 0){
+                        Toast.makeText(getContext(), "No Result/s Found.", Toast.LENGTH_LONG).show();
+                    }
                 }
 
                 @Override

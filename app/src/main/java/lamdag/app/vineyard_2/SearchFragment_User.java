@@ -372,6 +372,7 @@ public class SearchFragment_User extends Fragment {
             mContentsIngredients.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
+                    int flag = 0;
                     rowItems = new ArrayList<Recipes>();
                     for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                         final String recipeKey = postSnapshot.getKey();
@@ -470,9 +471,14 @@ public class SearchFragment_User extends Fragment {
                                     Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
                                 }
                             });
+                            flag++;
                         }
                     }
                     loadingDialog.dismiss();
+                    Log.d(TAG, "FLAG: "+flag);
+                    if(flag == 0){
+                        Toast.makeText(getContext(), "No Result/s Found.", Toast.LENGTH_LONG).show();
+                    }
                 }
 
                 @Override
