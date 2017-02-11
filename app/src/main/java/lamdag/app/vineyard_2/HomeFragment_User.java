@@ -37,6 +37,7 @@ public class HomeFragment_User extends Fragment{
 
     DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
     DatabaseReference mRecipeRef = mRootRef.child("users/"+ LandingpageActivity_User.uid+"/recipes");
+    DatabaseReference mRecipeCounterRef = mRootRef.child("users/"+ LandingpageActivity_User.uid+"/recipeCounter");
 
     TextView recipeUrl, recipeTitle, recipeDescription, recipekey;
     Button removeRecipe;
@@ -69,6 +70,7 @@ public class HomeFragment_User extends Fragment{
 
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
+        recipeCounter();
         getData();
 
         searchButton.setOnClickListener(new View.OnClickListener() {
@@ -84,6 +86,25 @@ public class HomeFragment_User extends Fragment{
         });
 
         return v;
+    }
+
+    public void recipeCounter(){
+        mRecipeRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                int cnt = 0;
+                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                    cnt++;
+                }
+                Log.d(TAG, "Recipes saved: "+cnt);
+                mRecipeCounterRef.setValue(cnt);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+            }
+        });
     }
 
     public void getData(){
