@@ -23,6 +23,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import static android.graphics.Typeface.BOLD;
@@ -100,12 +102,14 @@ public class RecipeListAdapter extends BaseAdapter {
                         mspecificUser.child("url").setValue(url);
                         mspecificUser.child("image_url").setValue(img_url);
                         mspecificUser.child("description").setValue(description);
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy-hh-mm-ss");
+                        final String format = simpleDateFormat.format(new Date());
 
                         mRecipeRef.child(id).addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot snapshot) {
                                 mspecificUser.setValue(snapshot.getValue());
-
+                                mspecificUser.child("timeStamp").setValue(format);
                             }
                             @Override public void onCancelled(DatabaseError databaseError) {
                                 Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
