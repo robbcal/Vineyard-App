@@ -37,8 +37,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 
@@ -349,12 +351,14 @@ public class SearchFragment_User extends Fragment {
                             if(haveNetworkConnection() == true) {
                                 String uid = user.getUid();
                                 final DatabaseReference mspecificUser = mUserRef.child(uid + "/recipes/" + recipe_key);
+                                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy-hh-mm-ss");
+                                final String format = simpleDateFormat.format(new Date());
 
                                 mRecipeRef.child(recipe_key).addValueEventListener(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(DataSnapshot snapshot) {
                                         mspecificUser.setValue(snapshot.getValue());
-
+                                        mspecificUser.child("timeStamp").setValue(format);
                                     }
 
                                     @Override
