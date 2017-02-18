@@ -2,6 +2,8 @@ package lamdag.app.vineyard_2;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -80,13 +82,25 @@ public class RecipeListAdapter_Home extends BaseAdapter {
         holder.removeRecipe.setTypeface(null, BOLD);
 
         holder.removeRecipe.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                String uid = user.getUid();
-                DatabaseReference mUserRecipe = mUserRef.child(uid+"/recipes");
-                mUserRecipe.child(id).removeValue();
-                rowItems.remove(rowItem);
-                RecipeListAdapter_Home.this.notifyDataSetChanged();
-                Toast.makeText(v.getContext(), title+" removed.", Toast.LENGTH_SHORT).show();
+            public void onClick(final View v) {
+                final String uid = user.getUid();
+                final DatabaseReference mUserRecipe = mUserRef.child(uid+"/recipes");
+
+                new AlertDialog.Builder(v.getRootView().getContext())
+                        .setTitle("Delete Saved Recipe")
+                        .setMessage("Are you sure you want to delete this recipe?")
+                        .setNegativeButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                                mUserRecipe.child(id).removeValue();
+                                rowItems.remove(rowItem);
+                                RecipeListAdapter_Home.this.notifyDataSetChanged();
+                                Toast.makeText(v.getContext(), title+" removed.", Toast.LENGTH_SHORT).show();
+
+                            }
+                        })
+                        .setPositiveButton("No", null).create().show();
             }
         });
 

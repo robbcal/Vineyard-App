@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -53,7 +54,7 @@ public class SearchFragment_User extends Fragment {
     TextView recipeUrl, recipeTitle, recipeDescription, recipeKey;
     Button addRecipe;
     FloatingActionMenu meal;
-    FloatingActionButton breakfast, lunch, snacks, dinner;
+    FloatingActionButton breakfast, lunch, snacks, dinner, others;
     ListView listView;
     MultiAutoCompleteTextView searchField;
     Button searchButton, clearButton, moreButton;
@@ -61,12 +62,15 @@ public class SearchFragment_User extends Fragment {
     ArrayList<String> searchedIngredients;
     FirebaseListAdapter<Recipe> mAdapter;
     int limit;
+    Long recipecount;
     AlertDialog loadingDialog;
+    private DatabaseReference databaseUser;
 
     boolean bf = false;
     boolean lu = false;
     boolean sn = false;
     boolean di = false;
+    boolean other = false;
 
     private static final String TAG = "Vineyard";
 
@@ -79,15 +83,19 @@ public class SearchFragment_User extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_search_user, container, false);
 
+        databaseUser = FirebaseDatabase.getInstance().getReference().child("users").child(user.getUid());
+
         mRecipeRef.keepSynced(true);
         mContentsIngredients.keepSynced(true);
         mContentsDirections.keepSynced(true);
+        databaseUser.keepSynced(true);
 
         meal = (FloatingActionMenu) v.findViewById(R.id.fab);
         breakfast = (FloatingActionButton) v.findViewById(R.id.Breakfast);
         lunch = (FloatingActionButton) v.findViewById(R.id.Lunch);
         snacks = (FloatingActionButton) v.findViewById(R.id.Snacks);
         dinner = (FloatingActionButton) v.findViewById(R.id.Dinner);
+        others = (FloatingActionButton) v.findViewById(R.id.Others);
 
         searchField =(MultiAutoCompleteTextView) v.findViewById(R.id.search_field);
         searchButton = (Button) v.findViewById(R.id.search_button);
@@ -107,6 +115,19 @@ public class SearchFragment_User extends Fragment {
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         getData();
+
+        databaseUser.addValueEventListener(new com.google.firebase.database.ValueEventListener() {
+            @Override
+            public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
+
+                recipecount = dataSnapshot.child("recipeCounter").getValue(Long.class);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
         searchButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -149,7 +170,7 @@ public class SearchFragment_User extends Fragment {
         breakfast.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(bf == false) {
+                if(!bf) {
                     bf = true;
                     meal.close(true);
                     loadingDialog.show();
@@ -157,7 +178,8 @@ public class SearchFragment_User extends Fragment {
                 }else{
                     bf = false;
                     Toast.makeText(v.getContext(), "Breakfast filter disabled.", Toast.LENGTH_SHORT).show();
-                    if(lu == false && sn == false && di == false) {
+                    meal.close(true);
+                    if(!lu && !sn && !di) {
                         listView.setAdapter(null);
                         moreButton.setVisibility(listView.VISIBLE);
                         getData();
@@ -171,7 +193,7 @@ public class SearchFragment_User extends Fragment {
         lunch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(lu == false) {
+                if(!lu) {
                     lu = true;
                     meal.close(true);
                     loadingDialog.show();
@@ -179,7 +201,8 @@ public class SearchFragment_User extends Fragment {
                 }else{
                     lu = false;
                     Toast.makeText(v.getContext(), "Lunch filter disabled.", Toast.LENGTH_SHORT).show();
-                    if(bf == false && sn == false && di == false) {
+                    meal.close(true);
+                    if(!bf && !sn && !di) {
                         listView.setAdapter(null);
                         moreButton.setVisibility(listView.VISIBLE);
                         getData();
@@ -193,7 +216,7 @@ public class SearchFragment_User extends Fragment {
         snacks.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(sn == false) {
+                if(!sn) {
                     sn = true;
                     meal.close(true);
                     loadingDialog.show();
@@ -201,7 +224,8 @@ public class SearchFragment_User extends Fragment {
                 }else{
                     sn = false;
                     Toast.makeText(v.getContext(), "Snacks filter disabled.", Toast.LENGTH_SHORT).show();
-                    if(lu == false && bf == false && di == false) {
+                    meal.close(true);
+                    if(!lu && !bf && !di) {
                         listView.setAdapter(null);
                         moreButton.setVisibility(listView.VISIBLE);
                         getData();
@@ -215,7 +239,7 @@ public class SearchFragment_User extends Fragment {
         dinner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(di == false) {
+                if(!di) {
                     di = true;
                     meal.close(true);
                     loadingDialog.show();
@@ -223,9 +247,32 @@ public class SearchFragment_User extends Fragment {
                 }else{
                     di = false;
                     Toast.makeText(v.getContext(), "Dinner filter disabled.", Toast.LENGTH_SHORT).show();
-                    if(lu == false && sn == false && bf == false) {
+                    meal.close(true);
+                    if(!lu && !sn && !bf) {
                         listView.setAdapter(null);
                         moreButton.setVisibility(listView.VISIBLE);
+                        getData();
+                    }else{
+                        filter();
+                    }
+                }
+            }
+        });
+
+        others.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!other) {
+                    other = true;
+                    meal.close(true);
+                    loadingDialog.show();
+                    filter();
+                }else{
+                    other = false;
+                    Toast.makeText(v.getContext(), "Other recipes filter disabled.", Toast.LENGTH_SHORT).show();
+                    meal.close(true);
+                    if(!lu && !sn && !bf && !di) {
+                        listView.setAdapter(null);
                         getData();
                     }else{
                         filter();
@@ -340,7 +387,7 @@ public class SearchFragment_User extends Fragment {
                                     }
                                 });
 
-                                Toast.makeText(v.getContext(), title + " has been added.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(v.getContext(), title+" has been added. "+recipecount+" recipes saved.", Toast.LENGTH_SHORT).show();
                             }else{
                                 Toast.makeText(v.getContext(), "Cannot add. Network connection is unavailable", Toast.LENGTH_SHORT).show();
                             }
@@ -397,34 +444,40 @@ public class SearchFragment_User extends Fragment {
                                     final String image_url = dataSnapshot.child("image_url").getValue(String.class);
                                     final String description = dataSnapshot.child("description").getValue(String.class);
                                     String descSearch = description.toLowerCase();
-                                    final boolean filter[] = new boolean[4];
+                                    final boolean filter[] = new boolean[5];
 
-                                    if (bf == true) {
+                                    if (bf) {
                                         if (descSearch.contains("breakfast")) {
                                             filter[0] = true;
                                         }
                                     }
 
-                                    if (lu == true) {
+                                    if (lu) {
                                         if (descSearch.contains("lunch")) {
                                             filter[1] = true;
                                         }
                                     }
 
-                                    if (sn == true) {
+                                    if (sn) {
                                         if (descSearch.contains("snack")) {
                                             filter[2] = true;
                                         }
                                     }
 
-                                    if (di == true) {
+                                    if (di) {
                                         if (descSearch.contains("dinner") || descSearch.contains("supper")) {
                                             filter[3] = true;
                                         }
                                     }
 
-                                    if (bf == true || lu == true || sn == true || di == true) {
-                                        if (filter[0] == true || filter[1] == true || filter[2] == true || filter[3] == true) {
+                                    if(other) {
+                                        if(!descSearch.contains("dinner") && !descSearch.contains("supper") && !descSearch.contains("snack") && !descSearch.contains("lunch") && !descSearch.contains("breakfast")){
+                                            filter[4] = true;
+                                        }
+                                    }
+
+                                    if (bf || lu || sn || di || other) {
+                                        if (filter[0] || filter[1] || filter[2] || filter[3] || filter[4]) {
                                             Recipes item = new Recipes(title, url, image_url, recipeKey, description);
                                             rowItems.add(item);
 
@@ -444,7 +497,7 @@ public class SearchFragment_User extends Fragment {
                                                 }
                                             });
                                         }
-                                    } else if (bf == false && lu == false && sn == false && di == false) {
+                                    } else if (!bf && !lu && !sn && !di) {
                                         Recipes item = new Recipes(title, url, image_url, recipeKey, description);
                                         rowItems.add(item);
 
@@ -539,34 +592,40 @@ public class SearchFragment_User extends Fragment {
                     final String image_url = postSnapshot.child("image_url").getValue(String.class);
                     final String description = postSnapshot.child("description").getValue(String.class);
                     String descSearch = description.toLowerCase();
-                    final boolean filter[] = new boolean[4];
+                    final boolean filter[] = new boolean[5];
 
-                    if(bf == true) {
+                    if(bf) {
                         if(descSearch.contains("breakfast")){
                             filter[0] = true;
                         }
                     }
 
-                    if(lu == true) {
+                    if(lu) {
                         if(descSearch.contains("lunch")) {
                             filter[1] = true;
                         }
                     }
 
-                    if(sn == true) {
+                    if(sn) {
                         if(descSearch.contains("snack")){
                             filter[2] = true;
                         }
                     }
 
-                    if(di == true) {
+                    if(di) {
                         if(descSearch.contains("dinner") || descSearch.contains("supper")){
                             filter[3] = true;
                         }
                     }
 
-                    if(bf == true || lu == true || sn == true || di == true){
-                        if(filter[0] == true || filter[1] == true || filter[2] == true ||filter[3] == true) {
+                    if(other) {
+                        if(!descSearch.contains("dinner") && !descSearch.contains("supper") && !descSearch.contains("snack") && !descSearch.contains("lunch") && !descSearch.contains("breakfast")){
+                            filter[4] = true;
+                        }
+                    }
+
+                    if(bf || lu || sn || di || other){
+                        if(filter[0] || filter[1] || filter[2] ||filter[3] || filter[4]) {
                             Recipes item = new Recipes(title, url, image_url, recipeKey, description);
                             rowItems.add(item);
 
@@ -682,7 +741,7 @@ public class SearchFragment_User extends Fragment {
                                     }
                                 });
 
-                                Toast.makeText(v.getContext(), title + " has been added.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(v.getContext(), title+" has been added. "+recipecount+" recipes saved.", Toast.LENGTH_SHORT).show();
                             }else{
                                 Toast.makeText(v.getContext(), "Cannot add. Network connection is unavailable", Toast.LENGTH_SHORT).show();
                             }

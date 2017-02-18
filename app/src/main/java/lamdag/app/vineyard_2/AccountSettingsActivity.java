@@ -97,8 +97,8 @@ public class AccountSettingsActivity extends AppCompatActivity {
                 new AlertDialog.Builder(AccountSettingsActivity.this)
                         .setTitle("Edit Details")
                         .setMessage("Are you sure you want to edit your details?")
-                        .setNegativeButton("No", null)
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        .setPositiveButton("No", null)
+                        .setNegativeButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
 

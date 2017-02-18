@@ -74,7 +74,7 @@
             android:id="@+id/Breakfast"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            fab:fab_colorNormal="#68228b"
+            fab:fab_colorNormal="#0000"
             fab:fab_colorPressed="#f5f5f5"
             fab:fab_colorRipple="#4f666a"
             android:src="@mipmap/ic_free_breakfast_white_24dp"
@@ -86,7 +86,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@mipmap/ic_restaurant_white_24dp"
-            fab:fab_colorNormal="#68228b"
+            fab:fab_colorNormal="#0000"
             fab:fab_colorPressed="#f5f5f5"
             fab:fab_colorRipple="#4f666a"
             fab:fab_size="mini"
@@ -96,7 +96,7 @@
             android:id="@+id/Snacks"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            fab:fab_colorNormal="#68228b"
+            fab:fab_colorNormal="#0000"
             fab:fab_colorPressed="#f5f5f5"
             fab:fab_colorRipple="#4f666a"
             android:src="@mipmap/ic_cake_white_24dp"
@@ -108,11 +108,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@mipmap/ic_room_service_white_24dp"
-            fab:fab_colorNormal="#68228b"
+            fab:fab_colorNormal="#0000"
             fab:fab_colorPressed="#f5f5f5"
             fab:fab_colorRipple="#4f666a"
             fab:fab_size="mini"
             fab:fab_label="Dinner" />
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/Others"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_local_drink_white_24dp"
+            fab:fab_colorNormal="#0000"
+            fab:fab_colorPressed="#f5f5f5"
+            fab:fab_colorRipple="#4f666a"
+            fab:fab_size="mini"
+            fab:fab_label="Others" />
 
     </com.github.clans.fab.FloatingActionMenu>
 

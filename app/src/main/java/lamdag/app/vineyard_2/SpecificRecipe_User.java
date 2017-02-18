@@ -92,62 +92,6 @@ public class SpecificRecipe_User extends AppCompatActivity {
                         for(int a = 0; a < Directions.size(); a++){
                             recipeDirections.append("> " + Directions.get(a) + "\n");;
                         }
-
-//                        mContentsRef.child(key).addValueEventListener(new ValueEventListener() {
-//                            @Override
-//                            public void onDataChange(DataSnapshot snapshot) {
-//                                String ingr = snapshot.child("ingredients").getValue(String.class);
-//                                String dir = snapshot.child("directions").getValue(String.class);
-//
-//                                Ingredients = new ArrayList<String>(Arrays.asList(ingr.split("\\|")));
-//                                for(int i = 0; i < Ingredients.size(); i++){
-//                                    recipeIngredients.append("> " + Ingredients.get(i) + "\n");
-//                                }
-//
-//                                Directions = new ArrayList<String>(Arrays.asList(dir.split("\\|")));
-//                                for(int a = 0; a < Directions.size(); a++){
-//                                    recipeDirections.append("> " + Directions.get(a) + "\n");;
-//                                }
-//                            }
-//                            @Override
-//                            public void onCancelled(DatabaseError databaseError) {
-//                                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
-//                            }
-//                        });
-
-                        /*mRecipeRef.child(key).addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot snapshot) {
-                                String ingr = snapshot.child("ingredients").getValue(String.class);
-                                String dir = snapshot.child("directions").getValue(String.class);
-
-                                Ingredients = new ArrayList<String>(Arrays.asList(ingr.split("\\|")));
-                                for(int i = 0; i < Ingredients.size(); i++){
-                                    recipeIngredients.append("> " + Ingredients.get(i) + "\n");
-                                }
-
-                                Directions = new ArrayList<String>(Arrays.asList(dir.split("\\|")));
-                                for(int a = 0; a < Directions.size(); a++){
-                                    recipeDirections.append("> " + Directions.get(a) + "\n");;
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-                                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
-                            }
-                        });*/
-                        /*Ingredients = new ArrayList<String>(Arrays.asList(ingr.split("\\|")));
-                        for(int i = 0; i < Ingredients.size(); i++){
-                            recipeIngredients.append("> " + Ingredients.get(i) + "\n");
-                        }
-
-                        Directions = new ArrayList<String>(Arrays.asList(dir.split("\\|")));
-                        for(int a = 0; a < Directions.size(); a++){
-                            recipeDirections.append("> " + Directions.get(a) + "\n");;
-                        }*/
-
-
                     }
 
                     @Override

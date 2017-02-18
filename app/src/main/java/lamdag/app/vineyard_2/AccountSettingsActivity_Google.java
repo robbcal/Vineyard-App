@@ -56,8 +56,8 @@ public class AccountSettingsActivity_Google extends AppCompatActivity {
                 new AlertDialog.Builder(AccountSettingsActivity_Google.this)
                         .setTitle("Delete Account")
                         .setMessage("Are you sure you want to delete this account? All saved recipes will also be deleted.")
-                        .setNegativeButton("No", null)
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        .setPositiveButton("No", null)
+                        .setNegativeButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 progress.setMessage("This may take a while...");
