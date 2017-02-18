@@ -35,7 +35,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class SignupActivity extends AppCompatActivity {
 
-    private EditText inputEmail, inputPassword, inputName;
+    private EditText inputEmail, inputPassword, inputName, verifyPassword;
     private TextView signupText;
     private Button btnSignUp, btnCancel, btnGuest;
     private SignInButton btnGoogle;
@@ -108,6 +108,7 @@ public class SignupActivity extends AppCompatActivity {
         inputEmail = (EditText) findViewById(R.id.email);
         inputName = (EditText) findViewById(R.id.name);
         inputPassword = (EditText) findViewById(R.id.password);
+        verifyPassword = (EditText) findViewById(R.id.verify);
         signupText = (TextView) findViewById(R.id.signup_text);
 
         progress = new ProgressDialog(this);
@@ -189,6 +190,7 @@ public class SignupActivity extends AppCompatActivity {
         final String name = inputName.getText().toString().trim();
         final String email = inputEmail.getText().toString().trim();
         final String password = inputPassword.getText().toString().trim();
+        final String verify = verifyPassword.getText().toString().trim();
 
         if (TextUtils.isEmpty(name)) {
             Toast.makeText(getApplicationContext(), "Enter name.", Toast.LENGTH_SHORT).show();
@@ -205,8 +207,13 @@ public class SignupActivity extends AppCompatActivity {
             return;
         }
 
-        if (password.length() < 6) {
+        if (password.length() < 6 && verify.length() < 6) {
             Toast.makeText(getApplicationContext(), "Password too short, enter a minimum of 6 characters.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (!password.contains(verify)) {
+            Toast.makeText(getApplicationContext(), "Passwords do not match.", Toast.LENGTH_SHORT).show();
             return;
         }
 
