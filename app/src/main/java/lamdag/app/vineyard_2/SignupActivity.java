@@ -207,6 +207,11 @@ public class SignupActivity extends AppCompatActivity {
             return;
         }
 
+        if (TextUtils.isEmpty(verify)) {
+            Toast.makeText(getApplicationContext(), "You must verify your password.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         if (password.length() < 6 && verify.length() < 6) {
             Toast.makeText(getApplicationContext(), "Password too short, enter a minimum of 6 characters.", Toast.LENGTH_SHORT).show();
             return;
