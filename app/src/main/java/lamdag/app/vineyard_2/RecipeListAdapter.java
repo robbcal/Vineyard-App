@@ -39,7 +39,6 @@ public class RecipeListAdapter extends BaseAdapter {
     DatabaseReference mContentsDirections = mRootRef.child("contents_Directions");
     private static final String TAG = "Vineyard";
     private DatabaseReference databaseUser;
-    Long recipecount;
 
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -48,19 +47,6 @@ public class RecipeListAdapter extends BaseAdapter {
         this.rowItems = items;
 
         databaseUser = FirebaseDatabase.getInstance().getReference().child("users").child(user.getUid());
-
-        databaseUser.addValueEventListener(new com.google.firebase.database.ValueEventListener() {
-            @Override
-            public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
-
-                recipecount = dataSnapshot.child("recipeCounter").getValue(Long.class);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
     }
 
     private class ViewHolder {
@@ -157,7 +143,7 @@ public class RecipeListAdapter extends BaseAdapter {
                             }
                         });
 
-                        Toast.makeText(v.getContext(), title+" has been added. "+recipecount+" recipes saved.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(v.getContext(), title+" has been added.", Toast.LENGTH_SHORT).show();
                     }else{
                         Toast.makeText(v.getContext(), "Cannot add. Network connection is unavailable", Toast.LENGTH_SHORT).show();
                     }

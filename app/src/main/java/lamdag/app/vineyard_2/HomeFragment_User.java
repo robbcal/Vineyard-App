@@ -2,10 +2,8 @@ package lamdag.app.vineyard_2;
 
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -43,7 +41,7 @@ public class HomeFragment_User extends Fragment{
     DatabaseReference mRecipeRef = mRootRef.child("users/"+ LandingpageActivity_User.uid+"/recipes");
     DatabaseReference mRecipeCounterRef = mRootRef.child("users/"+ LandingpageActivity_User.uid+"/recipeCounter");
 
-    TextView recipeUrl, recipeTitle, recipeDescription, recipekey;
+    TextView recipeUrl, recipeTitle, recipeDescription, recipekey, savedRecipeCount;
     Button removeRecipe;
     FloatingActionMenu meal;
     FloatingActionButton breakfast, lunch, snacks, dinner, others;
@@ -53,7 +51,6 @@ public class HomeFragment_User extends Fragment{
     List<Recipes> rowItems;
     RecipeListAdapter_Home adapter;
     FirebaseListAdapter<Recipe> mAdapter = null;
-    int limit;
     android.app.AlertDialog loadingDialog;
 
     boolean bf = false;
@@ -74,6 +71,8 @@ public class HomeFragment_User extends Fragment{
 
         mRecipeRef.keepSynced(true);
 
+        savedRecipeCount = (TextView)v.findViewById(R.id.savedRecipesCount);
+
         searchField =(EditText)v.findViewById(R.id.search_field);
         searchButton = (Button)v.findViewById(R.id.search_button);
         clearButton = (Button)v.findViewById(R.id.clearSearch);
@@ -85,8 +84,6 @@ public class HomeFragment_User extends Fragment{
         snacks = (FloatingActionButton) v.findViewById(R.id.Snacks);
         dinner = (FloatingActionButton) v.findViewById(R.id.Dinner);
         others = (FloatingActionButton) v.findViewById(R.id.Others);
-
-        limit = 20;
 
         loadingDialog = new android.app.AlertDialog.Builder(getActivity()).create();
         loadingDialog.setMessage("Recipe data currently loading...");
@@ -113,6 +110,7 @@ public class HomeFragment_User extends Fragment{
             public void onClick(View v) {
                 if(!bf) {
                     bf = true;
+                    Toast.makeText(v.getContext(), "Breakfast filter enabled.", Toast.LENGTH_SHORT).show();
                     meal.close(true);
                     filter();
                 }else{
@@ -134,6 +132,7 @@ public class HomeFragment_User extends Fragment{
             public void onClick(View v) {
                 if(!lu) {
                     lu = true;
+                    Toast.makeText(v.getContext(), "Lunch filter enabled.", Toast.LENGTH_SHORT).show();
                     meal.close(true);
                     filter();
                 }else{
@@ -176,6 +175,7 @@ public class HomeFragment_User extends Fragment{
             public void onClick(View v) {
                 if(!di) {
                     di = true;
+                    Toast.makeText(v.getContext(), "Dinner filter enabled.", Toast.LENGTH_SHORT).show();
                     meal.close(true);
                     filter();
                 }else{
@@ -197,6 +197,7 @@ public class HomeFragment_User extends Fragment{
             public void onClick(View v) {
                 if(!other) {
                     other = true;
+                    Toast.makeText(v.getContext(), "Other recipes filter enabled.", Toast.LENGTH_SHORT).show();
                     meal.close(true);
                     filter();
                 }else{
@@ -226,6 +227,7 @@ public class HomeFragment_User extends Fragment{
                 }
                 Log.d(TAG, "Recipes saved: "+cnt);
                 mRecipeCounterRef.setValue(cnt);
+                savedRecipeCount.setText("Recipes saved: "+cnt);
             }
 
             @Override
@@ -237,7 +239,7 @@ public class HomeFragment_User extends Fragment{
 
     public void getData(){
 
-        mAdapter = new FirebaseListAdapter<Recipe>(getActivity(), Recipe.class, R.layout.custom_list_home, mRecipeRef.orderByChild("title").limitToFirst(limit)) {
+        mAdapter = new FirebaseListAdapter<Recipe>(getActivity(), Recipe.class, R.layout.custom_list_home, mRecipeRef.orderByChild("title")) {
             @Override
             protected void populateView(View view, Recipe r, int position) {
                 DatabaseReference recipeRef = getRef(position);
@@ -353,7 +355,6 @@ public class HomeFragment_User extends Fragment{
                             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
                                     TextView text = (TextView) view.findViewById(R.id.recipe_url);
                                     String recipe_url = text.getText().toString().trim();
 
@@ -366,12 +367,11 @@ public class HomeFragment_User extends Fragment{
                             flag++;
                         }
                     }
-                    Log.d(TAG, "FLAG: "+flag);
-                    if(flag == 0){
-                        Toast.makeText(getContext(), "No Result/s Found.", Toast.LENGTH_SHORT).show();
-                    }
                 }
-                loadingDialog.dismiss();
+                Log.d(TAG, "FLAG: "+flag);
+                if(flag == 0){
+                    Toast.makeText(getContext(), "No Result/s Found.", Toast.LENGTH_SHORT).show();
+                }
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -397,28 +397,83 @@ public class HomeFragment_User extends Fragment{
                     final String url = postSnapshot.child("url").getValue(String.class);
                     final String image_url = postSnapshot.child("image_url").getValue(String.class);
                     final String description = postSnapshot.child("description").getValue(String.class);
-
+                    String descSearch = description.toLowerCase();
                     String t = title.toLowerCase();
 
                     if(t.contains(search.toLowerCase())){
-                        Recipes item = new Recipes(title, url, image_url, recipeKey, description);
-                        rowItems.add(item);
+                        final boolean filter[] = new boolean[5];
 
-                        adapter = new RecipeListAdapter_Home(getActivity().getApplicationContext(), rowItems);
-                        listView.setAdapter(adapter);
-
-                        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                TextView text = (TextView) view.findViewById(R.id.recipe_url);
-                                String recipe_url = text.getText().toString().trim();
-
-                                Intent intent = new Intent(getActivity().getApplicationContext(), SpecificRecipe_User.class);
-                                intent.putExtra("key", recipeKey);
-                                intent.putExtra("url", recipe_url);
-                                startActivity(intent);
+                        if (bf) {
+                            if (descSearch.contains("breakfast")) {
+                                filter[0] = true;
                             }
-                        });
+                        }
+
+                        if (lu) {
+                            if (descSearch.contains("lunch")) {
+                                filter[1] = true;
+                            }
+                        }
+
+                        if (sn) {
+                            if (descSearch.contains("snack")) {
+                                filter[2] = true;
+                            }
+                        }
+
+                        if (di) {
+                            if (descSearch.contains("dinner") || descSearch.contains("supper")) {
+                                filter[3] = true;
+                            }
+                        }
+
+                        if(other) {
+                            if(!descSearch.contains("dinner") && !descSearch.contains("supper") && !descSearch.contains("snack") && !descSearch.contains("lunch") && !descSearch.contains("breakfast")){
+                                filter[4] = true;
+                            }
+                        }
+
+                        if (bf || lu || sn || di || other) {
+                            if (filter[0] || filter[1] || filter[2] || filter[3] || filter[4]) {
+                                Recipes item = new Recipes(title, url, image_url, recipeKey, description);
+                                rowItems.add(item);
+
+                                adapter = new RecipeListAdapter_Home(getActivity().getApplicationContext(), rowItems);
+                                listView.setAdapter(adapter);
+
+                                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                    @Override
+                                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                        TextView text = (TextView) view.findViewById(R.id.recipe_url);
+                                        String recipe_url = text.getText().toString().trim();
+
+                                        Intent intent = new Intent(getActivity().getApplicationContext(), SpecificRecipe_User.class);
+                                        intent.putExtra("key", recipeKey);
+                                        intent.putExtra("url", recipe_url);
+                                        startActivity(intent);
+                                    }
+                                });
+                            }
+                        }else if (!bf && !lu && !sn && !di) {
+                            Recipes item = new Recipes(title, url, image_url, recipeKey, description);
+                            rowItems.add(item);
+
+                            adapter = new RecipeListAdapter_Home(getActivity().getApplicationContext(), rowItems);
+                            listView.setAdapter(adapter);
+
+                            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                    TextView text = (TextView) view.findViewById(R.id.recipe_url);
+                                    String recipe_url = text.getText().toString().trim();
+
+                                    Intent intent = new Intent(getActivity().getApplicationContext(), SpecificRecipe_User.class);
+                                    intent.putExtra("key", recipeKey);
+                                    intent.putExtra("url", recipe_url);
+                                    startActivity(intent);
+                                }
+                            });
+                        }
                         flag++;
                     }
                 }
@@ -437,7 +492,11 @@ public class HomeFragment_User extends Fragment{
     public void clearSearchText(){
         searchField.setText("");
         listView.setAdapter(null);
-
+        bf = false;
+        lu = false;
+        sn = false;
+        di = false;
+        other = false;
         getData();
     }
 

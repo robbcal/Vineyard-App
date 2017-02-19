@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -64,7 +63,6 @@ public class SearchFragment_User extends Fragment {
     ArrayList<String> searchedIngredients;
     FirebaseListAdapter<Recipe> mAdapter;
     int limit;
-    Long recipecount;
     AlertDialog loadingDialog;
     private DatabaseReference databaseUser;
 
@@ -118,19 +116,6 @@ public class SearchFragment_User extends Fragment {
 
         getData();
 
-        databaseUser.addValueEventListener(new com.google.firebase.database.ValueEventListener() {
-            @Override
-            public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
-
-                recipecount = dataSnapshot.child("recipeCounter").getValue(Long.class);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
         searchButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 searchIngredient();
@@ -174,6 +159,7 @@ public class SearchFragment_User extends Fragment {
             public void onClick(View v) {
                 if(!bf) {
                     bf = true;
+                    Toast.makeText(v.getContext(), "Breakfast filter enabled.", Toast.LENGTH_SHORT).show();
                     meal.close(true);
                     loadingDialog.show();
                     filter();
@@ -197,6 +183,7 @@ public class SearchFragment_User extends Fragment {
             public void onClick(View v) {
                 if(!lu) {
                     lu = true;
+                    Toast.makeText(v.getContext(), "Lunch filter enabled.", Toast.LENGTH_SHORT).show();
                     meal.close(true);
                     loadingDialog.show();
                     filter();
@@ -220,6 +207,7 @@ public class SearchFragment_User extends Fragment {
             public void onClick(View v) {
                 if(!sn) {
                     sn = true;
+                    Toast.makeText(v.getContext(), "Snacks filter enabled.", Toast.LENGTH_SHORT).show();
                     meal.close(true);
                     loadingDialog.show();
                     filter();
@@ -243,6 +231,7 @@ public class SearchFragment_User extends Fragment {
             public void onClick(View v) {
                 if(!di) {
                     di = true;
+                    Toast.makeText(v.getContext(), "Dinner filter enabled.", Toast.LENGTH_SHORT).show();
                     meal.close(true);
                     loadingDialog.show();
                     filter();
@@ -266,6 +255,7 @@ public class SearchFragment_User extends Fragment {
             public void onClick(View v) {
                 if(!other) {
                     other = true;
+                    Toast.makeText(v.getContext(), "Other recipes filter enabled.", Toast.LENGTH_SHORT).show();
                     meal.close(true);
                     loadingDialog.show();
                     filter();
@@ -391,7 +381,7 @@ public class SearchFragment_User extends Fragment {
                                     }
                                 });
 
-                                Toast.makeText(v.getContext(), title+" has been added. "+recipecount+" recipes saved.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(v.getContext(), title+" has been added.", Toast.LENGTH_SHORT).show();
                             }else{
                                 Toast.makeText(v.getContext(), "Cannot add. Network connection is unavailable", Toast.LENGTH_SHORT).show();
                             }
@@ -571,6 +561,7 @@ public class SearchFragment_User extends Fragment {
         lu = false;
         sn = false;
         di = false;
+        other = false;
         moreButton.setVisibility(listView.VISIBLE);
         getData();
     }
@@ -745,7 +736,7 @@ public class SearchFragment_User extends Fragment {
                                     }
                                 });
 
-                                Toast.makeText(v.getContext(), title+" has been added. "+recipecount+" recipes saved.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(v.getContext(), title+" has been added.", Toast.LENGTH_SHORT).show();
                             }else{
                                 Toast.makeText(v.getContext(), "Cannot add. Network connection is unavailable", Toast.LENGTH_SHORT).show();
                             }
