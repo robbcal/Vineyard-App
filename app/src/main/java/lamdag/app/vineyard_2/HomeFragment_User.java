@@ -113,6 +113,7 @@ public class HomeFragment_User extends Fragment{
             public void onClick(View v) {
                 if(!bf) {
                     bf = true;
+                    Toast.makeText(v.getContext(), "Breakfast filter enabled.", Toast.LENGTH_SHORT).show();
                     meal.close(true);
                     filter();
                 }else{
@@ -134,6 +135,7 @@ public class HomeFragment_User extends Fragment{
             public void onClick(View v) {
                 if(!lu) {
                     lu = true;
+                    Toast.makeText(v.getContext(), "Lunch filter enabled.", Toast.LENGTH_SHORT).show();
                     meal.close(true);
                     filter();
                 }else{
@@ -155,6 +157,7 @@ public class HomeFragment_User extends Fragment{
             public void onClick(View v) {
                 if(!sn) {
                     sn = true;
+                    Toast.makeText(v.getContext(), "Snacks filter enabled.", Toast.LENGTH_SHORT).show();
                     meal.close(true);
                     filter();
                 }else{
@@ -176,6 +179,7 @@ public class HomeFragment_User extends Fragment{
             public void onClick(View v) {
                 if(!di) {
                     di = true;
+                    Toast.makeText(v.getContext(), "Dinner filter enabled.", Toast.LENGTH_SHORT).show();
                     meal.close(true);
                     filter();
                 }else{
@@ -197,6 +201,7 @@ public class HomeFragment_User extends Fragment{
             public void onClick(View v) {
                 if(!other) {
                     other = true;
+                    Toast.makeText(v.getContext(), "Other recipes filter enabled.", Toast.LENGTH_SHORT).show();
                     meal.close(true);
                     filter();
                 }else{
