@@ -15,8 +15,8 @@ android {
         applicationId "lamdag.app.vineyard_2"
         minSdkVersion 14
         targetSdkVersion 25
-        versionCode 3
-        versionName "1.2"
+        versionCode 4
+        versionName "1.21"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

@@ -217,7 +217,7 @@ public class SignupActivity extends AppCompatActivity {
             return;
         }
 
-        if (!password.contains(verify)) {
+        if (!password.equals(verify)) {
             Toast.makeText(getApplicationContext(), "Passwords do not match.", Toast.LENGTH_SHORT).show();
             return;
         }
