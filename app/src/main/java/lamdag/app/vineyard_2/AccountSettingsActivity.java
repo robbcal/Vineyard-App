@@ -1,8 +1,11 @@
 package lamdag.app.vineyard_2;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
@@ -127,35 +130,56 @@ public class AccountSettingsActivity extends AppCompatActivity {
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(haveNetworkConnection() == true) {
+                    new AlertDialog.Builder(AccountSettingsActivity.this)
+                            .setTitle("Delete Account")
+                            .setMessage("Are you sure you want to delete this account? All saved recipes will also be deleted.")
+                            .setNegativeButton("No", null)
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    progress.setMessage("This may take a while...");
+                                    progress.setCancelable(false);
+                                    progress.show();
 
-                new AlertDialog.Builder(AccountSettingsActivity.this)
-                        .setTitle("Delete Account")
-                        .setMessage("Are you sure you want to delete this account? All saved recipes will also be deleted.")
-                        .setNegativeButton("No", null)
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                progress.setMessage("This may take a while...");
-                                progress.setCancelable(false);
-                                progress.show();
+                                    databaseUser.removeValue();
+                                    user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                Intent intent = new Intent(AccountSettingsActivity.this, LoginActivity.class);
+                                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                                startActivity(intent);
 
-                                databaseUser.removeValue();
-                                user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        if (task.isSuccessful()) {
-                                            Intent intent  = new Intent(AccountSettingsActivity.this, LoginActivity.class);
-                                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                            startActivity(intent);
-
-                                            Toast.makeText(AccountSettingsActivity.this, "Successfully deleted account.",
-                                                    Toast.LENGTH_LONG).show();
+                                                Toast.makeText(AccountSettingsActivity.this, "Successfully deleted account.",
+                                                        Toast.LENGTH_LONG).show();
+                                            }
                                         }
-                                    }
-                                });
-                            }
-                        }).create().show();
+                                    });
+                                }
+                            }).create().show();
+                }else{
+                    Toast.makeText(AccountSettingsActivity.this, "Cannot delete account. Network connection is unavailable.",
+                            Toast.LENGTH_LONG).show();
+                }
             }
         });
+    }
+
+    private boolean haveNetworkConnection() {
+        boolean haveConnectedWifi = false;
+        boolean haveConnectedMobile = false;
+
+        ConnectivityManager cm = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo[] netInfo = cm.getAllNetworkInfo();
+        for (NetworkInfo ni : netInfo) {
+            if (ni.getTypeName().equalsIgnoreCase("WIFI"))
+                if (ni.isConnected())
+                    haveConnectedWifi = true;
+            if (ni.getTypeName().equalsIgnoreCase("MOBILE"))
+                if (ni.isConnected())
+                    haveConnectedMobile = true;
+        }
+        return haveConnectedWifi || haveConnectedMobile;
     }
 }
