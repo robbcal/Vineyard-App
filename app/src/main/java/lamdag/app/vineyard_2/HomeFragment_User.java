@@ -154,6 +154,7 @@ public class HomeFragment_User extends Fragment{
             public void onClick(View v) {
                 if(!sn) {
                     sn = true;
+                    Toast.makeText(v.getContext(), "Snacks filter enabled.", Toast.LENGTH_SHORT).show();
                     meal.close(true);
                     filter();
                 }else{
