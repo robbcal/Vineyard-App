@@ -335,13 +335,13 @@ public class SearchFragment_User extends Fragment {
 
                 addRecipe.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View v) {
+                    public void onClick(final View v) {
 
                         if (user != null) {
                             if(haveNetworkConnection() == true) {
                                 String uid = user.getUid();
                                 final DatabaseReference mspecificUser = mUserRef.child(uid + "/recipes/" + recipe_key);
-                                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy-hh-mm-ss");
+                                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss");
                                 final String format = simpleDateFormat.format(new Date());
 
                                 mRecipeRef.child(recipe_key).addValueEventListener(new ValueEventListener() {
@@ -381,7 +381,7 @@ public class SearchFragment_User extends Fragment {
                                     }
                                 });
 
-                                Toast.makeText(v.getContext(), title+" has been added.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(v.getContext(), title+" has been added. "+format, Toast.LENGTH_SHORT).show();
                             }else{
                                 Toast.makeText(v.getContext(), "Cannot add. Network connection is unavailable", Toast.LENGTH_SHORT).show();
                             }
@@ -472,7 +472,7 @@ public class SearchFragment_User extends Fragment {
 
                                     if (bf || lu || sn || di || other) {
                                         if (filter[0] || filter[1] || filter[2] || filter[3] || filter[4]) {
-                                            Recipes item = new Recipes(title, url, image_url, recipeKey, description);
+                                            Recipes item = new Recipes(title, url, image_url, recipeKey, description, "");
                                             rowItems.add(item);
 
                                             RecipeListAdapter adapter = new RecipeListAdapter(getActivity().getApplicationContext(), rowItems);
@@ -492,7 +492,7 @@ public class SearchFragment_User extends Fragment {
                                             });
                                         }
                                     } else if (!bf && !lu && !sn && !di) {
-                                        Recipes item = new Recipes(title, url, image_url, recipeKey, description);
+                                        Recipes item = new Recipes(title, url, image_url, recipeKey, description, "");
                                         rowItems.add(item);
 
                                         RecipeListAdapter adapter = new RecipeListAdapter(getActivity().getApplicationContext(), rowItems);
@@ -621,7 +621,7 @@ public class SearchFragment_User extends Fragment {
 
                     if(bf || lu || sn || di || other){
                         if(filter[0] || filter[1] || filter[2] ||filter[3] || filter[4]) {
-                            Recipes item = new Recipes(title, url, image_url, recipeKey, description);
+                            Recipes item = new Recipes(title, url, image_url, recipeKey, description, "");
                             rowItems.add(item);
 
                             RecipeListAdapter adapter = new RecipeListAdapter(getActivity().getApplicationContext(), rowItems);
@@ -698,12 +698,14 @@ public class SearchFragment_User extends Fragment {
                             if(haveNetworkConnection() == true) {
                                 String uid = user.getUid();
                                 final DatabaseReference mspecificUser = mUserRef.child(uid + "/recipes/" + recipe_key);
+                                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss");
+                                final String format = simpleDateFormat.format(new Date());
 
                                 mRecipeRef.child(recipe_key).addValueEventListener(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(DataSnapshot snapshot) {
                                         mspecificUser.setValue(snapshot.getValue());
-
+                                        mspecificUser.child("timeStamp").setValue(format);
                                     }
 
                                     @Override
@@ -736,7 +738,7 @@ public class SearchFragment_User extends Fragment {
                                     }
                                 });
 
-                                Toast.makeText(v.getContext(), title+" has been added.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(v.getContext(), title+" has been added. "+format, Toast.LENGTH_SHORT).show();
                             }else{
                                 Toast.makeText(v.getContext(), "Cannot add. Network connection is unavailable", Toast.LENGTH_SHORT).show();
                             }

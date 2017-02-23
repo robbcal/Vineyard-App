@@ -6,17 +6,19 @@ public class Recipes {
     private String image_url;
     private String id;
     private String description;
+    private String timeStamp;
 
     public Recipes() {
     }
 
-    public Recipes(String title, String url, String image_url, String id, String description){
+    public Recipes(String title, String url, String image_url, String id, String description, String timeStamp){
         super();
         this.title = title;
         this.url = url;
         this.image_url = image_url;
         this.id = id;
         this.description = description;
+        this.timeStamp = timeStamp;
     }
 
     public String getTitle() {
@@ -57,5 +59,13 @@ public class Recipes {
 
     public void setDescription(String description) {
         description = description;
+    }
+
+    public String getDate() {
+        return timeStamp;
+    }
+
+    public void setDate(String description) {
+        timeStamp = timeStamp;
     }
 }

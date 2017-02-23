@@ -42,6 +42,7 @@ public class RecipeListAdapter_Home extends BaseAdapter {
         TextView txtID;
         Button removeRecipe;
         TextView txtDescription;
+        TextView txtDate;
     }
 
     public View getView(final int position, View convertView, ViewGroup parent) {
@@ -57,6 +58,7 @@ public class RecipeListAdapter_Home extends BaseAdapter {
             holder.imageView = (ImageView) convertView.findViewById(R.id.icon);
             holder.txtID = (TextView) convertView.findViewById(R.id.recipe_key);
             holder.txtDescription = (TextView) convertView.findViewById(R.id.recipe_description);
+            holder.txtDate = (TextView) convertView.findViewById(R.id.timeStamp);
 
             holder.removeRecipe = (Button) convertView.findViewById(R.id.remove);
             convertView.setTag(holder);
@@ -72,12 +74,14 @@ public class RecipeListAdapter_Home extends BaseAdapter {
         final String img_url = rowItem.getImage_url();
         final String id = rowItem.getID();
         final String description = rowItem.getDescription();
+        final String date = rowItem.getDate();
 
         holder.txtUrl.setText(url);
         holder.txtTitle.setText(title);
         Picasso.with(context).load(img_url).error(R.drawable.placeholder_error).into(holder.imageView);
         holder.txtID.setText(id);
         holder.txtDescription.setText(description);
+        holder.txtDate.setText(date);
         holder.removeRecipe.setTextSize(14);
         holder.removeRecipe.setTypeface(null, BOLD);
 

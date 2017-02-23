@@ -43,7 +43,7 @@ public class HomeFragment_Google extends Fragment{
     DatabaseReference mRecipeRef = mRootRef.child("users/"+uid+"/recipes");
     DatabaseReference mRecipeCounterRef = mRootRef.child("users/"+uid+"/recipeCounter");
 
-    TextView recipeUrl, recipeTitle, recipeDescription, recipekey, savedRecipeCount;
+    TextView recipeUrl, recipeTitle, recipeDescription, recipekey, savedRecipeCount, recipeTimeStamp;
     Button removeRecipe;
     FloatingActionMenu meal;
     FloatingActionButton breakfast, lunch, snacks, dinner, others;
@@ -230,7 +230,15 @@ public class HomeFragment_Google extends Fragment{
                 }
                 Log.d(TAG, "Recipes saved: "+cnt);
                 mRecipeCounterRef.setValue(cnt);
-                savedRecipeCount.setText("Recipes saved: "+cnt);
+                String display;
+                if(cnt == 0){
+                    display = "No saved recipe.";
+                }else if(cnt == 1){
+                    display = cnt+" recipe saved.";
+                }else{
+                    display = cnt+" recipes saved.";
+                }
+                savedRecipeCount.setText(display);
             }
 
             @Override
@@ -257,6 +265,7 @@ public class HomeFragment_Google extends Fragment{
                 recipekey = (TextView) view.findViewById(R.id.recipe_key);
                 recipeUrl = (TextView) view.findViewById(R.id.recipe_url);
                 recipeDescription = (TextView) view.findViewById(R.id.recipe_description);
+                recipeTimeStamp = (TextView) view.findViewById(R.id.timeStamp);
                 removeRecipe = (Button) view.findViewById(R.id.remove);
 
                 Picasso.with(getActivity().getApplicationContext()).load(imgUrl).error(R.drawable.placeholder_error).into((ImageView) view.findViewById(R.id.icon));
@@ -264,6 +273,19 @@ public class HomeFragment_Google extends Fragment{
                 recipeUrl.setText(url);
                 recipekey.setText(recipeKey);
                 recipeDescription.setText(description);
+
+                mRecipeRef.child(recipeKey+"/timeStamp").addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        String date = dataSnapshot.getValue(String.class);
+                        recipeTimeStamp.setText(date);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                    }
+                });
 
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -314,6 +336,7 @@ public class HomeFragment_Google extends Fragment{
                     final String url = postSnapshot.child("url").getValue(String.class);
                     final String image_url = postSnapshot.child("image_url").getValue(String.class);
                     final String description = postSnapshot.child("description").getValue(String.class);
+                    final String timeStamp = postSnapshot.child("timeStamp").getValue(String.class);
                     String descSearch = description.toLowerCase();
                     final boolean filter[] = new boolean[5];
 
@@ -349,7 +372,7 @@ public class HomeFragment_Google extends Fragment{
 
                     if(bf || lu || sn || di || other){
                         if(filter[0] || filter[1] || filter[2] ||filter[3] || filter[4]) {
-                            Recipes item = new Recipes(title, url, image_url, recipeKey, description);
+                            Recipes item = new Recipes(title, url, image_url, recipeKey, description, timeStamp);
                             rowItems.add(item);
 
                             adapter = new RecipeListAdapter_Home(getActivity().getApplicationContext(), rowItems);
@@ -400,6 +423,7 @@ public class HomeFragment_Google extends Fragment{
                     final String url = postSnapshot.child("url").getValue(String.class);
                     final String image_url = postSnapshot.child("image_url").getValue(String.class);
                     final String description = postSnapshot.child("description").getValue(String.class);
+                    final String timeStamp = postSnapshot.child("timeStamp").getValue(String.class);
                     String descSearch = description.toLowerCase();
                     String t = title.toLowerCase();
 
@@ -438,7 +462,7 @@ public class HomeFragment_Google extends Fragment{
 
                         if (bf || lu || sn || di || other) {
                             if (filter[0] || filter[1] || filter[2] || filter[3] || filter[4]) {
-                                Recipes item = new Recipes(title, url, image_url, recipeKey, description);
+                                Recipes item = new Recipes(title, url, image_url, recipeKey, description, timeStamp);
                                 rowItems.add(item);
 
                                 adapter = new RecipeListAdapter_Home(getActivity().getApplicationContext(), rowItems);
@@ -458,7 +482,7 @@ public class HomeFragment_Google extends Fragment{
                                 });
                             }
                         }else if (!bf && !lu && !sn && !di) {
-                            Recipes item = new Recipes(title, url, image_url, recipeKey, description);
+                            Recipes item = new Recipes(title, url, image_url, recipeKey, description, timeStamp);
                             rowItems.add(item);
 
                             adapter = new RecipeListAdapter_Home(getActivity().getApplicationContext(), rowItems);

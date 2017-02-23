@@ -246,7 +246,7 @@ public class SearchFragment extends Fragment {
                                     final String description = dataSnapshot.child("description").getValue(String.class);
 
 
-                                    Recipes item = new Recipes(title, url, image_url, recipeKey, description);
+                                    Recipes item = new Recipes(title, url, image_url, recipeKey, description, "");
                                     rowItems.add(item);
 
                                     RecipeListAdapter_Guest adapter = new RecipeListAdapter_Guest(getActivity().getApplicationContext(), rowItems);

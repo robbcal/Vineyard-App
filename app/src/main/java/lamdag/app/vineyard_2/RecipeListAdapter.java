@@ -105,7 +105,7 @@ public class RecipeListAdapter extends BaseAdapter {
                         mspecificUser.child("url").setValue(url);
                         mspecificUser.child("image_url").setValue(img_url);
                         mspecificUser.child("description").setValue(description);
-                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy-hh-mm-ss");
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss");
                         final String format = simpleDateFormat.format(new Date());
 
                         mRecipeRef.child(id).addValueEventListener(new ValueEventListener() {
@@ -143,7 +143,7 @@ public class RecipeListAdapter extends BaseAdapter {
                             }
                         });
 
-                        Toast.makeText(v.getContext(), title+" has been added.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(v.getContext(), title+" has been added. "+format, Toast.LENGTH_SHORT).show();
                     }else{
                         Toast.makeText(v.getContext(), "Cannot add. Network connection is unavailable", Toast.LENGTH_SHORT).show();
                     }

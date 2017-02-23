@@ -10,7 +10,7 @@ public class Recipe {
     public Recipe() {
     }
 
-    public Recipe(String title, String url, String image_url) {
+    public Recipe(String title, String url, String image_url, String description) {
         this.title = title;
         this.url = url;
         this.image_url = image_url;
